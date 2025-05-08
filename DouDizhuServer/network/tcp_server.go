@@ -15,16 +15,11 @@ type TCPServer struct {
 }
 
 // NewTCPServer 创建一个新的TCP服务器实例
-func NewTCPServer(addr string) *TCPServer {
+func NewTCPServer(addr string, messageHandler handler.Handler) *TCPServer {
 	return &TCPServer{
 		addr:           addr,
-		messageHandler: &handler.DefaultHandler{},
+		messageHandler: messageHandler,
 	}
-}
-
-// SetMessageHandler 设置消息处理器
-func (s *TCPServer) SetMessageHandler(handler handler.Handler) {
-	s.messageHandler = handler
 }
 
 // Start 启动TCP服务器
@@ -75,9 +70,11 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 		}
 
 		// 使用消息处理器处理数据
-		if err := s.messageHandler.HandleMessage(buf[:n], remoteAddr); err != nil {
+		resp, err := s.messageHandler.HandleMessage(buf[:n])
+		if err != nil {
 			logger.ErrorWith("处理消息失败", "remote_addr", remoteAddr, "error", err)
 			continue
 		}
+		conn.Write(resp)
 	}
 }
