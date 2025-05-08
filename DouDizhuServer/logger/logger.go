@@ -65,73 +65,101 @@ func WithFields(fields map[string]interface{}) *zap.SugaredLogger {
 }
 
 // Info 输出info级别日志
-func Info(args ...interface{}) {
-	sugar.Info(args...)
+func Info(msg string) {
+	sugar.Info(msg)
 }
 
 // Infof 输出info级别日志（格式化）
-func Infof(format string, args ...interface{}) {
+func InfoFormat(format string, args ...interface{}) {
 	sugar.Infof(format, args...)
 }
 
+func InfoWith(msg string, fields ...interface{}) {
+	sugar.Infow(msg, fields...)
+}
+
 // Error 输出error级别日志
-func Error(args ...interface{}) {
-	sugar.Error(args...)
+func Error(msg string) {
+	sugar.Error(msg)
 }
 
 // Errorf 输出error级别日志（格式化）
-func Errorf(format string, args ...interface{}) {
+func ErrorFormat(format string, args ...interface{}) {
 	sugar.Errorf(format, args...)
 }
 
+func ErrorWith(msg string, fields ...interface{}) {
+	sugar.Errorw(msg, fields...)
+}
+
 // Debug 输出debug级别日志
-func Debug(args ...interface{}) {
-	sugar.Debug(args...)
+func Debug(msg string) {
+	sugar.Debug(msg)
 }
 
 // Debugf 输出debug级别日志（格式化）
-func Debugf(format string, args ...interface{}) {
+func DebugFormat(format string, args ...interface{}) {
 	sugar.Debugf(format, args...)
 }
 
+func DebugWith(msg string, fields ...interface{}) {
+	sugar.Debugw(msg, fields...)
+}
+
 // Warn 输出warn级别日志
-func Warn(args ...interface{}) {
-	sugar.Warn(args...)
+func Warn(msg string) {
+	sugar.Warn(msg)
 }
 
 // Warnf 输出warn级别日志（格式化）
-func Warnf(format string, args ...interface{}) {
+func WarnFormat(format string, args ...interface{}) {
 	sugar.Warnf(format, args...)
 }
 
+func WarnWith(msg string, fields ...interface{}) {
+	sugar.Warnw(msg, fields...)
+}
+
 // Fatal 输出fatal级别日志并退出程序
-func Fatal(args ...interface{}) {
-	sugar.Fatal(args...)
+func Fatal(msg string) {
+	sugar.Fatal(msg)
 }
 
 // Fatalf 输出fatal级别日志并退出程序（格式化）
-func Fatalf(format string, args ...interface{}) {
+func FatalFormat(format string, args ...interface{}) {
 	sugar.Fatalf(format, args...)
 }
 
+func FatalWith(msg string, fields ...interface{}) {
+	sugar.Fatalw(msg, fields...)
+}
+
 // Panic 输出panic级别日志
-func Panic(args ...interface{}) {
-	sugar.Panic(args...)
+func Panic(msg string) {
+	sugar.Panic(msg)
 }
 
 // Panicf 输出panic级别日志（格式化）
-func Panicf(format string, args ...interface{}) {
+func PanicFormat(format string, args ...interface{}) {
 	sugar.Panicf(format, args...)
 }
 
+func PanicWith(msg string, fields ...interface{}) {
+	sugar.Panicw(msg, fields...)
+}
+
 // DPanic 输出dpanic级别日志
-func DPanic(args ...interface{}) {
-	sugar.DPanic(args...)
+func DPanic(msg string) {
+	sugar.DPanic(msg)
 }
 
 // DPanicf 输出dpanic级别日志（格式化）
-func DPanicf(format string, args ...interface{}) {
+func DPanicFormat(format string, args ...interface{}) {
 	sugar.DPanicf(format, args...)
+}
+
+func DPanicWith(msg string, fields ...interface{}) {
+	sugar.DPanicw(msg, fields...)
 }
 
 // Sync 同步日志
