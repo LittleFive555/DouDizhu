@@ -1,9 +1,13 @@
 package main
 
-import "go.uber.org/zap"
+import (
+	"DouDizhuServer/logger"
+)
 
 func main() {
-	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
-	logger.Info("Hello everybody.")
+	// 初始化日志
+	if err := logger.InitLoggerWithConfig("config/log.yaml"); err != nil {
+		panic(err)
+	}
+	logger.Info("日志系统初始化成功")
 }
