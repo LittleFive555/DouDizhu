@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.30.2
-// source: Message.proto
+// source: GameMsg.proto
 
 package protodef
 
@@ -23,13 +23,14 @@ const (
 
 type GameMsgHeader struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	MessageId     uint32                 `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GameMsgHeader) Reset() {
 	*x = GameMsgHeader{}
-	mi := &file_Message_proto_msgTypes[0]
+	mi := &file_GameMsg_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -41,7 +42,7 @@ func (x *GameMsgHeader) String() string {
 func (*GameMsgHeader) ProtoMessage() {}
 
 func (x *GameMsgHeader) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[0]
+	mi := &file_GameMsg_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -54,7 +55,14 @@ func (x *GameMsgHeader) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameMsgHeader.ProtoReflect.Descriptor instead.
 func (*GameMsgHeader) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{0}
+	return file_GameMsg_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GameMsgHeader) GetMessageId() uint32 {
+	if x != nil {
+		return x.MessageId
+	}
+	return 0
 }
 
 type GameMsgReqPacket struct {
@@ -70,7 +78,7 @@ type GameMsgReqPacket struct {
 
 func (x *GameMsgReqPacket) Reset() {
 	*x = GameMsgReqPacket{}
-	mi := &file_Message_proto_msgTypes[1]
+	mi := &file_GameMsg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -82,7 +90,7 @@ func (x *GameMsgReqPacket) String() string {
 func (*GameMsgReqPacket) ProtoMessage() {}
 
 func (x *GameMsgReqPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[1]
+	mi := &file_GameMsg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -95,7 +103,7 @@ func (x *GameMsgReqPacket) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameMsgReqPacket.ProtoReflect.Descriptor instead.
 func (*GameMsgReqPacket) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{1}
+	return file_GameMsg_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GameMsgReqPacket) GetHeader() *GameMsgHeader {
@@ -145,7 +153,7 @@ type GameMsgRespPacket struct {
 
 func (x *GameMsgRespPacket) Reset() {
 	*x = GameMsgRespPacket{}
-	mi := &file_Message_proto_msgTypes[2]
+	mi := &file_GameMsg_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -157,7 +165,7 @@ func (x *GameMsgRespPacket) String() string {
 func (*GameMsgRespPacket) ProtoMessage() {}
 
 func (x *GameMsgRespPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[2]
+	mi := &file_GameMsg_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -170,7 +178,7 @@ func (x *GameMsgRespPacket) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameMsgRespPacket.ProtoReflect.Descriptor instead.
 func (*GameMsgRespPacket) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{2}
+	return file_GameMsg_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GameMsgRespPacket) GetHeader() *GameMsgHeader {
@@ -221,144 +229,13 @@ func (*GameMsgRespPacket_Error) isGameMsgRespPacket_Content() {}
 
 func (*GameMsgRespPacket_ChatMsg) isGameMsgRespPacket_Content() {}
 
-type ChatMsgRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
+var File_GameMsg_proto protoreflect.FileDescriptor
 
-func (x *ChatMsgRequest) Reset() {
-	*x = ChatMsgRequest{}
-	mi := &file_Message_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ChatMsgRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ChatMsgRequest) ProtoMessage() {}
-
-func (x *ChatMsgRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ChatMsgRequest.ProtoReflect.Descriptor instead.
-func (*ChatMsgRequest) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *ChatMsgRequest) GetContent() string {
-	if x != nil {
-		return x.Content
-	}
-	return ""
-}
-
-type ChatMsgResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ChatMsgResponse) Reset() {
-	*x = ChatMsgResponse{}
-	mi := &file_Message_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ChatMsgResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ChatMsgResponse) ProtoMessage() {}
-
-func (x *ChatMsgResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ChatMsgResponse.ProtoReflect.Descriptor instead.
-func (*ChatMsgResponse) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{4}
-}
-
-type Error struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Error) Reset() {
-	*x = Error{}
-	mi := &file_Message_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Error) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Error) ProtoMessage() {}
-
-func (x *Error) ProtoReflect() protoreflect.Message {
-	mi := &file_Message_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Error.ProtoReflect.Descriptor instead.
-func (*Error) Descriptor() ([]byte, []int) {
-	return file_Message_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *Error) GetCode() string {
-	if x != nil {
-		return x.Code
-	}
-	return ""
-}
-
-func (x *Error) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
-var File_Message_proto protoreflect.FileDescriptor
-
-const file_Message_proto_rawDesc = "" +
+const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rMessage.proto\x12\bDouDizhu\"\x0f\n" +
-	"\rGameMsgHeader\"\x84\x01\n" +
+	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\"-\n" +
+	"\rGameMsgHeader\x12\x1c\n" +
+	"\tmessageId\x18\x01 \x01(\rR\tmessageId\"\x84\x01\n" +
 	"\x10GameMsgReqPacket\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.DouDizhu.GameMsgHeaderR\x06header\x124\n" +
 	"\achatMsg\x18\x02 \x01(\v2\x18.DouDizhu.ChatMsgRequestH\x00R\achatMsgB\t\n" +
@@ -367,41 +244,35 @@ const file_Message_proto_rawDesc = "" +
 	"\x06header\x18\x01 \x01(\v2\x17.DouDizhu.GameMsgHeaderR\x06header\x12'\n" +
 	"\x05error\x18\x02 \x01(\v2\x0f.DouDizhu.ErrorH\x00R\x05error\x125\n" +
 	"\achatMsg\x18\x03 \x01(\v2\x19.DouDizhu.ChatMsgResponseH\x00R\achatMsgB\t\n" +
-	"\acontent\"*\n" +
-	"\x0eChatMsgRequest\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"\x11\n" +
-	"\x0fChatMsgResponse\"5\n" +
-	"\x05Error\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessageB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\acontentB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
-	file_Message_proto_rawDescOnce sync.Once
-	file_Message_proto_rawDescData []byte
+	file_GameMsg_proto_rawDescOnce sync.Once
+	file_GameMsg_proto_rawDescData []byte
 )
 
-func file_Message_proto_rawDescGZIP() []byte {
-	file_Message_proto_rawDescOnce.Do(func() {
-		file_Message_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_Message_proto_rawDesc), len(file_Message_proto_rawDesc)))
+func file_GameMsg_proto_rawDescGZIP() []byte {
+	file_GameMsg_proto_rawDescOnce.Do(func() {
+		file_GameMsg_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_GameMsg_proto_rawDesc), len(file_GameMsg_proto_rawDesc)))
 	})
-	return file_Message_proto_rawDescData
+	return file_GameMsg_proto_rawDescData
 }
 
-var file_Message_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_Message_proto_goTypes = []any{
+var file_GameMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_GameMsg_proto_goTypes = []any{
 	(*GameMsgHeader)(nil),     // 0: DouDizhu.GameMsgHeader
 	(*GameMsgReqPacket)(nil),  // 1: DouDizhu.GameMsgReqPacket
 	(*GameMsgRespPacket)(nil), // 2: DouDizhu.GameMsgRespPacket
 	(*ChatMsgRequest)(nil),    // 3: DouDizhu.ChatMsgRequest
-	(*ChatMsgResponse)(nil),   // 4: DouDizhu.ChatMsgResponse
-	(*Error)(nil),             // 5: DouDizhu.Error
+	(*Error)(nil),             // 4: DouDizhu.Error
+	(*ChatMsgResponse)(nil),   // 5: DouDizhu.ChatMsgResponse
 }
-var file_Message_proto_depIdxs = []int32{
+var file_GameMsg_proto_depIdxs = []int32{
 	0, // 0: DouDizhu.GameMsgReqPacket.header:type_name -> DouDizhu.GameMsgHeader
 	3, // 1: DouDizhu.GameMsgReqPacket.chatMsg:type_name -> DouDizhu.ChatMsgRequest
 	0, // 2: DouDizhu.GameMsgRespPacket.header:type_name -> DouDizhu.GameMsgHeader
-	5, // 3: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
-	4, // 4: DouDizhu.GameMsgRespPacket.chatMsg:type_name -> DouDizhu.ChatMsgResponse
+	4, // 3: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
+	5, // 4: DouDizhu.GameMsgRespPacket.chatMsg:type_name -> DouDizhu.ChatMsgResponse
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
@@ -409,15 +280,17 @@ var file_Message_proto_depIdxs = []int32{
 	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_Message_proto_init() }
-func file_Message_proto_init() {
-	if File_Message_proto != nil {
+func init() { file_GameMsg_proto_init() }
+func file_GameMsg_proto_init() {
+	if File_GameMsg_proto != nil {
 		return
 	}
-	file_Message_proto_msgTypes[1].OneofWrappers = []any{
+	file_Error_proto_init()
+	file_ChatMsg_proto_init()
+	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
 		(*GameMsgReqPacket_ChatMsg)(nil),
 	}
-	file_Message_proto_msgTypes[2].OneofWrappers = []any{
+	file_GameMsg_proto_msgTypes[2].OneofWrappers = []any{
 		(*GameMsgRespPacket_Error)(nil),
 		(*GameMsgRespPacket_ChatMsg)(nil),
 	}
@@ -425,17 +298,17 @@ func file_Message_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_Message_proto_rawDesc), len(file_Message_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_GameMsg_proto_rawDesc), len(file_GameMsg_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_Message_proto_goTypes,
-		DependencyIndexes: file_Message_proto_depIdxs,
-		MessageInfos:      file_Message_proto_msgTypes,
+		GoTypes:           file_GameMsg_proto_goTypes,
+		DependencyIndexes: file_GameMsg_proto_depIdxs,
+		MessageInfos:      file_GameMsg_proto_msgTypes,
 	}.Build()
-	File_Message_proto = out.File
-	file_Message_proto_goTypes = nil
-	file_Message_proto_depIdxs = nil
+	File_GameMsg_proto = out.File
+	file_GameMsg_proto_goTypes = nil
+	file_GameMsg_proto_depIdxs = nil
 }

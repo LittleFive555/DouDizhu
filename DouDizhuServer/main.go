@@ -3,7 +3,6 @@ package main
 import (
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
-	"DouDizhuServer/network/protodef"
 )
 
 func main() {
@@ -20,15 +19,5 @@ func main() {
 		logger.ErrorWith("服务器启动失败", "error", err)
 		panic(err)
 	}
-}
-
-func handleChatMessage(req *protodef.GameMsgReqPacket, remoteAddr string) (*protodef.GameMsgRespPacket, error) {
-	logger.InfoWith("收到聊天消息", "remote_addr", remoteAddr, "content", req.GetChatMsg().GetContent())
-
-	return &protodef.GameMsgRespPacket{
-		Header: &protodef.GameMsgHeader{},
-		Content: &protodef.GameMsgRespPacket_ChatMsg{
-			ChatMsg: &protodef.ChatMsgResponse{},
-		},
-	}, nil
+	defer server.Stop()
 }

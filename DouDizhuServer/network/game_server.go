@@ -1,21 +1,22 @@
 package network
 
 import (
-	"DouDizhuServer/network/gameplay"
+	"DouDizhuServer/gameplay"
 	"DouDizhuServer/network/handler"
 	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/network/tcp"
 	"reflect"
 )
 
 type GameServer struct {
-	server *TCPServer
+	server *tcp.TCPServer
 }
 
 func NewGameServer(addr string) *GameServer {
 	messageHandler := handler.NewProtoHandler()
 	messageHandler.RegisterHandler(reflect.TypeOf(protodef.GameMsgReqPacket_ChatMsg{}), gameplay.HandleChatMessage)
 	return &GameServer{
-		server: NewTCPServer(addr, messageHandler),
+		server: tcp.NewTCPServer(addr, messageHandler, tcp.NewLengthPrefixConnIO()),
 	}
 }
 

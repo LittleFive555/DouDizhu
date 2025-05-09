@@ -1,0 +1,10 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+message Error {
+	string code = 1;
+	string message = 2;
+}

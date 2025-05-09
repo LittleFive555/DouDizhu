@@ -1,0 +1,16 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+import "Extend.proto";
+
+message ChatMsgRequest {
+	option (paired_with) = "ChatMsgResponse";
+	string content = 1;
+}
+
+message ChatMsgResponse {
+	option (paired_with) = "ChatMsgRequest";
+}

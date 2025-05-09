@@ -4,11 +4,12 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
+import "Error.proto";
+import "ChatMsg.proto";
+
 message GameMsgHeader {
 	uint32 messageId = 1;
 }
-
-
 
 message GameMsgReqPacket {
 	GameMsgHeader header = 1;
@@ -23,24 +24,4 @@ message GameMsgRespPacket {
 		Error error = 2;
 		ChatMsgResponse chatMsg = 3;
 	}
-}
-
-
-
-
-
-message ChatMsgRequest {
-	string content = 1;
-}
-
-message ChatMsgResponse {
-}
-
-
-
-
-
-message Error {
-	string code = 1;
-	string message = 2;
 }

@@ -1,4 +1,4 @@
-package network
+package tcp
 
 import (
 	"DouDizhuServer/logger"
@@ -11,14 +11,16 @@ import (
 type TCPServer struct {
 	addr           string
 	listener       net.Listener
+	connIO         ConnIO
 	messageHandler handler.Handler
 }
 
 // NewTCPServer 创建一个新的TCP服务器实例
-func NewTCPServer(addr string, messageHandler handler.Handler) *TCPServer {
+func NewTCPServer(addr string, messageHandler handler.Handler, connIO ConnIO) *TCPServer {
 	return &TCPServer{
 		addr:           addr,
 		messageHandler: messageHandler,
+		connIO:         connIO,
 	}
 }
 
@@ -57,9 +59,8 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 	remoteAddr := conn.RemoteAddr().String()
 	logger.InfoWith("新连接", "remote_addr", remoteAddr)
 
-	buf := make([]byte, 1024)
 	for {
-		n, err := conn.Read(buf)
+		message, err := s.connIO.Read(conn)
 		if err != nil {
 			if err.Error() == "EOF" {
 				logger.InfoWith("客户端正常断开连接", "remote_addr", remoteAddr)
@@ -70,11 +71,11 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 		}
 
 		// 使用消息处理器处理数据
-		resp, err := s.messageHandler.HandleMessage(buf[:n])
+		resp, err := s.messageHandler.HandleMessage(message)
 		if err != nil {
 			logger.ErrorWith("处理消息失败", "remote_addr", remoteAddr, "error", err)
 			continue
 		}
-		conn.Write(resp)
+		s.connIO.Write(conn, resp)
 	}
 }

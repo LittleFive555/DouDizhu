@@ -1,0 +1,11 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MessageOptions {
+  string paired_with = 51234;
+}
