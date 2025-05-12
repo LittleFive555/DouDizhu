@@ -65,12 +65,12 @@ namespace Network
             messageReadWriter = new LengthPrefixReadWriter();
         }
 
-        public void Connect(string serverIp, int port)
+        public async Task ConnectAsync(string serverIp, int port)
         {
             try
             {
                 tcpClient = new TcpClient();
-                tcpClient.Connect(serverIp, port);
+                await tcpClient.ConnectAsync(serverIp, port);
                 networkStream = tcpClient.GetStream();
                 isConnected = true;
                 Debug.Log("TCP连接已建立");

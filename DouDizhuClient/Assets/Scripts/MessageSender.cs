@@ -18,7 +18,7 @@ public class MessageSender : MonoBehaviour
         int port = 8080;
 
         // 连接服务器
-        NetworkManager.Instance.Connect(serverIp, port);
+        NetworkManager.Instance.ConnectAsync(serverIp, port);
 
         // 设置按钮点击事件
         sendButton.onClick.AddListener(SendMessage);
