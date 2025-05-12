@@ -1,9 +1,10 @@
 using System;
 using System.Net.Sockets;
 using UnityEngine;
+using Network.Tcp;
 using Network.Proto;
 using Google.Protobuf;
-using Network.Tcp;
+using System.Threading.Tasks;
 
 namespace Network
 {
@@ -97,12 +98,12 @@ namespace Network
             Debug.Log("TCP连接已关闭");
         }
 
-        public NetworkResult<CommonResponse> Request<TReq>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        public async Task<NetworkResult<CommonResponse>> RequestAsync<TReq>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
-            return Request<TReq, CommonResponse>(requestType, request);
+            return await RequestAsync<TReq, CommonResponse>(requestType, request);
         }
 
-        public NetworkResult<TResp> Request<TReq, TResp>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage
+        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage
         {
             if (!isConnected || tcpClient == null || !tcpClient.Connected)
                 return NetworkResult<TResp>.Failure("TCP连接未建立，无法发送消息");
@@ -110,11 +111,11 @@ namespace Network
             try
             {
                 GameMsgReqPacket gameMsgReqPacket = PackRequest(requestType, request);
-                messageReadWriter.WriteTo(networkStream, gameMsgReqPacket.ToByteArray());
+                await messageReadWriter.WriteTo(networkStream, gameMsgReqPacket.ToByteArray());
                 Debug.Log("消息已发送: " + request.ToString());
 
                 // 读取响应数据
-                byte[] responseBuffer = messageReadWriter.ReadFrom(networkStream);
+                byte[] responseBuffer = await messageReadWriter.ReadFrom(networkStream);
                 if (responseBuffer == null || responseBuffer.Length == 0)
                     return NetworkResult<TResp>.Failure("未收到服务器响应");
 
@@ -132,6 +133,11 @@ namespace Network
             {
                 return NetworkResult<TResp>.Failure($"发送消息时发生错误: {ex.Message}");
             }
+        }
+
+        public void OnNotified(GameNotificationPacket notification)
+        {
+
         }
 
         private GameMsgReqPacket PackRequest<TReq>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage

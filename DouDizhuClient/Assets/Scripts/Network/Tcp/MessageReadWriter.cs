@@ -1,10 +1,11 @@
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Network.Tcp
 {
     public interface MessageReadWriter
     {
-        byte[] ReadFrom(NetworkStream networkStream);
-        void WriteTo(NetworkStream networkStream, byte[] messageBytes);
+        Task<byte[]> ReadFrom(NetworkStream networkStream);
+        Task WriteTo(NetworkStream networkStream, byte[] messageBytes);
     }
 }

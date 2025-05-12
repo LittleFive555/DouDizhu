@@ -29,12 +29,12 @@ public class MessageSender : MonoBehaviour
         SendMessageImpl(messageInput.text);
     }
 
-    private void SendMessageImpl(string message)
+    private async void SendMessageImpl(string message)
     {
         if (string.IsNullOrEmpty(message))
             return;
 
-        var response = NetworkManager.Instance.Request(GameMsgReqPacket.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
+        var response = await NetworkManager.Instance.RequestAsync(GameMsgReqPacket.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
         if (response.IsSuccess)
         {
             messageInput.text = ""; // 清空输入框
