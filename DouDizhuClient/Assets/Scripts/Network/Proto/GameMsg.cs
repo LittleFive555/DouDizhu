@@ -25,22 +25,26 @@ namespace Network.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg1HYW1lTXNnLnByb3RvEghEb3VEaXpodRoLRXJyb3IucHJvdG8aDUNoYXRN",
-            "c2cucHJvdG8iIgoNR2FtZU1zZ0hlYWRlchIRCgltZXNzYWdlSWQYASABKA0i",
-            "cwoQR2FtZU1zZ1JlcVBhY2tldBInCgZoZWFkZXIYASABKAsyFy5Eb3VEaXpo",
-            "dS5HYW1lTXNnSGVhZGVyEisKB2NoYXRNc2cYAiABKAsyGC5Eb3VEaXpodS5D",
-            "aGF0TXNnUmVxdWVzdEgAQgkKB2NvbnRlbnQinQEKEUdhbWVNc2dSZXNwUGFj",
-            "a2V0EicKBmhlYWRlchgBIAEoCzIXLkRvdURpemh1LkdhbWVNc2dIZWFkZXIS",
-            "IAoFZXJyb3IYAiABKAsyDy5Eb3VEaXpodS5FcnJvckgAEjIKDmNvbW1vblJl",
-            "c3BvbnNlGAMgASgLMhguRG91RGl6aHUuQ29tbW9uUmVzcG9uc2VIAEIJCgdj",
-            "b250ZW50IlUKFkdhbWVOb3RpZmljYXRpb25QYWNrZXQSMAoHY2hhdE1zZxgB",
-            "IAEoCzIdLkRvdURpemh1LkNoYXRNc2dOb3RpZmljYXRpb25IAEIJCgdjb250",
-            "ZW50IhAKDkNvbW1vblJlc3BvbnNlQiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1O",
-            "ZXR3b3JrLlByb3RvYgZwcm90bzM="));
+            "c2cucHJvdG8iIgoNR2FtZU1zZ0hlYWRlchIRCgltZXNzYWdlSWQYASABKAMi",
+            "dAoRR2FtZUNsaWVudE1lc3NhZ2USJwoGaGVhZGVyGAEgASgLMhcuRG91RGl6",
+            "aHUuR2FtZU1zZ0hlYWRlchIrCgdjaGF0TXNnGAIgASgLMhguRG91RGl6aHUu",
+            "Q2hhdE1zZ1JlcXVlc3RIAEIJCgdjb250ZW50IokBChFHYW1lU2VydmVyTWVz",
+            "c2FnZRIvCghyZXNwb25zZRgBIAEoCzIbLkRvdURpemh1LkdhbWVNc2dSZXNw",
+            "UGFja2V0SAASOAoMbm90aWZpY2F0aW9uGAIgASgLMiAuRG91RGl6aHUuR2Ft",
+            "ZU5vdGlmaWNhdGlvblBhY2tldEgAQgkKB2NvbnRlbnQinQEKEUdhbWVNc2dS",
+            "ZXNwUGFja2V0EicKBmhlYWRlchgBIAEoCzIXLkRvdURpemh1LkdhbWVNc2dI",
+            "ZWFkZXISIAoFZXJyb3IYAiABKAsyDy5Eb3VEaXpodS5FcnJvckgAEjIKDmNv",
+            "bW1vblJlc3BvbnNlGAMgASgLMhguRG91RGl6aHUuQ29tbW9uUmVzcG9uc2VI",
+            "AEIJCgdjb250ZW50IlUKFkdhbWVOb3RpZmljYXRpb25QYWNrZXQSMAoHY2hh",
+            "dE1zZxgBIAEoCzIdLkRvdURpemh1LkNoYXRNc2dOb3RpZmljYXRpb25IAEIJ",
+            "Cgdjb250ZW50IhAKDkNvbW1vblJlc3BvbnNlQiJaEG5ldHdvcmsvcHJvdG9k",
+            "ZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Network.Proto.ErrorReflection.Descriptor, global::Network.Proto.ChatMsgReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgHeader), global::Network.Proto.GameMsgHeader.Parser, new[]{ "MessageId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgReqPacket), global::Network.Proto.GameMsgReqPacket.Parser, new[]{ "Header", "ChatMsg" }, new[]{ "Content" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameClientMessage), global::Network.Proto.GameClientMessage.Parser, new[]{ "Header", "ChatMsg" }, new[]{ "Content" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameServerMessage), global::Network.Proto.GameServerMessage.Parser, new[]{ "Response", "Notification" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgRespPacket), global::Network.Proto.GameMsgRespPacket.Parser, new[]{ "Header", "Error", "CommonResponse" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameNotificationPacket), global::Network.Proto.GameNotificationPacket.Parser, new[]{ "ChatMsg" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.CommonResponse), global::Network.Proto.CommonResponse.Parser, null, null, null, null, null)
@@ -97,10 +101,13 @@ namespace Network.Proto {
 
     /// <summary>Field number for the "messageId" field.</summary>
     public const int MessageIdFieldNumber = 1;
-    private uint messageId_;
+    private long messageId_;
+    /// <summary>
+    /// 用于标识请求的唯一id
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public uint MessageId {
+    public long MessageId {
       get { return messageId_; }
       set {
         messageId_ = value;
@@ -130,7 +137,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (MessageId != 0) hash ^= MessageId.GetHashCode();
+      if (MessageId != 0L) hash ^= MessageId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -149,9 +156,9 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (MessageId != 0) {
+      if (MessageId != 0L) {
         output.WriteRawTag(8);
-        output.WriteUInt32(MessageId);
+        output.WriteInt64(MessageId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -163,9 +170,9 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (MessageId != 0) {
+      if (MessageId != 0L) {
         output.WriteRawTag(8);
-        output.WriteUInt32(MessageId);
+        output.WriteInt64(MessageId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -177,8 +184,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (MessageId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MessageId);
+      if (MessageId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(MessageId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -192,7 +199,7 @@ namespace Network.Proto {
       if (other == null) {
         return;
       }
-      if (other.MessageId != 0) {
+      if (other.MessageId != 0L) {
         MessageId = other.MessageId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -215,7 +222,7 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            MessageId = input.ReadUInt32();
+            MessageId = input.ReadInt64();
             break;
           }
         }
@@ -238,7 +245,7 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            MessageId = input.ReadUInt32();
+            MessageId = input.ReadInt64();
             break;
           }
         }
@@ -249,16 +256,16 @@ namespace Network.Proto {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class GameMsgReqPacket : pb::IMessage<GameMsgReqPacket>
+  public sealed partial class GameClientMessage : pb::IMessage<GameClientMessage>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<GameMsgReqPacket> _parser = new pb::MessageParser<GameMsgReqPacket>(() => new GameMsgReqPacket());
+    private static readonly pb::MessageParser<GameClientMessage> _parser = new pb::MessageParser<GameClientMessage>(() => new GameClientMessage());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<GameMsgReqPacket> Parser { get { return _parser; } }
+    public static pb::MessageParser<GameClientMessage> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -274,7 +281,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GameMsgReqPacket() {
+    public GameClientMessage() {
       OnConstruction();
     }
 
@@ -282,7 +289,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GameMsgReqPacket(GameMsgReqPacket other) : this() {
+    public GameClientMessage(GameClientMessage other) : this() {
       header_ = other.header_ != null ? other.header_.Clone() : null;
       switch (other.ContentCase) {
         case ContentOneofCase.ChatMsg:
@@ -295,8 +302,8 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public GameMsgReqPacket Clone() {
-      return new GameMsgReqPacket(this);
+    public GameClientMessage Clone() {
+      return new GameClientMessage(this);
     }
 
     /// <summary>Field number for the "header" field.</summary>
@@ -346,12 +353,12 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as GameMsgReqPacket);
+      return Equals(other as GameClientMessage);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(GameMsgReqPacket other) {
+    public bool Equals(GameClientMessage other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -439,7 +446,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(GameMsgReqPacket other) {
+    public void MergeFrom(GameClientMessage other) {
       if (other == null) {
         return;
       }
@@ -536,6 +543,300 @@ namespace Network.Proto {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class GameServerMessage : pb::IMessage<GameServerMessage>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<GameServerMessage> _parser = new pb::MessageParser<GameServerMessage>(() => new GameServerMessage());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<GameServerMessage> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GameServerMessage() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GameServerMessage(GameServerMessage other) : this() {
+      switch (other.ContentCase) {
+        case ContentOneofCase.Response:
+          Response = other.Response.Clone();
+          break;
+        case ContentOneofCase.Notification:
+          Notification = other.Notification.Clone();
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GameServerMessage Clone() {
+      return new GameServerMessage(this);
+    }
+
+    /// <summary>Field number for the "response" field.</summary>
+    public const int ResponseFieldNumber = 1;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.GameMsgRespPacket Response {
+      get { return contentCase_ == ContentOneofCase.Response ? (global::Network.Proto.GameMsgRespPacket) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.Response;
+      }
+    }
+
+    /// <summary>Field number for the "notification" field.</summary>
+    public const int NotificationFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.GameNotificationPacket Notification {
+      get { return contentCase_ == ContentOneofCase.Notification ? (global::Network.Proto.GameNotificationPacket) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.Notification;
+      }
+    }
+
+    private object content_;
+    /// <summary>Enum of possible cases for the "content" oneof.</summary>
+    public enum ContentOneofCase {
+      None = 0,
+      Response = 1,
+      Notification = 2,
+    }
+    private ContentOneofCase contentCase_ = ContentOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ContentOneofCase ContentCase {
+      get { return contentCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearContent() {
+      contentCase_ = ContentOneofCase.None;
+      content_ = null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as GameServerMessage);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(GameServerMessage other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Response, other.Response)) return false;
+      if (!object.Equals(Notification, other.Notification)) return false;
+      if (ContentCase != other.ContentCase) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (contentCase_ == ContentOneofCase.Response) hash ^= Response.GetHashCode();
+      if (contentCase_ == ContentOneofCase.Notification) hash ^= Notification.GetHashCode();
+      hash ^= (int) contentCase_;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (contentCase_ == ContentOneofCase.Response) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Response);
+      }
+      if (contentCase_ == ContentOneofCase.Notification) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Notification);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (contentCase_ == ContentOneofCase.Response) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Response);
+      }
+      if (contentCase_ == ContentOneofCase.Notification) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Notification);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (contentCase_ == ContentOneofCase.Response) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Response);
+      }
+      if (contentCase_ == ContentOneofCase.Notification) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Notification);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(GameServerMessage other) {
+      if (other == null) {
+        return;
+      }
+      switch (other.ContentCase) {
+        case ContentOneofCase.Response:
+          if (Response == null) {
+            Response = new global::Network.Proto.GameMsgRespPacket();
+          }
+          Response.MergeFrom(other.Response);
+          break;
+        case ContentOneofCase.Notification:
+          if (Notification == null) {
+            Notification = new global::Network.Proto.GameNotificationPacket();
+          }
+          Notification.MergeFrom(other.Notification);
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            global::Network.Proto.GameMsgRespPacket subBuilder = new global::Network.Proto.GameMsgRespPacket();
+            if (contentCase_ == ContentOneofCase.Response) {
+              subBuilder.MergeFrom(Response);
+            }
+            input.ReadMessage(subBuilder);
+            Response = subBuilder;
+            break;
+          }
+          case 18: {
+            global::Network.Proto.GameNotificationPacket subBuilder = new global::Network.Proto.GameNotificationPacket();
+            if (contentCase_ == ContentOneofCase.Notification) {
+              subBuilder.MergeFrom(Notification);
+            }
+            input.ReadMessage(subBuilder);
+            Notification = subBuilder;
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            global::Network.Proto.GameMsgRespPacket subBuilder = new global::Network.Proto.GameMsgRespPacket();
+            if (contentCase_ == ContentOneofCase.Response) {
+              subBuilder.MergeFrom(Response);
+            }
+            input.ReadMessage(subBuilder);
+            Response = subBuilder;
+            break;
+          }
+          case 18: {
+            global::Network.Proto.GameNotificationPacket subBuilder = new global::Network.Proto.GameNotificationPacket();
+            if (contentCase_ == ContentOneofCase.Notification) {
+              subBuilder.MergeFrom(Notification);
+            }
+            input.ReadMessage(subBuilder);
+            Notification = subBuilder;
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GameMsgRespPacket : pb::IMessage<GameMsgRespPacket>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -550,7 +851,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -890,7 +1191,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1134,7 +1435,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Network.Proto.GameMsgReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

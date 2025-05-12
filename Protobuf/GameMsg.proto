@@ -8,13 +8,21 @@ import "Error.proto";
 import "ChatMsg.proto";
 
 message GameMsgHeader {
-	uint32 messageId = 1;
+	// 用于标识请求的唯一id
+	int64 messageId = 1;
 }
 
-message GameMsgReqPacket {
+message GameClientMessage {
 	GameMsgHeader header = 1;
 	oneof content {
 		ChatMsgRequest chatMsg = 2;
+	}
+}
+
+message GameServerMessage {
+	oneof content {
+		GameMsgRespPacket response = 1;
+		GameNotificationPacket notification = 2;
 	}
 }
 

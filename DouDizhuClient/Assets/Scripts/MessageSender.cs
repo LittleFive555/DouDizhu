@@ -18,7 +18,7 @@ public class MessageSender : MonoBehaviour
         int port = 8080;
 
         // 连接服务器
-        NetworkManager.Instance.ConnectAsync(serverIp, port);
+        _ = NetworkManager.Instance.ConnectAsync(serverIp, port);
 
         // 设置按钮点击事件
         sendButton.onClick.AddListener(SendMessage);
@@ -34,7 +34,7 @@ public class MessageSender : MonoBehaviour
         if (string.IsNullOrEmpty(message))
             return;
 
-        var response = await NetworkManager.Instance.RequestAsync(GameMsgReqPacket.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
+        var response = await NetworkManager.Instance.RequestAsync(GameClientMessage.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
         if (response.IsSuccess)
         {
             messageInput.text = ""; // 清空输入框

@@ -22,8 +22,9 @@ const (
 )
 
 type GameMsgHeader struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	MessageId     uint32                 `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 用于标识请求的唯一id
+	MessageId     int64 `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -58,38 +59,38 @@ func (*GameMsgHeader) Descriptor() ([]byte, []int) {
 	return file_GameMsg_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GameMsgHeader) GetMessageId() uint32 {
+func (x *GameMsgHeader) GetMessageId() int64 {
 	if x != nil {
 		return x.MessageId
 	}
 	return 0
 }
 
-type GameMsgReqPacket struct {
+type GameClientMessage struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
 	Header *GameMsgHeader         `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
 	// Types that are valid to be assigned to Content:
 	//
-	//	*GameMsgReqPacket_ChatMsg
-	Content       isGameMsgReqPacket_Content `protobuf_oneof:"content"`
+	//	*GameClientMessage_ChatMsg
+	Content       isGameClientMessage_Content `protobuf_oneof:"content"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GameMsgReqPacket) Reset() {
-	*x = GameMsgReqPacket{}
+func (x *GameClientMessage) Reset() {
+	*x = GameClientMessage{}
 	mi := &file_GameMsg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GameMsgReqPacket) String() string {
+func (x *GameClientMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GameMsgReqPacket) ProtoMessage() {}
+func (*GameClientMessage) ProtoMessage() {}
 
-func (x *GameMsgReqPacket) ProtoReflect() protoreflect.Message {
+func (x *GameClientMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_GameMsg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -101,43 +102,125 @@ func (x *GameMsgReqPacket) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GameMsgReqPacket.ProtoReflect.Descriptor instead.
-func (*GameMsgReqPacket) Descriptor() ([]byte, []int) {
+// Deprecated: Use GameClientMessage.ProtoReflect.Descriptor instead.
+func (*GameClientMessage) Descriptor() ([]byte, []int) {
 	return file_GameMsg_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GameMsgReqPacket) GetHeader() *GameMsgHeader {
+func (x *GameClientMessage) GetHeader() *GameMsgHeader {
 	if x != nil {
 		return x.Header
 	}
 	return nil
 }
 
-func (x *GameMsgReqPacket) GetContent() isGameMsgReqPacket_Content {
+func (x *GameClientMessage) GetContent() isGameClientMessage_Content {
 	if x != nil {
 		return x.Content
 	}
 	return nil
 }
 
-func (x *GameMsgReqPacket) GetChatMsg() *ChatMsgRequest {
+func (x *GameClientMessage) GetChatMsg() *ChatMsgRequest {
 	if x != nil {
-		if x, ok := x.Content.(*GameMsgReqPacket_ChatMsg); ok {
+		if x, ok := x.Content.(*GameClientMessage_ChatMsg); ok {
 			return x.ChatMsg
 		}
 	}
 	return nil
 }
 
-type isGameMsgReqPacket_Content interface {
-	isGameMsgReqPacket_Content()
+type isGameClientMessage_Content interface {
+	isGameClientMessage_Content()
 }
 
-type GameMsgReqPacket_ChatMsg struct {
+type GameClientMessage_ChatMsg struct {
 	ChatMsg *ChatMsgRequest `protobuf:"bytes,2,opt,name=chatMsg,proto3,oneof"`
 }
 
-func (*GameMsgReqPacket_ChatMsg) isGameMsgReqPacket_Content() {}
+func (*GameClientMessage_ChatMsg) isGameClientMessage_Content() {}
+
+type GameServerMessage struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Content:
+	//
+	//	*GameServerMessage_Response
+	//	*GameServerMessage_Notification
+	Content       isGameServerMessage_Content `protobuf_oneof:"content"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GameServerMessage) Reset() {
+	*x = GameServerMessage{}
+	mi := &file_GameMsg_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GameServerMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GameServerMessage) ProtoMessage() {}
+
+func (x *GameServerMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_GameMsg_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GameServerMessage.ProtoReflect.Descriptor instead.
+func (*GameServerMessage) Descriptor() ([]byte, []int) {
+	return file_GameMsg_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GameServerMessage) GetContent() isGameServerMessage_Content {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *GameServerMessage) GetResponse() *GameMsgRespPacket {
+	if x != nil {
+		if x, ok := x.Content.(*GameServerMessage_Response); ok {
+			return x.Response
+		}
+	}
+	return nil
+}
+
+func (x *GameServerMessage) GetNotification() *GameNotificationPacket {
+	if x != nil {
+		if x, ok := x.Content.(*GameServerMessage_Notification); ok {
+			return x.Notification
+		}
+	}
+	return nil
+}
+
+type isGameServerMessage_Content interface {
+	isGameServerMessage_Content()
+}
+
+type GameServerMessage_Response struct {
+	Response *GameMsgRespPacket `protobuf:"bytes,1,opt,name=response,proto3,oneof"`
+}
+
+type GameServerMessage_Notification struct {
+	Notification *GameNotificationPacket `protobuf:"bytes,2,opt,name=notification,proto3,oneof"`
+}
+
+func (*GameServerMessage_Response) isGameServerMessage_Content() {}
+
+func (*GameServerMessage_Notification) isGameServerMessage_Content() {}
 
 type GameMsgRespPacket struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
@@ -153,7 +236,7 @@ type GameMsgRespPacket struct {
 
 func (x *GameMsgRespPacket) Reset() {
 	*x = GameMsgRespPacket{}
-	mi := &file_GameMsg_proto_msgTypes[2]
+	mi := &file_GameMsg_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -165,7 +248,7 @@ func (x *GameMsgRespPacket) String() string {
 func (*GameMsgRespPacket) ProtoMessage() {}
 
 func (x *GameMsgRespPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[2]
+	mi := &file_GameMsg_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -178,7 +261,7 @@ func (x *GameMsgRespPacket) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameMsgRespPacket.ProtoReflect.Descriptor instead.
 func (*GameMsgRespPacket) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{2}
+	return file_GameMsg_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GameMsgRespPacket) GetHeader() *GameMsgHeader {
@@ -241,7 +324,7 @@ type GameNotificationPacket struct {
 
 func (x *GameNotificationPacket) Reset() {
 	*x = GameNotificationPacket{}
-	mi := &file_GameMsg_proto_msgTypes[3]
+	mi := &file_GameMsg_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -253,7 +336,7 @@ func (x *GameNotificationPacket) String() string {
 func (*GameNotificationPacket) ProtoMessage() {}
 
 func (x *GameNotificationPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[3]
+	mi := &file_GameMsg_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -266,7 +349,7 @@ func (x *GameNotificationPacket) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GameNotificationPacket.ProtoReflect.Descriptor instead.
 func (*GameNotificationPacket) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{3}
+	return file_GameMsg_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GameNotificationPacket) GetContent() isGameNotificationPacket_Content {
@@ -304,7 +387,7 @@ type CommonResponse struct {
 
 func (x *CommonResponse) Reset() {
 	*x = CommonResponse{}
-	mi := &file_GameMsg_proto_msgTypes[4]
+	mi := &file_GameMsg_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -316,7 +399,7 @@ func (x *CommonResponse) String() string {
 func (*CommonResponse) ProtoMessage() {}
 
 func (x *CommonResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[4]
+	mi := &file_GameMsg_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +412,7 @@ func (x *CommonResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommonResponse.ProtoReflect.Descriptor instead.
 func (*CommonResponse) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{4}
+	return file_GameMsg_proto_rawDescGZIP(), []int{5}
 }
 
 var File_GameMsg_proto protoreflect.FileDescriptor
@@ -338,10 +421,14 @@ const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
 	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\"-\n" +
 	"\rGameMsgHeader\x12\x1c\n" +
-	"\tmessageId\x18\x01 \x01(\rR\tmessageId\"\x84\x01\n" +
-	"\x10GameMsgReqPacket\x12/\n" +
+	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\"\x85\x01\n" +
+	"\x11GameClientMessage\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.DouDizhu.GameMsgHeaderR\x06header\x124\n" +
 	"\achatMsg\x18\x02 \x01(\v2\x18.DouDizhu.ChatMsgRequestH\x00R\achatMsgB\t\n" +
+	"\acontent\"\xa1\x01\n" +
+	"\x11GameServerMessage\x129\n" +
+	"\bresponse\x18\x01 \x01(\v2\x1b.DouDizhu.GameMsgRespPacketH\x00R\bresponse\x12F\n" +
+	"\fnotification\x18\x02 \x01(\v2 .DouDizhu.GameNotificationPacketH\x00R\fnotificationB\t\n" +
 	"\acontent\"\xbc\x01\n" +
 	"\x11GameMsgRespPacket\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.DouDizhu.GameMsgHeaderR\x06header\x12'\n" +
@@ -365,29 +452,32 @@ func file_GameMsg_proto_rawDescGZIP() []byte {
 	return file_GameMsg_proto_rawDescData
 }
 
-var file_GameMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_GameMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_GameMsg_proto_goTypes = []any{
 	(*GameMsgHeader)(nil),          // 0: DouDizhu.GameMsgHeader
-	(*GameMsgReqPacket)(nil),       // 1: DouDizhu.GameMsgReqPacket
-	(*GameMsgRespPacket)(nil),      // 2: DouDizhu.GameMsgRespPacket
-	(*GameNotificationPacket)(nil), // 3: DouDizhu.GameNotificationPacket
-	(*CommonResponse)(nil),         // 4: DouDizhu.CommonResponse
-	(*ChatMsgRequest)(nil),         // 5: DouDizhu.ChatMsgRequest
-	(*Error)(nil),                  // 6: DouDizhu.Error
-	(*ChatMsgNotification)(nil),    // 7: DouDizhu.ChatMsgNotification
+	(*GameClientMessage)(nil),      // 1: DouDizhu.GameClientMessage
+	(*GameServerMessage)(nil),      // 2: DouDizhu.GameServerMessage
+	(*GameMsgRespPacket)(nil),      // 3: DouDizhu.GameMsgRespPacket
+	(*GameNotificationPacket)(nil), // 4: DouDizhu.GameNotificationPacket
+	(*CommonResponse)(nil),         // 5: DouDizhu.CommonResponse
+	(*ChatMsgRequest)(nil),         // 6: DouDizhu.ChatMsgRequest
+	(*Error)(nil),                  // 7: DouDizhu.Error
+	(*ChatMsgNotification)(nil),    // 8: DouDizhu.ChatMsgNotification
 }
 var file_GameMsg_proto_depIdxs = []int32{
-	0, // 0: DouDizhu.GameMsgReqPacket.header:type_name -> DouDizhu.GameMsgHeader
-	5, // 1: DouDizhu.GameMsgReqPacket.chatMsg:type_name -> DouDizhu.ChatMsgRequest
-	0, // 2: DouDizhu.GameMsgRespPacket.header:type_name -> DouDizhu.GameMsgHeader
-	6, // 3: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
-	4, // 4: DouDizhu.GameMsgRespPacket.commonResponse:type_name -> DouDizhu.CommonResponse
-	7, // 5: DouDizhu.GameNotificationPacket.chatMsg:type_name -> DouDizhu.ChatMsgNotification
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0, // 0: DouDizhu.GameClientMessage.header:type_name -> DouDizhu.GameMsgHeader
+	6, // 1: DouDizhu.GameClientMessage.chatMsg:type_name -> DouDizhu.ChatMsgRequest
+	3, // 2: DouDizhu.GameServerMessage.response:type_name -> DouDizhu.GameMsgRespPacket
+	4, // 3: DouDizhu.GameServerMessage.notification:type_name -> DouDizhu.GameNotificationPacket
+	0, // 4: DouDizhu.GameMsgRespPacket.header:type_name -> DouDizhu.GameMsgHeader
+	7, // 5: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
+	5, // 6: DouDizhu.GameMsgRespPacket.commonResponse:type_name -> DouDizhu.CommonResponse
+	8, // 7: DouDizhu.GameNotificationPacket.chatMsg:type_name -> DouDizhu.ChatMsgNotification
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_GameMsg_proto_init() }
@@ -398,13 +488,17 @@ func file_GameMsg_proto_init() {
 	file_Error_proto_init()
 	file_ChatMsg_proto_init()
 	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
-		(*GameMsgReqPacket_ChatMsg)(nil),
+		(*GameClientMessage_ChatMsg)(nil),
 	}
 	file_GameMsg_proto_msgTypes[2].OneofWrappers = []any{
+		(*GameServerMessage_Response)(nil),
+		(*GameServerMessage_Notification)(nil),
+	}
+	file_GameMsg_proto_msgTypes[3].OneofWrappers = []any{
 		(*GameMsgRespPacket_Error)(nil),
 		(*GameMsgRespPacket_CommonResponse)(nil),
 	}
-	file_GameMsg_proto_msgTypes[3].OneofWrappers = []any{
+	file_GameMsg_proto_msgTypes[4].OneofWrappers = []any{
 		(*GameNotificationPacket_ChatMsg)(nil),
 	}
 	type x struct{}
@@ -413,7 +507,7 @@ func file_GameMsg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_GameMsg_proto_rawDesc), len(file_GameMsg_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

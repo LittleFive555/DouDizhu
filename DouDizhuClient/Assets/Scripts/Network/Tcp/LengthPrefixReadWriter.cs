@@ -19,6 +19,10 @@ namespace Network.Tcp
             // 转换为整数
             int length = BitConverter.ToInt32(lengthBytes, 0);
             
+            // 如果服务器返回的长度为0，则表示连接已断开
+            if (length == 0)
+                return null;
+            
             // 读取消息内容
             byte[] messageBytes = new byte[length];
             await networkStream.ReadAsync(messageBytes, 0, length);

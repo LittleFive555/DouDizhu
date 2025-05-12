@@ -11,25 +11,25 @@ import (
 
 // ProtoHandler 实现基于protobuf的消息处理器
 type ProtoHandler struct {
-	handlers map[reflect.Type]func(*protodef.GameMsgReqPacket) (*protodef.GameMsgRespPacket, error)
+	handlers map[reflect.Type]func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)
 }
 
 // NewProtoHandler 创建一个新的ProtoHandler实例
 func NewProtoHandler() *ProtoHandler {
 	return &ProtoHandler{
-		handlers: make(map[reflect.Type]func(*protodef.GameMsgReqPacket) (*protodef.GameMsgRespPacket, error)),
+		handlers: make(map[reflect.Type]func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)),
 	}
 }
 
 // RegisterHandler 注册消息处理器
-func (h *ProtoHandler) RegisterHandler(msgType reflect.Type, handler func(*protodef.GameMsgReqPacket) (*protodef.GameMsgRespPacket, error)) {
+func (h *ProtoHandler) RegisterHandler(msgType reflect.Type, handler func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)) {
 	h.handlers[msgType] = handler
 }
 
 // HandleMessage 实现Handler接口
 func (h *ProtoHandler) HandleMessage(data []byte) ([]byte, error) {
 	// 解析请求包
-	reqPacket := &protodef.GameMsgReqPacket{}
+	reqPacket := &protodef.GameClientMessage{}
 
 	if err := proto.Unmarshal(data, reqPacket); err != nil {
 		logger.ErrorWith("解析消息失败", "error", err)
@@ -58,8 +58,16 @@ func (h *ProtoHandler) HandleMessage(data []byte) ([]byte, error) {
 		return nil, err
 	}
 
+	// 包装为 GameServerMessage
+	respPacket.Header.MessageId = reqPacket.Header.MessageId
+	serverMessage := &protodef.GameServerMessage{
+		Content: &protodef.GameServerMessage_Response{
+			Response: respPacket,
+		},
+	}
+
 	// 序列化响应包
-	responseData, err := proto.Marshal(respPacket)
+	responseData, err := proto.Marshal(serverMessage)
 	if err != nil {
 		logger.ErrorWith("序列化响应失败", "error", err)
 		return nil, err
