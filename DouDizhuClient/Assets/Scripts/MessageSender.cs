@@ -10,6 +10,13 @@ public class MessageSender : MonoBehaviour
     private TMP_InputField messageInput;
     [SerializeField]
     private Button sendButton;
+    [SerializeField]
+    private TMP_InputField IDInput;
+    [SerializeField]
+    private TMP_InputField NameInput;
+
+    public static string ID;
+    public static string Name;
 
     void Start()
     {
@@ -33,6 +40,9 @@ public class MessageSender : MonoBehaviour
     {
         if (string.IsNullOrEmpty(message))
             return;
+        
+        ID = IDInput.text;
+        Name = NameInput.text;
 
         var response = await NetworkManager.Instance.RequestAsync(GameClientMessage.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
         if (response.IsSuccess)

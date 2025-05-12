@@ -2,25 +2,24 @@ package tcp
 
 import (
 	"DouDizhuServer/logger"
-	"DouDizhuServer/network/handler"
 	"fmt"
 	"net"
 )
 
 // TCPServer TCP服务器结构体
 type TCPServer struct {
-	addr           string
-	listener       net.Listener
-	connIO         ConnIO
-	messageHandler handler.Handler
+	addr            string
+	listener        net.Listener
+	connIO          ConnIO
+	conns           map[string]net.Conn
+	messageConsumer func(data []byte) ([]byte, error)
 }
 
 // NewTCPServer 创建一个新的TCP服务器实例
-func NewTCPServer(addr string, messageHandler handler.Handler, connIO ConnIO) *TCPServer {
+func NewTCPServer(addr string, connIO ConnIO) *TCPServer {
 	return &TCPServer{
-		addr:           addr,
-		messageHandler: messageHandler,
-		connIO:         connIO,
+		addr:   addr,
+		connIO: connIO,
 	}
 }
 
@@ -31,6 +30,7 @@ func (s *TCPServer) Start() error {
 		return fmt.Errorf("启动服务器失败: %v", err)
 	}
 	s.listener = ln
+	s.conns = make(map[string]net.Conn)
 
 	logger.InfoWith("TCP服务器启动成功", "addr", s.addr)
 
@@ -52,11 +52,16 @@ func (s *TCPServer) Stop() error {
 	return nil
 }
 
+func (s *TCPServer) SetMessageConsumer(messageConsumer func(data []byte) ([]byte, error)) {
+	s.messageConsumer = messageConsumer
+}
+
 // handleConnection 处理单个连接
 func (s *TCPServer) handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	remoteAddr := conn.RemoteAddr().String()
+	s.conns[remoteAddr] = conn
 	logger.InfoWith("新连接", "remote_addr", remoteAddr)
 
 	for {
@@ -67,15 +72,23 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 			} else {
 				logger.ErrorWith("连接异常断开", "remote_addr", remoteAddr, "error", err)
 			}
+			delete(s.conns, remoteAddr)
 			break
 		}
 
 		// 使用消息处理器处理数据
-		resp, err := s.messageHandler.HandleMessage(message)
+		response, err := s.messageConsumer(message)
 		if err != nil {
 			logger.ErrorWith("处理消息失败", "remote_addr", remoteAddr, "error", err)
 			continue
 		}
-		s.connIO.Write(conn, resp)
+		s.connIO.Write(conn, response)
 	}
+}
+
+func (s *TCPServer) NotifyAll(data []byte) error {
+	for _, conn := range s.conns {
+		s.connIO.Write(conn, data)
+	}
+	return nil
 }

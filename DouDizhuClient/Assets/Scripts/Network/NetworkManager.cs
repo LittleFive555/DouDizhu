@@ -177,19 +177,27 @@ namespace Network
 
         public void OnNotified(GameNotificationPacket notification)
         {
-
-        }
-
-        public void OnResponse(GameMsgRespPacket response)
-        {
-
+            switch (notification.ContentCase)
+            {
+                case GameNotificationPacket.ContentOneofCase.ChatMsg:
+                    Debug.Log($"收到聊天消息: {notification.ChatMsg.From.Nickname}({notification.ChatMsg.From.PlayerId}): {notification.ChatMsg.Content}");
+                    break;
+            }
         }
 
         private GameClientMessage PackRequest<TReq>(GameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
             GameClientMessage gameClientMessage = new GameClientMessage()
             {
-                Header = new GameMsgHeader() { MessageId = GenerateRequestId() },
+                Header = new GameMsgHeader()
+                { 
+                    MessageId = GenerateRequestId(),
+                    Player = new Player()
+                    {
+                        PlayerId = MessageSender.ID,
+                        Nickname = MessageSender.Name
+                    }
+                },
             };
             
             string propertyName = requestType.ToString();

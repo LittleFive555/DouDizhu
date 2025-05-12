@@ -24,7 +24,8 @@ const (
 type GameMsgHeader struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 用于标识请求的唯一id
-	MessageId     int64 `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
+	MessageId     int64   `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
+	Player        *Player `protobuf:"bytes,2,opt,name=player,proto3" json:"player,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,6 +65,13 @@ func (x *GameMsgHeader) GetMessageId() int64 {
 		return x.MessageId
 	}
 	return 0
+}
+
+func (x *GameMsgHeader) GetPlayer() *Player {
+	if x != nil {
+		return x.Player
+	}
+	return nil
 }
 
 type GameClientMessage struct {
@@ -419,9 +427,10 @@ var File_GameMsg_proto protoreflect.FileDescriptor
 
 const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\"-\n" +
+	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\x1a\fPlayer.proto\"W\n" +
 	"\rGameMsgHeader\x12\x1c\n" +
-	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\"\x85\x01\n" +
+	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\x12(\n" +
+	"\x06player\x18\x02 \x01(\v2\x10.DouDizhu.PlayerR\x06player\"\x85\x01\n" +
 	"\x11GameClientMessage\x12/\n" +
 	"\x06header\x18\x01 \x01(\v2\x17.DouDizhu.GameMsgHeaderR\x06header\x124\n" +
 	"\achatMsg\x18\x02 \x01(\v2\x18.DouDizhu.ChatMsgRequestH\x00R\achatMsgB\t\n" +
@@ -460,24 +469,26 @@ var file_GameMsg_proto_goTypes = []any{
 	(*GameMsgRespPacket)(nil),      // 3: DouDizhu.GameMsgRespPacket
 	(*GameNotificationPacket)(nil), // 4: DouDizhu.GameNotificationPacket
 	(*CommonResponse)(nil),         // 5: DouDizhu.CommonResponse
-	(*ChatMsgRequest)(nil),         // 6: DouDizhu.ChatMsgRequest
-	(*Error)(nil),                  // 7: DouDizhu.Error
-	(*ChatMsgNotification)(nil),    // 8: DouDizhu.ChatMsgNotification
+	(*Player)(nil),                 // 6: DouDizhu.Player
+	(*ChatMsgRequest)(nil),         // 7: DouDizhu.ChatMsgRequest
+	(*Error)(nil),                  // 8: DouDizhu.Error
+	(*ChatMsgNotification)(nil),    // 9: DouDizhu.ChatMsgNotification
 }
 var file_GameMsg_proto_depIdxs = []int32{
-	0, // 0: DouDizhu.GameClientMessage.header:type_name -> DouDizhu.GameMsgHeader
-	6, // 1: DouDizhu.GameClientMessage.chatMsg:type_name -> DouDizhu.ChatMsgRequest
-	3, // 2: DouDizhu.GameServerMessage.response:type_name -> DouDizhu.GameMsgRespPacket
-	4, // 3: DouDizhu.GameServerMessage.notification:type_name -> DouDizhu.GameNotificationPacket
-	0, // 4: DouDizhu.GameMsgRespPacket.header:type_name -> DouDizhu.GameMsgHeader
-	7, // 5: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
-	5, // 6: DouDizhu.GameMsgRespPacket.commonResponse:type_name -> DouDizhu.CommonResponse
-	8, // 7: DouDizhu.GameNotificationPacket.chatMsg:type_name -> DouDizhu.ChatMsgNotification
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	6, // 0: DouDizhu.GameMsgHeader.player:type_name -> DouDizhu.Player
+	0, // 1: DouDizhu.GameClientMessage.header:type_name -> DouDizhu.GameMsgHeader
+	7, // 2: DouDizhu.GameClientMessage.chatMsg:type_name -> DouDizhu.ChatMsgRequest
+	3, // 3: DouDizhu.GameServerMessage.response:type_name -> DouDizhu.GameMsgRespPacket
+	4, // 4: DouDizhu.GameServerMessage.notification:type_name -> DouDizhu.GameNotificationPacket
+	0, // 5: DouDizhu.GameMsgRespPacket.header:type_name -> DouDizhu.GameMsgHeader
+	8, // 6: DouDizhu.GameMsgRespPacket.error:type_name -> DouDizhu.Error
+	5, // 7: DouDizhu.GameMsgRespPacket.commonResponse:type_name -> DouDizhu.CommonResponse
+	9, // 8: DouDizhu.GameNotificationPacket.chatMsg:type_name -> DouDizhu.ChatMsgNotification
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_GameMsg_proto_init() }
@@ -487,6 +498,7 @@ func file_GameMsg_proto_init() {
 	}
 	file_Error_proto_init()
 	file_ChatMsg_proto_init()
+	file_Player_proto_init()
 	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
 		(*GameClientMessage_ChatMsg)(nil),
 	}

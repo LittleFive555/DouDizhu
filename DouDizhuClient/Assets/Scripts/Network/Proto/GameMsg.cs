@@ -25,24 +25,25 @@ namespace Network.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg1HYW1lTXNnLnByb3RvEghEb3VEaXpodRoLRXJyb3IucHJvdG8aDUNoYXRN",
-            "c2cucHJvdG8iIgoNR2FtZU1zZ0hlYWRlchIRCgltZXNzYWdlSWQYASABKAMi",
-            "dAoRR2FtZUNsaWVudE1lc3NhZ2USJwoGaGVhZGVyGAEgASgLMhcuRG91RGl6",
-            "aHUuR2FtZU1zZ0hlYWRlchIrCgdjaGF0TXNnGAIgASgLMhguRG91RGl6aHUu",
-            "Q2hhdE1zZ1JlcXVlc3RIAEIJCgdjb250ZW50IokBChFHYW1lU2VydmVyTWVz",
-            "c2FnZRIvCghyZXNwb25zZRgBIAEoCzIbLkRvdURpemh1LkdhbWVNc2dSZXNw",
-            "UGFja2V0SAASOAoMbm90aWZpY2F0aW9uGAIgASgLMiAuRG91RGl6aHUuR2Ft",
-            "ZU5vdGlmaWNhdGlvblBhY2tldEgAQgkKB2NvbnRlbnQinQEKEUdhbWVNc2dS",
-            "ZXNwUGFja2V0EicKBmhlYWRlchgBIAEoCzIXLkRvdURpemh1LkdhbWVNc2dI",
-            "ZWFkZXISIAoFZXJyb3IYAiABKAsyDy5Eb3VEaXpodS5FcnJvckgAEjIKDmNv",
-            "bW1vblJlc3BvbnNlGAMgASgLMhguRG91RGl6aHUuQ29tbW9uUmVzcG9uc2VI",
-            "AEIJCgdjb250ZW50IlUKFkdhbWVOb3RpZmljYXRpb25QYWNrZXQSMAoHY2hh",
-            "dE1zZxgBIAEoCzIdLkRvdURpemh1LkNoYXRNc2dOb3RpZmljYXRpb25IAEIJ",
-            "Cgdjb250ZW50IhAKDkNvbW1vblJlc3BvbnNlQiJaEG5ldHdvcmsvcHJvdG9k",
-            "ZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
+            "c2cucHJvdG8aDFBsYXllci5wcm90byJECg1HYW1lTXNnSGVhZGVyEhEKCW1l",
+            "c3NhZ2VJZBgBIAEoAxIgCgZwbGF5ZXIYAiABKAsyEC5Eb3VEaXpodS5QbGF5",
+            "ZXIidAoRR2FtZUNsaWVudE1lc3NhZ2USJwoGaGVhZGVyGAEgASgLMhcuRG91",
+            "RGl6aHUuR2FtZU1zZ0hlYWRlchIrCgdjaGF0TXNnGAIgASgLMhguRG91RGl6",
+            "aHUuQ2hhdE1zZ1JlcXVlc3RIAEIJCgdjb250ZW50IokBChFHYW1lU2VydmVy",
+            "TWVzc2FnZRIvCghyZXNwb25zZRgBIAEoCzIbLkRvdURpemh1LkdhbWVNc2dS",
+            "ZXNwUGFja2V0SAASOAoMbm90aWZpY2F0aW9uGAIgASgLMiAuRG91RGl6aHUu",
+            "R2FtZU5vdGlmaWNhdGlvblBhY2tldEgAQgkKB2NvbnRlbnQinQEKEUdhbWVN",
+            "c2dSZXNwUGFja2V0EicKBmhlYWRlchgBIAEoCzIXLkRvdURpemh1LkdhbWVN",
+            "c2dIZWFkZXISIAoFZXJyb3IYAiABKAsyDy5Eb3VEaXpodS5FcnJvckgAEjIK",
+            "DmNvbW1vblJlc3BvbnNlGAMgASgLMhguRG91RGl6aHUuQ29tbW9uUmVzcG9u",
+            "c2VIAEIJCgdjb250ZW50IlUKFkdhbWVOb3RpZmljYXRpb25QYWNrZXQSMAoH",
+            "Y2hhdE1zZxgBIAEoCzIdLkRvdURpemh1LkNoYXRNc2dOb3RpZmljYXRpb25I",
+            "AEIJCgdjb250ZW50IhAKDkNvbW1vblJlc3BvbnNlQiJaEG5ldHdvcmsvcHJv",
+            "dG9kZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Network.Proto.ErrorReflection.Descriptor, global::Network.Proto.ChatMsgReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Network.Proto.ErrorReflection.Descriptor, global::Network.Proto.ChatMsgReflection.Descriptor, global::Network.Proto.PlayerReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgHeader), global::Network.Proto.GameMsgHeader.Parser, new[]{ "MessageId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgHeader), global::Network.Proto.GameMsgHeader.Parser, new[]{ "MessageId", "Player" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameClientMessage), global::Network.Proto.GameClientMessage.Parser, new[]{ "Header", "ChatMsg" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameServerMessage), global::Network.Proto.GameServerMessage.Parser, new[]{ "Response", "Notification" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.GameMsgRespPacket), global::Network.Proto.GameMsgRespPacket.Parser, new[]{ "Header", "Error", "CommonResponse" }, new[]{ "Content" }, null, null, null),
@@ -90,6 +91,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public GameMsgHeader(GameMsgHeader other) : this() {
       messageId_ = other.messageId_;
+      player_ = other.player_ != null ? other.player_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -114,6 +116,18 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "player" field.</summary>
+    public const int PlayerFieldNumber = 2;
+    private global::Network.Proto.Player player_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.Player Player {
+      get { return player_; }
+      set {
+        player_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -130,6 +144,7 @@ namespace Network.Proto {
         return true;
       }
       if (MessageId != other.MessageId) return false;
+      if (!object.Equals(Player, other.Player)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -138,6 +153,7 @@ namespace Network.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (MessageId != 0L) hash ^= MessageId.GetHashCode();
+      if (player_ != null) hash ^= Player.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -160,6 +176,10 @@ namespace Network.Proto {
         output.WriteRawTag(8);
         output.WriteInt64(MessageId);
       }
+      if (player_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Player);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -174,6 +194,10 @@ namespace Network.Proto {
         output.WriteRawTag(8);
         output.WriteInt64(MessageId);
       }
+      if (player_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Player);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -186,6 +210,9 @@ namespace Network.Proto {
       int size = 0;
       if (MessageId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(MessageId);
+      }
+      if (player_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Player);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -201,6 +228,12 @@ namespace Network.Proto {
       }
       if (other.MessageId != 0L) {
         MessageId = other.MessageId;
+      }
+      if (other.player_ != null) {
+        if (player_ == null) {
+          Player = new global::Network.Proto.Player();
+        }
+        Player.MergeFrom(other.Player);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -225,6 +258,13 @@ namespace Network.Proto {
             MessageId = input.ReadInt64();
             break;
           }
+          case 18: {
+            if (player_ == null) {
+              Player = new global::Network.Proto.Player();
+            }
+            input.ReadMessage(Player);
+            break;
+          }
         }
       }
     #endif
@@ -246,6 +286,13 @@ namespace Network.Proto {
             break;
           case 8: {
             MessageId = input.ReadInt64();
+            break;
+          }
+          case 18: {
+            if (player_ == null) {
+              Player = new global::Network.Proto.Player();
+            }
+            input.ReadMessage(Player);
             break;
           }
         }
