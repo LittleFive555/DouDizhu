@@ -65,26 +65,28 @@ func (x *ChatMsgRequest) GetContent() string {
 	return ""
 }
 
-type ChatMsgResponse struct {
+type ChatMsgNotification struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	From          *Player                `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ChatMsgResponse) Reset() {
-	*x = ChatMsgResponse{}
+func (x *ChatMsgNotification) Reset() {
+	*x = ChatMsgNotification{}
 	mi := &file_ChatMsg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ChatMsgResponse) String() string {
+func (x *ChatMsgNotification) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChatMsgResponse) ProtoMessage() {}
+func (*ChatMsgNotification) ProtoMessage() {}
 
-func (x *ChatMsgResponse) ProtoReflect() protoreflect.Message {
+func (x *ChatMsgNotification) ProtoReflect() protoreflect.Message {
 	mi := &file_ChatMsg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -96,19 +98,35 @@ func (x *ChatMsgResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChatMsgResponse.ProtoReflect.Descriptor instead.
-func (*ChatMsgResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ChatMsgNotification.ProtoReflect.Descriptor instead.
+func (*ChatMsgNotification) Descriptor() ([]byte, []int) {
 	return file_ChatMsg_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChatMsgNotification) GetFrom() *Player {
+	if x != nil {
+		return x.From
+	}
+	return nil
+}
+
+func (x *ChatMsgNotification) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
 }
 
 var File_ChatMsg_proto protoreflect.FileDescriptor
 
 const file_ChatMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rChatMsg.proto\x12\bDouDizhu\x1a\fExtend.proto\"?\n" +
+	"\rChatMsg.proto\x12\bDouDizhu\x1a\fPlayer.proto\"*\n" +
 	"\x0eChatMsgRequest\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent:\x13\x92\x82\x19\x0fChatMsgResponse\"%\n" +
-	"\x0fChatMsgResponse:\x12\x92\x82\x19\x0eChatMsgRequestB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\acontent\x18\x01 \x01(\tR\acontent\"U\n" +
+	"\x13ChatMsgNotification\x12$\n" +
+	"\x04from\x18\x01 \x01(\v2\x10.DouDizhu.PlayerR\x04from\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\tR\acontentB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_ChatMsg_proto_rawDescOnce sync.Once
@@ -124,15 +142,17 @@ func file_ChatMsg_proto_rawDescGZIP() []byte {
 
 var file_ChatMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_ChatMsg_proto_goTypes = []any{
-	(*ChatMsgRequest)(nil),  // 0: DouDizhu.ChatMsgRequest
-	(*ChatMsgResponse)(nil), // 1: DouDizhu.ChatMsgResponse
+	(*ChatMsgRequest)(nil),      // 0: DouDizhu.ChatMsgRequest
+	(*ChatMsgNotification)(nil), // 1: DouDizhu.ChatMsgNotification
+	(*Player)(nil),              // 2: DouDizhu.Player
 }
 var file_ChatMsg_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	2, // 0: DouDizhu.ChatMsgNotification.from:type_name -> DouDizhu.Player
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_ChatMsg_proto_init() }
@@ -140,7 +160,7 @@ func file_ChatMsg_proto_init() {
 	if File_ChatMsg_proto != nil {
 		return
 	}
-	file_Extend_proto_init()
+	file_Player_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

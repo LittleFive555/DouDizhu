@@ -22,6 +22,17 @@ message GameMsgRespPacket {
 	GameMsgHeader header = 1;
 	oneof content {
 		Error error = 2;
-		ChatMsgResponse chatMsg = 3;
+		CommonResponse commonResponse = 3;
 	}
+}
+
+message GameNotificationPacket {
+	oneof content {
+		ChatMsgNotification chatMsg = 1;
+	}
+}
+
+// 不需要返回值可用这个
+message CommonResponse {
+	
 }

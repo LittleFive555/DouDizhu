@@ -34,7 +34,7 @@ public class MessageSender : MonoBehaviour
         if (string.IsNullOrEmpty(message))
             return;
 
-        var response = NetworkManager.Instance.Request<ChatMsgRequest, ChatMsgResponse>(GameMsgReqPacket.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
+        var response = NetworkManager.Instance.Request(GameMsgReqPacket.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
         if (response.IsSuccess)
         {
             messageInput.text = ""; // 清空输入框

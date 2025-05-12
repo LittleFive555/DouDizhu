@@ -24,15 +24,16 @@ namespace Network.Proto {
     static ChatMsgReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg1DaGF0TXNnLnByb3RvEghEb3VEaXpodRoMRXh0ZW5kLnByb3RvIjYKDkNo",
-            "YXRNc2dSZXF1ZXN0Eg8KB2NvbnRlbnQYASABKAk6E5KCGQ9DaGF0TXNnUmVz",
-            "cG9uc2UiJQoPQ2hhdE1zZ1Jlc3BvbnNlOhKSghkOQ2hhdE1zZ1JlcXVlc3RC",
-            "IloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJvdG9iBnByb3RvMw=="));
+            "Cg1DaGF0TXNnLnByb3RvEghEb3VEaXpodRoMUGxheWVyLnByb3RvIiEKDkNo",
+            "YXRNc2dSZXF1ZXN0Eg8KB2NvbnRlbnQYASABKAkiRgoTQ2hhdE1zZ05vdGlm",
+            "aWNhdGlvbhIeCgRmcm9tGAEgASgLMhAuRG91RGl6aHUuUGxheWVyEg8KB2Nv",
+            "bnRlbnQYAiABKAlCIloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJv",
+            "dG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Network.Proto.ExtendReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Network.Proto.PlayerReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.ChatMsgRequest), global::Network.Proto.ChatMsgRequest.Parser, new[]{ "Content" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.ChatMsgResponse), global::Network.Proto.ChatMsgResponse.Parser, null, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.ChatMsgNotification), global::Network.Proto.ChatMsgNotification.Parser, new[]{ "From", "Content" }, null, null, null, null)
           }));
     }
     #endregion
@@ -238,16 +239,16 @@ namespace Network.Proto {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class ChatMsgResponse : pb::IMessage<ChatMsgResponse>
+  public sealed partial class ChatMsgNotification : pb::IMessage<ChatMsgNotification>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<ChatMsgResponse> _parser = new pb::MessageParser<ChatMsgResponse>(() => new ChatMsgResponse());
+    private static readonly pb::MessageParser<ChatMsgNotification> _parser = new pb::MessageParser<ChatMsgNotification>(() => new ChatMsgNotification());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<ChatMsgResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<ChatMsgNotification> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -263,7 +264,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ChatMsgResponse() {
+    public ChatMsgNotification() {
       OnConstruction();
     }
 
@@ -271,31 +272,59 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ChatMsgResponse(ChatMsgResponse other) : this() {
+    public ChatMsgNotification(ChatMsgNotification other) : this() {
+      from_ = other.from_ != null ? other.from_.Clone() : null;
+      content_ = other.content_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ChatMsgResponse Clone() {
-      return new ChatMsgResponse(this);
+    public ChatMsgNotification Clone() {
+      return new ChatMsgNotification(this);
+    }
+
+    /// <summary>Field number for the "from" field.</summary>
+    public const int FromFieldNumber = 1;
+    private global::Network.Proto.Player from_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.Player From {
+      get { return from_; }
+      set {
+        from_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "content" field.</summary>
+    public const int ContentFieldNumber = 2;
+    private string content_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Content {
+      get { return content_; }
+      set {
+        content_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as ChatMsgResponse);
+      return Equals(other as ChatMsgNotification);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(ChatMsgResponse other) {
+    public bool Equals(ChatMsgNotification other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(From, other.From)) return false;
+      if (Content != other.Content) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -303,6 +332,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (from_ != null) hash ^= From.GetHashCode();
+      if (Content.Length != 0) hash ^= Content.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -321,6 +352,14 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
+      if (from_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(From);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Content);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -331,6 +370,14 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (from_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(From);
+      }
+      if (Content.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Content);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -341,6 +388,12 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (from_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(From);
+      }
+      if (Content.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -349,9 +402,18 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(ChatMsgResponse other) {
+    public void MergeFrom(ChatMsgNotification other) {
       if (other == null) {
         return;
+      }
+      if (other.from_ != null) {
+        if (from_ == null) {
+          From = new global::Network.Proto.Player();
+        }
+        From.MergeFrom(other.From);
+      }
+      if (other.Content.Length != 0) {
+        Content = other.Content;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -372,6 +434,17 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 10: {
+            if (from_ == null) {
+              From = new global::Network.Proto.Player();
+            }
+            input.ReadMessage(From);
+            break;
+          }
+          case 18: {
+            Content = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -391,6 +464,17 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
+          case 10: {
+            if (from_ == null) {
+              From = new global::Network.Proto.Player();
+            }
+            input.ReadMessage(From);
+            break;
+          }
+          case 18: {
+            Content = input.ReadString();
+            break;
+          }
         }
       }
     }

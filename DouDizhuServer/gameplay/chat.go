@@ -10,8 +10,8 @@ func HandleChatMessage(req *protodef.GameMsgReqPacket) (*protodef.GameMsgRespPac
 
 	return &protodef.GameMsgRespPacket{
 		Header: &protodef.GameMsgHeader{},
-		Content: &protodef.GameMsgRespPacket_ChatMsg{
-			ChatMsg: &protodef.ChatMsgResponse{},
+		Content: &protodef.GameMsgRespPacket_CommonResponse{
+			CommonResponse: &protodef.CommonResponse{},
 		},
 	}, nil
 }

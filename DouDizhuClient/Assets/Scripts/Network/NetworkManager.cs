@@ -7,6 +7,21 @@ using Network.Tcp;
 
 namespace Network
 {
+    public struct NetworkResult
+    {
+        public bool IsSuccess { get; }
+        public string ErrorMessage { get; }
+
+        private NetworkResult(bool isSuccess, string errorMessage)
+        {
+            IsSuccess = isSuccess;
+            ErrorMessage = errorMessage;
+        }
+
+        public static NetworkResult Success() => new NetworkResult(true, null);
+        public static NetworkResult Failure(string errorMessage) => new NetworkResult(false, errorMessage);
+    }
+
     public struct NetworkResult<T>
     {
         public bool IsSuccess { get; }
@@ -80,6 +95,11 @@ namespace Network
             }
             isConnected = false;
             Debug.Log("TCP连接已关闭");
+        }
+
+        public NetworkResult<CommonResponse> Request<TReq>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        {
+            return Request<TReq, CommonResponse>(requestType, request);
         }
 
         public NetworkResult<TResp> Request<TReq, TResp>(GameMsgReqPacket.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage

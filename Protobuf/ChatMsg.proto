@@ -4,13 +4,13 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
-import "Extend.proto";
+import "Player.proto";
 
 message ChatMsgRequest {
-	option (paired_with) = "ChatMsgResponse";
 	string content = 1;
 }
 
-message ChatMsgResponse {
-	option (paired_with) = "ChatMsgRequest";
+message ChatMsgNotification {
+	Player from = 1;
+	string content = 2;
 }
