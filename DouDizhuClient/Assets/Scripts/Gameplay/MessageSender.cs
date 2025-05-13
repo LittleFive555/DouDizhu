@@ -29,6 +29,8 @@ public class MessageSender : MonoBehaviour
 
         // 设置按钮点击事件
         sendButton.onClick.AddListener(SendMessage);
+
+        NetworkManager.Instance.RegisterNotificationHandler<ChatMsgNotification>(GameNotificationPacket.ContentOneofCase.ChatMsg, OnReceivedChatMsg);
     }
 
     void SendMessage()
@@ -49,6 +51,11 @@ public class MessageSender : MonoBehaviour
         {
             messageInput.text = ""; // 清空输入框
         }
+    }
+
+    private void OnReceivedChatMsg(ChatMsgNotification notification)
+    {
+        Debug.Log($"收到聊天消息: {notification.Content}");
     }
 
     void OnDestroy()

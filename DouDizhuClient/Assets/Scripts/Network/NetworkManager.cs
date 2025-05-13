@@ -1,48 +1,17 @@
 using System;
 using System.Net.Sockets;
 using UnityEngine;
-using Network.Tcp;
-using Network.Proto;
-using Google.Protobuf;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Collections.Generic;
+using Google.Protobuf;
+using Network.Tcp;
+using Network.Proto;
 
 namespace Network
 {
-    public struct NetworkResult
-    {
-        public bool IsSuccess { get; }
-        public string ErrorMessage { get; }
-
-        private NetworkResult(bool isSuccess, string errorMessage)
-        {
-            IsSuccess = isSuccess;
-            ErrorMessage = errorMessage;
-        }
-
-        public static NetworkResult Success() => new NetworkResult(true, null);
-        public static NetworkResult Failure(string errorMessage) => new NetworkResult(false, errorMessage);
-    }
-
-    public struct NetworkResult<T>
-    {
-        public bool IsSuccess { get; }
-        public T Data { get; }
-        public string ErrorMessage { get; }
-
-        private NetworkResult(bool isSuccess, T data, string errorMessage)
-        {
-            IsSuccess = isSuccess;
-            Data = data;
-            ErrorMessage = errorMessage;
-        }
-
-        public static NetworkResult<T> Success(T data) => new NetworkResult<T>(true, data, null);
-        public static NetworkResult<T> Failure(string errorMessage) => new NetworkResult<T>(false, default, errorMessage);
-    }
-
-    public class NetworkManager
+    public partial class NetworkManager
     {
         private static NetworkManager m_Instance;
         public static NetworkManager Instance
@@ -64,6 +33,7 @@ namespace Network
         private const int REQUEST_TIMEOUT = 5;
 
         private readonly ConcurrentDictionary<long, TaskCompletionSource<GameMsgRespPacket>> m_PendingRequests = new();
+        private readonly Dictionary<GameNotificationPacket.ContentOneofCase, Action<IMessage>> m_NotificationHandlers = new();
 
         public NetworkManager()
         {
@@ -139,6 +109,27 @@ namespace Network
             }
         }
 
+        public void RegisterNotificationHandler<TNotification>(GameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        {
+            var adapter = new NotificationHandlerAdapter<TNotification>(handler);
+            if (m_NotificationHandlers.ContainsKey(notificationType))
+                m_NotificationHandlers[notificationType] += adapter.Handle;
+            else
+                m_NotificationHandlers[notificationType] = adapter.Handle;
+        }
+
+        public void UnregisterNotificationHandler<TNotification>(GameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        {
+            // 查找对应的适配器
+            var adapter = new NotificationHandlerAdapter<TNotification>(handler);
+            if (m_NotificationHandlers.ContainsKey(notificationType))
+            {
+                m_NotificationHandlers[notificationType] -= adapter.Handle;
+                if (m_NotificationHandlers[notificationType] == null)
+                    m_NotificationHandlers.Remove(notificationType);
+            }
+        }
+
         private async Task ReceiveLoopAsync()
         {
             try
@@ -154,19 +145,9 @@ namespace Network
 
                     GameServerMessage gameServerMessage = GameServerMessage.Parser.ParseFrom(responseBuffer);
                     if (gameServerMessage.ContentCase == GameServerMessage.ContentOneofCase.Notification)
-                    {
-                        GameNotificationPacket gameNotificationPacket = gameServerMessage.Notification;
-                        OnNotified(gameNotificationPacket);
-                    }
+                        OnNotified(gameServerMessage.Notification);
                     else if (gameServerMessage.ContentCase == GameServerMessage.ContentOneofCase.Response)
-                    {
-                        GameMsgRespPacket gameMsgRespPacket = gameServerMessage.Response;
-                        if (m_PendingRequests.TryGetValue(gameMsgRespPacket.Header.MessageId, out var tcs))
-                        {
-                            tcs.SetResult(gameMsgRespPacket);
-                            m_PendingRequests.TryRemove(gameMsgRespPacket.Header.MessageId, out _);
-                        }
-                    }
+                        OnResponse(gameServerMessage.Response);
                 }
             }
             catch (Exception ex)
@@ -175,13 +156,29 @@ namespace Network
             }
         }
 
-        public void OnNotified(GameNotificationPacket notification)
+        private void OnResponse(GameMsgRespPacket gameMsgRespPacket)
         {
-            switch (notification.ContentCase)
+            if (m_PendingRequests.TryGetValue(gameMsgRespPacket.Header.MessageId, out var tcs))
             {
-                case GameNotificationPacket.ContentOneofCase.ChatMsg:
-                    Debug.Log($"收到聊天消息: {notification.ChatMsg.From.Nickname}({notification.ChatMsg.From.PlayerId}): {notification.ChatMsg.Content}");
-                    break;
+                tcs.SetResult(gameMsgRespPacket);
+                m_PendingRequests.TryRemove(gameMsgRespPacket.Header.MessageId, out _);
+            }
+        }
+
+        private void OnNotified(GameNotificationPacket notification)
+        {
+            if (m_NotificationHandlers.TryGetValue(notification.ContentCase, out var handler))
+            {
+                try
+                {
+                    string propertyName = notification.ContentCase.ToString();
+                    var value = notification.GetType().GetProperty(propertyName).GetValue(notification);
+                    handler(value as IMessage);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"通知处理程序发生错误: {ex.Message}");
+                }
             }
         }
 
@@ -228,23 +225,6 @@ namespace Network
             return default(TResp);
         }
 
-        private TNotification UnpackNotification<TNotification>(GameNotificationPacket notification) where TNotification : IMessage
-        {
-            string propertyName = notification.ContentCase.ToString();
-            Type packetType = typeof(GameNotificationPacket);
-            var property = packetType.GetProperty(propertyName);
-            if (property != null)
-            {
-                // 获取属性值并转换为目标类型
-                var value = property.GetValue(notification);
-                if (value is TNotification typedValue)
-                    return typedValue;
-            }
-            
-            Debug.LogError($"无法从通知中获取类型 {typeof(TNotification).Name} 的数据");
-            return default(TNotification);
-        }
-
         private static long GenerateRequestId() => DateTimeOffset.UtcNow.Ticks;
-    } 
+    }
 }
