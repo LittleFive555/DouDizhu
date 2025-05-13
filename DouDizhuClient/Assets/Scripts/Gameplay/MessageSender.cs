@@ -3,8 +3,10 @@ using UnityEngine.UI;
 using TMPro;
 using Network;
 using Network.Proto;
+using UIModule;
 
-public class MessageSender : MonoBehaviour
+[UIComponent(OpenLayer = EnumUILayer.View, ResPath = "Assets/Res/Gameplay/UI/Chat/UIChat.prefab")]
+public class MessageSender : UIComponentBase
 {
     [SerializeField]
     private TMP_InputField messageInput;

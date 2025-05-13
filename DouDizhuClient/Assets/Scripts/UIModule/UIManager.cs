@@ -1,5 +1,6 @@
 using System.Reflection;
 using UnityEngine;
+using EdenMeng.AssetManager;
 
 namespace UIModule
 {
@@ -35,6 +36,12 @@ namespace UIModule
                 Debug.LogError($"未找到{componentType.FullName}的属性定义");
                 return;
             }
+            var uiObjAsset = AssetManager.LoadAsset<GameObject>(componentAttribute.ResPath);
+            var uiObj = GameObject.Instantiate(uiObjAsset);
+            UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
+            var uiComponent = uiObj.GetComponent<TUIComponent>();
+            uiComponent.OnShowBegin<UIComponentBase.EmptyArgs>(null);
+            uiComponent.OnShowFinish<UIComponentBase.EmptyArgs>(null);
         }
 
         public void ShowUI<TUIComponent, TArgs>(TArgs args) where TUIComponent : UIComponentBase where TArgs : struct
