@@ -20,13 +20,6 @@ public class MessageSender : MonoBehaviour
 
     void Start()
     {
-        // 替换为你的服务器IP和端口
-        string serverIp = "127.0.0.1";
-        int port = 8080;
-
-        // 连接服务器
-        _ = NetworkManager.Instance.ConnectAsync(serverIp, port);
-
         // 设置按钮点击事件
         sendButton.onClick.AddListener(SendMessage);
 
@@ -56,10 +49,5 @@ public class MessageSender : MonoBehaviour
     private void OnReceivedChatMsg(ChatMsgNotification notification)
     {
         Debug.Log($"收到聊天消息: {notification.Content}");
-    }
-
-    void OnDestroy()
-    {
-        NetworkManager.Instance.Disconnect();
     }
 }

@@ -30,6 +30,12 @@ namespace Network
         private bool m_IsConnected = false;
         public bool IsConnected => m_IsConnected;
 
+        
+        // 替换为你的服务器IP和端口
+        private const string SERVER_IP = "127.0.0.1";
+        private const int SERVER_PORT = 8080;
+
+
         private const int REQUEST_TIMEOUT = 5;
 
         private readonly ConcurrentDictionary<long, TaskCompletionSource<GameMsgRespPacket>> m_PendingRequests = new();
@@ -40,22 +46,9 @@ namespace Network
             m_MessageReadWriter = new LengthPrefixReadWriter();
         }
 
-        public async Task ConnectAsync(string serverIp, int port)
+        public async Task ConnectAsync()
         {
-            try
-            {
-                m_TcpClient = new TcpClient();
-                await m_TcpClient.ConnectAsync(serverIp, port);
-                m_NetworkStream = m_TcpClient.GetStream();
-                m_IsConnected = true;
-                Debug.Log("TCP连接已建立");
-                _ = ReceiveLoopAsync();
-            }
-            catch (SocketException ex)
-            {
-                Debug.LogError("TCP连接失败: " + ex.Message);
-                m_IsConnected = false;
-            }
+            await ConnectAsync(SERVER_IP, SERVER_PORT);
         }
 
         public void Disconnect()
@@ -127,6 +120,24 @@ namespace Network
                 m_NotificationHandlers[notificationType] -= adapter.Handle;
                 if (m_NotificationHandlers[notificationType] == null)
                     m_NotificationHandlers.Remove(notificationType);
+            }
+        }
+
+        private async Task ConnectAsync(string serverIp, int port)
+        {
+            try
+            {
+                m_TcpClient = new TcpClient();
+                await m_TcpClient.ConnectAsync(serverIp, port);
+                m_NetworkStream = m_TcpClient.GetStream();
+                m_IsConnected = true;
+                Debug.Log("TCP连接已建立");
+                _ = ReceiveLoopAsync();
+            }
+            catch (SocketException ex)
+            {
+                Debug.LogError("TCP连接失败: " + ex.Message);
+                m_IsConnected = false;
             }
         }
 
