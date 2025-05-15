@@ -202,8 +202,8 @@ namespace Network
                     MessageId = GenerateRequestId(),
                     Player = new Player()
                     {
-                        PlayerId = MessageSender.ID,
-                        Nickname = MessageSender.Name
+                        PlayerId = "", // TODO
+                        Nickname = ""
                     }
                 },
             };

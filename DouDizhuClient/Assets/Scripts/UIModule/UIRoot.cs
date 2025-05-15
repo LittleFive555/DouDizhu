@@ -16,8 +16,6 @@ namespace UIModule
 
             DontDestroyOnLoad(gameObject);
             Instance = this;
-
-            UIManager.Instance.ShowUI<MessageSender>();
         }
 
         public void AppendToLayer(EnumUILayer layer, GameObject gameObject)
