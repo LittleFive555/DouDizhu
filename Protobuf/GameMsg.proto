@@ -7,6 +7,7 @@ option csharp_namespace = "Network.Proto";
 import "Error.proto";
 import "ChatMsg.proto";
 import "Player.proto";
+import "Login.proto";
 
 message PGameMsgHeader {
 	// 用于标识请求的唯一id
@@ -18,6 +19,8 @@ message PGameClientMessage {
 	PGameMsgHeader header = 1;
 	oneof content {
 		PChatMsgRequest chatMsg = 2;
+		PRegistRequest registReq = 3;
+		PLoginRequest loginReq = 4;
 	}
 }
 
@@ -33,6 +36,8 @@ message PGameMsgRespPacket {
 	oneof content {
 		PError error = 2;
 		PCommonResponse commonResponse = 3;
+		PRegistResponse registResp = 4;
+		PLoginResponse loginResp = 5;
 	}
 }
 

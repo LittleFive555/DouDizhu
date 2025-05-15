@@ -21,9 +21,58 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PError_Code int32
+
+const (
+	PError_CODE_UNKNOWN              PError_Code = 0
+	PError_CODE_DATABASE_READ_ERROR  PError_Code = 1
+	PError_CODE_DATABASE_WRITE_ERROR PError_Code = 2
+)
+
+// Enum value maps for PError_Code.
+var (
+	PError_Code_name = map[int32]string{
+		0: "CODE_UNKNOWN",
+		1: "CODE_DATABASE_READ_ERROR",
+		2: "CODE_DATABASE_WRITE_ERROR",
+	}
+	PError_Code_value = map[string]int32{
+		"CODE_UNKNOWN":              0,
+		"CODE_DATABASE_READ_ERROR":  1,
+		"CODE_DATABASE_WRITE_ERROR": 2,
+	}
+)
+
+func (x PError_Code) Enum() *PError_Code {
+	p := new(PError_Code)
+	*p = x
+	return p
+}
+
+func (x PError_Code) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PError_Code) Descriptor() protoreflect.EnumDescriptor {
+	return file_Error_proto_enumTypes[0].Descriptor()
+}
+
+func (PError_Code) Type() protoreflect.EnumType {
+	return &file_Error_proto_enumTypes[0]
+}
+
+func (x PError_Code) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PError_Code.Descriptor instead.
+func (PError_Code) EnumDescriptor() ([]byte, []int) {
+	return file_Error_proto_rawDescGZIP(), []int{0, 0}
+}
+
 type PError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Code          PError_Code            `protobuf:"varint,1,opt,name=code,proto3,enum=DouDizhu.PError_Code" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -59,11 +108,11 @@ func (*PError) Descriptor() ([]byte, []int) {
 	return file_Error_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PError) GetCode() string {
+func (x *PError) GetCode() PError_Code {
 	if x != nil {
 		return x.Code
 	}
-	return ""
+	return PError_CODE_UNKNOWN
 }
 
 func (x *PError) GetMessage() string {
@@ -77,10 +126,14 @@ var File_Error_proto protoreflect.FileDescriptor
 
 const file_Error_proto_rawDesc = "" +
 	"\n" +
-	"\vError.proto\x12\bDouDizhu\"6\n" +
-	"\x06PError\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessageB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\vError.proto\x12\bDouDizhu\"\xa4\x01\n" +
+	"\x06PError\x12)\n" +
+	"\x04code\x18\x01 \x01(\x0e2\x15.DouDizhu.PError.CodeR\x04code\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"U\n" +
+	"\x04Code\x12\x10\n" +
+	"\fCODE_UNKNOWN\x10\x00\x12\x1c\n" +
+	"\x18CODE_DATABASE_READ_ERROR\x10\x01\x12\x1d\n" +
+	"\x19CODE_DATABASE_WRITE_ERROR\x10\x02B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Error_proto_rawDescOnce sync.Once
@@ -94,16 +147,19 @@ func file_Error_proto_rawDescGZIP() []byte {
 	return file_Error_proto_rawDescData
 }
 
+var file_Error_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_Error_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_Error_proto_goTypes = []any{
-	(*PError)(nil), // 0: DouDizhu.PError
+	(PError_Code)(0), // 0: DouDizhu.PError.Code
+	(*PError)(nil),   // 1: DouDizhu.PError
 }
 var file_Error_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: DouDizhu.PError.code:type_name -> DouDizhu.PError.Code
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_Error_proto_init() }
@@ -116,13 +172,14 @@ func file_Error_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_Error_proto_rawDesc), len(file_Error_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_Error_proto_goTypes,
 		DependencyIndexes: file_Error_proto_depIdxs,
+		EnumInfos:         file_Error_proto_enumTypes,
 		MessageInfos:      file_Error_proto_msgTypes,
 	}.Build()
 	File_Error_proto = out.File

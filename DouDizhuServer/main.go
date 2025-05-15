@@ -2,8 +2,11 @@ package main
 
 import (
 	"DouDizhuServer/gameplay"
+	"DouDizhuServer/gameplay/login"
+	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
+	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
 	"reflect"
 )
@@ -19,7 +22,12 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer(":8080")
 
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
+	message.Dispatcher = message.NewMessageDispatcher(10)
+	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
+	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegistReq{}), login.HandleRegist)
+	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), login.HandleLogin)
+
+	player.Manager = player.NewPlayerManager()
 
 	if err := network.Server.Start(); err != nil {
 		logger.ErrorWith("服务器启动失败", "error", err)

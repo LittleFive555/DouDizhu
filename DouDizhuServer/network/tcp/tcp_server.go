@@ -2,24 +2,24 @@ package tcp
 
 import (
 	"DouDizhuServer/logger"
+	"DouDizhuServer/network/message"
+	"encoding/binary"
 	"fmt"
+	"io"
 	"net"
 )
 
 // TCPServer TCP服务器结构体
 type TCPServer struct {
-	addr            string
-	listener        net.Listener
-	connIO          ConnIO
-	conns           map[string]net.Conn
-	messageConsumer func(data []byte) ([]byte, error)
+	addr     string
+	listener net.Listener
+	conns    map[string]net.Conn
 }
 
 // NewTCPServer 创建一个新的TCP服务器实例
-func NewTCPServer(addr string, connIO ConnIO) *TCPServer {
+func NewTCPServer(addr string) *TCPServer {
 	return &TCPServer{
-		addr:   addr,
-		connIO: connIO,
+		addr: addr,
 	}
 }
 
@@ -52,10 +52,6 @@ func (s *TCPServer) Stop() error {
 	return nil
 }
 
-func (s *TCPServer) SetMessageConsumer(messageConsumer func(data []byte) ([]byte, error)) {
-	s.messageConsumer = messageConsumer
-}
-
 // handleConnection 处理单个连接
 func (s *TCPServer) handleConnection(conn net.Conn) {
 	defer conn.Close()
@@ -65,7 +61,7 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 	logger.InfoWith("新连接", "remote_addr", remoteAddr)
 
 	for {
-		message, err := s.connIO.Read(conn)
+		rawMessage, err := read(conn)
 		if err != nil {
 			if err.Error() == "EOF" {
 				logger.InfoWith("客户端正常断开连接", "remote_addr", remoteAddr)
@@ -76,19 +72,54 @@ func (s *TCPServer) handleConnection(conn net.Conn) {
 			break
 		}
 
-		// 使用消息处理器处理数据
-		response, err := s.messageConsumer(message)
-		if err != nil {
-			logger.ErrorWith("处理消息失败", "remote_addr", remoteAddr, "error", err)
-			continue
-		}
-		s.connIO.Write(conn, response)
+		message.Dispatcher.PostMessage(&message.Message{
+			SessionId: remoteAddr,
+			Data:      rawMessage,
+		})
 	}
 }
 
-func (s *TCPServer) NotifyAll(data []byte) error {
+func (s *TCPServer) SendMessage(sessionId string, data []byte) error {
+	conn, ok := s.conns[sessionId]
+	if !ok {
+		return fmt.Errorf("sessionId不存在")
+	}
+	return write(conn, data)
+}
+
+func (s *TCPServer) SendMessageToAll(data []byte) error {
 	for _, conn := range s.conns {
-		s.connIO.Write(conn, data)
+		write(conn, data)
+	}
+	return nil
+}
+
+func read(conn net.Conn) ([]byte, error) {
+	lengthBuf := make([]byte, 4)
+	_, err := io.ReadFull(conn, lengthBuf)
+	if err != nil {
+		return nil, err
+	}
+	length := binary.BigEndian.Uint32(lengthBuf)
+	data := make([]byte, length)
+	_, err = io.ReadFull(conn, data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func write(conn net.Conn, data []byte) error {
+	lengthBuf := make([]byte, 4)
+	length := uint32(len(data))
+	binary.BigEndian.PutUint32(lengthBuf, length)
+	_, err := conn.Write(lengthBuf)
+	if err != nil {
+		return err
+	}
+	_, err = conn.Write(data)
+	if err != nil {
+		return err
 	}
 	return nil
 }

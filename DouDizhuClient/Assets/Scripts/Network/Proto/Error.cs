@@ -24,13 +24,15 @@ namespace Network.Proto {
     static ErrorReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUiJwoGUEVycm9yEgwKBGNvZGUYASAB",
-            "KAkSDwoHbWVzc2FnZRgCIAEoCUIiWhBuZXR3b3JrL3Byb3RvZGVmqgINTmV0",
-            "d29yay5Qcm90b2IGcHJvdG8z"));
+            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUilQEKBlBFcnJvchIjCgRjb2RlGAEg",
+            "ASgOMhUuRG91RGl6aHUuUEVycm9yLkNvZGUSDwoHbWVzc2FnZRgCIAEoCSJV",
+            "CgRDb2RlEhAKDENPREVfVU5LTk9XThAAEhwKGENPREVfREFUQUJBU0VfUkVB",
+            "RF9FUlJPUhABEh0KGUNPREVfREFUQUJBU0VfV1JJVEVfRVJST1IQAkIiWhBu",
+            "ZXR3b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PError), global::Network.Proto.PError.Parser, new[]{ "Code", "Message" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PError), global::Network.Proto.PError.Parser, new[]{ "Code", "Message" }, null, new[]{ typeof(global::Network.Proto.PError.Types.Code) }, null, null)
           }));
     }
     #endregion
@@ -85,13 +87,13 @@ namespace Network.Proto {
 
     /// <summary>Field number for the "code" field.</summary>
     public const int CodeFieldNumber = 1;
-    private string code_ = "";
+    private global::Network.Proto.PError.Types.Code code_ = global::Network.Proto.PError.Types.Code.Unknown;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Code {
+    public global::Network.Proto.PError.Types.Code Code {
       get { return code_; }
       set {
-        code_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        code_ = value;
       }
     }
 
@@ -131,7 +133,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Code.Length != 0) hash ^= Code.GetHashCode();
+      if (Code != global::Network.Proto.PError.Types.Code.Unknown) hash ^= Code.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -151,9 +153,9 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Code.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Code);
+      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Code);
       }
       if (Message.Length != 0) {
         output.WriteRawTag(18);
@@ -169,9 +171,9 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Code.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Code);
+      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Code);
       }
       if (Message.Length != 0) {
         output.WriteRawTag(18);
@@ -187,8 +189,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Code.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Code);
+      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Code);
       }
       if (Message.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
@@ -205,7 +207,7 @@ namespace Network.Proto {
       if (other == null) {
         return;
       }
-      if (other.Code.Length != 0) {
+      if (other.Code != global::Network.Proto.PError.Types.Code.Unknown) {
         Code = other.Code;
       }
       if (other.Message.Length != 0) {
@@ -230,8 +232,8 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            Code = input.ReadString();
+          case 8: {
+            Code = (global::Network.Proto.PError.Types.Code) input.ReadEnum();
             break;
           }
           case 18: {
@@ -257,8 +259,8 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            Code = input.ReadString();
+          case 8: {
+            Code = (global::Network.Proto.PError.Types.Code) input.ReadEnum();
             break;
           }
           case 18: {
@@ -269,6 +271,20 @@ namespace Network.Proto {
       }
     }
     #endif
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the PError message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static partial class Types {
+      public enum Code {
+        [pbr::OriginalName("CODE_UNKNOWN")] Unknown = 0,
+        [pbr::OriginalName("CODE_DATABASE_READ_ERROR")] DatabaseReadError = 1,
+        [pbr::OriginalName("CODE_DATABASE_WRITE_ERROR")] DatabaseWriteError = 2,
+      }
+
+    }
+    #endregion
 
   }
 

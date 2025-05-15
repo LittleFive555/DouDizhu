@@ -25,28 +25,33 @@ namespace Network.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg1HYW1lTXNnLnByb3RvEghEb3VEaXpodRoLRXJyb3IucHJvdG8aDUNoYXRN",
-            "c2cucHJvdG8aDFBsYXllci5wcm90byJGCg5QR2FtZU1zZ0hlYWRlchIRCglt",
-            "ZXNzYWdlSWQYASABKAMSIQoGcGxheWVyGAIgASgLMhEuRG91RGl6aHUuUFBs",
-            "YXllciJ3ChJQR2FtZUNsaWVudE1lc3NhZ2USKAoGaGVhZGVyGAEgASgLMhgu",
-            "RG91RGl6aHUuUEdhbWVNc2dIZWFkZXISLAoHY2hhdE1zZxgCIAEoCzIZLkRv",
-            "dURpemh1LlBDaGF0TXNnUmVxdWVzdEgAQgkKB2NvbnRlbnQijAEKElBHYW1l",
-            "U2VydmVyTWVzc2FnZRIwCghyZXNwb25zZRgBIAEoCzIcLkRvdURpemh1LlBH",
-            "YW1lTXNnUmVzcFBhY2tldEgAEjkKDG5vdGlmaWNhdGlvbhgCIAEoCzIhLkRv",
-            "dURpemh1LlBHYW1lTm90aWZpY2F0aW9uUGFja2V0SABCCQoHY29udGVudCKh",
-            "AQoSUEdhbWVNc2dSZXNwUGFja2V0EigKBmhlYWRlchgBIAEoCzIYLkRvdURp",
-            "emh1LlBHYW1lTXNnSGVhZGVyEiEKBWVycm9yGAIgASgLMhAuRG91RGl6aHUu",
-            "UEVycm9ySAASMwoOY29tbW9uUmVzcG9uc2UYAyABKAsyGS5Eb3VEaXpodS5Q",
-            "Q29tbW9uUmVzcG9uc2VIAEIJCgdjb250ZW50IlcKF1BHYW1lTm90aWZpY2F0",
-            "aW9uUGFja2V0EjEKB2NoYXRNc2cYASABKAsyHi5Eb3VEaXpodS5QQ2hhdE1z",
-            "Z05vdGlmaWNhdGlvbkgAQgkKB2NvbnRlbnQiEQoPUENvbW1vblJlc3BvbnNl",
-            "QiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
+            "c2cucHJvdG8aDFBsYXllci5wcm90bxoLTG9naW4ucHJvdG8iRgoOUEdhbWVN",
+            "c2dIZWFkZXISEQoJbWVzc2FnZUlkGAEgASgDEiEKBnBsYXllchgCIAEoCzIR",
+            "LkRvdURpemh1LlBQbGF5ZXIi0wEKElBHYW1lQ2xpZW50TWVzc2FnZRIoCgZo",
+            "ZWFkZXIYASABKAsyGC5Eb3VEaXpodS5QR2FtZU1zZ0hlYWRlchIsCgdjaGF0",
+            "TXNnGAIgASgLMhkuRG91RGl6aHUuUENoYXRNc2dSZXF1ZXN0SAASLQoJcmVn",
+            "aXN0UmVxGAMgASgLMhguRG91RGl6aHUuUFJlZ2lzdFJlcXVlc3RIABIrCghs",
+            "b2dpblJlcRgEIAEoCzIXLkRvdURpemh1LlBMb2dpblJlcXVlc3RIAEIJCgdj",
+            "b250ZW50IowBChJQR2FtZVNlcnZlck1lc3NhZ2USMAoIcmVzcG9uc2UYASAB",
+            "KAsyHC5Eb3VEaXpodS5QR2FtZU1zZ1Jlc3BQYWNrZXRIABI5Cgxub3RpZmlj",
+            "YXRpb24YAiABKAsyIS5Eb3VEaXpodS5QR2FtZU5vdGlmaWNhdGlvblBhY2tl",
+            "dEgAQgkKB2NvbnRlbnQigQIKElBHYW1lTXNnUmVzcFBhY2tldBIoCgZoZWFk",
+            "ZXIYASABKAsyGC5Eb3VEaXpodS5QR2FtZU1zZ0hlYWRlchIhCgVlcnJvchgC",
+            "IAEoCzIQLkRvdURpemh1LlBFcnJvckgAEjMKDmNvbW1vblJlc3BvbnNlGAMg",
+            "ASgLMhkuRG91RGl6aHUuUENvbW1vblJlc3BvbnNlSAASLwoKcmVnaXN0UmVz",
+            "cBgEIAEoCzIZLkRvdURpemh1LlBSZWdpc3RSZXNwb25zZUgAEi0KCWxvZ2lu",
+            "UmVzcBgFIAEoCzIYLkRvdURpemh1LlBMb2dpblJlc3BvbnNlSABCCQoHY29u",
+            "dGVudCJXChdQR2FtZU5vdGlmaWNhdGlvblBhY2tldBIxCgdjaGF0TXNnGAEg",
+            "ASgLMh4uRG91RGl6aHUuUENoYXRNc2dOb3RpZmljYXRpb25IAEIJCgdjb250",
+            "ZW50IhEKD1BDb21tb25SZXNwb25zZUIiWhBuZXR3b3JrL3Byb3RvZGVmqgIN",
+            "TmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Network.Proto.ErrorReflection.Descriptor, global::Network.Proto.ChatMsgReflection.Descriptor, global::Network.Proto.PlayerReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Network.Proto.ErrorReflection.Descriptor, global::Network.Proto.ChatMsgReflection.Descriptor, global::Network.Proto.PlayerReflection.Descriptor, global::Network.Proto.LoginReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameMsgHeader), global::Network.Proto.PGameMsgHeader.Parser, new[]{ "MessageId", "Player" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameClientMessage), global::Network.Proto.PGameClientMessage.Parser, new[]{ "Header", "ChatMsg" }, new[]{ "Content" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameClientMessage), global::Network.Proto.PGameClientMessage.Parser, new[]{ "Header", "ChatMsg", "RegistReq", "LoginReq" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameServerMessage), global::Network.Proto.PGameServerMessage.Parser, new[]{ "Response", "Notification" }, new[]{ "Content" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameMsgRespPacket), global::Network.Proto.PGameMsgRespPacket.Parser, new[]{ "Header", "Error", "CommonResponse" }, new[]{ "Content" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameMsgRespPacket), global::Network.Proto.PGameMsgRespPacket.Parser, new[]{ "Header", "Error", "CommonResponse", "RegistResp", "LoginResp" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGameNotificationPacket), global::Network.Proto.PGameNotificationPacket.Parser, new[]{ "ChatMsg" }, new[]{ "Content" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PCommonResponse), global::Network.Proto.PCommonResponse.Parser, null, null, null, null, null)
           }));
@@ -342,6 +347,12 @@ namespace Network.Proto {
         case ContentOneofCase.ChatMsg:
           ChatMsg = other.ChatMsg.Clone();
           break;
+        case ContentOneofCase.RegistReq:
+          RegistReq = other.RegistReq.Clone();
+          break;
+        case ContentOneofCase.LoginReq:
+          LoginReq = other.LoginReq.Clone();
+          break;
       }
 
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -377,11 +388,37 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "registReq" field.</summary>
+    public const int RegistReqFieldNumber = 3;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PRegistRequest RegistReq {
+      get { return contentCase_ == ContentOneofCase.RegistReq ? (global::Network.Proto.PRegistRequest) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.RegistReq;
+      }
+    }
+
+    /// <summary>Field number for the "loginReq" field.</summary>
+    public const int LoginReqFieldNumber = 4;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PLoginRequest LoginReq {
+      get { return contentCase_ == ContentOneofCase.LoginReq ? (global::Network.Proto.PLoginRequest) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.LoginReq;
+      }
+    }
+
     private object content_;
     /// <summary>Enum of possible cases for the "content" oneof.</summary>
     public enum ContentOneofCase {
       None = 0,
       ChatMsg = 2,
+      RegistReq = 3,
+      LoginReq = 4,
     }
     private ContentOneofCase contentCase_ = ContentOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -414,6 +451,8 @@ namespace Network.Proto {
       }
       if (!object.Equals(Header, other.Header)) return false;
       if (!object.Equals(ChatMsg, other.ChatMsg)) return false;
+      if (!object.Equals(RegistReq, other.RegistReq)) return false;
+      if (!object.Equals(LoginReq, other.LoginReq)) return false;
       if (ContentCase != other.ContentCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -424,6 +463,8 @@ namespace Network.Proto {
       int hash = 1;
       if (header_ != null) hash ^= Header.GetHashCode();
       if (contentCase_ == ContentOneofCase.ChatMsg) hash ^= ChatMsg.GetHashCode();
+      if (contentCase_ == ContentOneofCase.RegistReq) hash ^= RegistReq.GetHashCode();
+      if (contentCase_ == ContentOneofCase.LoginReq) hash ^= LoginReq.GetHashCode();
       hash ^= (int) contentCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -451,6 +492,14 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteMessage(ChatMsg);
       }
+      if (contentCase_ == ContentOneofCase.RegistReq) {
+        output.WriteRawTag(26);
+        output.WriteMessage(RegistReq);
+      }
+      if (contentCase_ == ContentOneofCase.LoginReq) {
+        output.WriteRawTag(34);
+        output.WriteMessage(LoginReq);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -469,6 +518,14 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteMessage(ChatMsg);
       }
+      if (contentCase_ == ContentOneofCase.RegistReq) {
+        output.WriteRawTag(26);
+        output.WriteMessage(RegistReq);
+      }
+      if (contentCase_ == ContentOneofCase.LoginReq) {
+        output.WriteRawTag(34);
+        output.WriteMessage(LoginReq);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -484,6 +541,12 @@ namespace Network.Proto {
       }
       if (contentCase_ == ContentOneofCase.ChatMsg) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ChatMsg);
+      }
+      if (contentCase_ == ContentOneofCase.RegistReq) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(RegistReq);
+      }
+      if (contentCase_ == ContentOneofCase.LoginReq) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoginReq);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -509,6 +572,18 @@ namespace Network.Proto {
             ChatMsg = new global::Network.Proto.PChatMsgRequest();
           }
           ChatMsg.MergeFrom(other.ChatMsg);
+          break;
+        case ContentOneofCase.RegistReq:
+          if (RegistReq == null) {
+            RegistReq = new global::Network.Proto.PRegistRequest();
+          }
+          RegistReq.MergeFrom(other.RegistReq);
+          break;
+        case ContentOneofCase.LoginReq:
+          if (LoginReq == null) {
+            LoginReq = new global::Network.Proto.PLoginRequest();
+          }
+          LoginReq.MergeFrom(other.LoginReq);
           break;
       }
 
@@ -547,6 +622,24 @@ namespace Network.Proto {
             ChatMsg = subBuilder;
             break;
           }
+          case 26: {
+            global::Network.Proto.PRegistRequest subBuilder = new global::Network.Proto.PRegistRequest();
+            if (contentCase_ == ContentOneofCase.RegistReq) {
+              subBuilder.MergeFrom(RegistReq);
+            }
+            input.ReadMessage(subBuilder);
+            RegistReq = subBuilder;
+            break;
+          }
+          case 34: {
+            global::Network.Proto.PLoginRequest subBuilder = new global::Network.Proto.PLoginRequest();
+            if (contentCase_ == ContentOneofCase.LoginReq) {
+              subBuilder.MergeFrom(LoginReq);
+            }
+            input.ReadMessage(subBuilder);
+            LoginReq = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -580,6 +673,24 @@ namespace Network.Proto {
             }
             input.ReadMessage(subBuilder);
             ChatMsg = subBuilder;
+            break;
+          }
+          case 26: {
+            global::Network.Proto.PRegistRequest subBuilder = new global::Network.Proto.PRegistRequest();
+            if (contentCase_ == ContentOneofCase.RegistReq) {
+              subBuilder.MergeFrom(RegistReq);
+            }
+            input.ReadMessage(subBuilder);
+            RegistReq = subBuilder;
+            break;
+          }
+          case 34: {
+            global::Network.Proto.PLoginRequest subBuilder = new global::Network.Proto.PLoginRequest();
+            if (contentCase_ == ContentOneofCase.LoginReq) {
+              subBuilder.MergeFrom(LoginReq);
+            }
+            input.ReadMessage(subBuilder);
+            LoginReq = subBuilder;
             break;
           }
         }
@@ -926,6 +1037,12 @@ namespace Network.Proto {
         case ContentOneofCase.CommonResponse:
           CommonResponse = other.CommonResponse.Clone();
           break;
+        case ContentOneofCase.RegistResp:
+          RegistResp = other.RegistResp.Clone();
+          break;
+        case ContentOneofCase.LoginResp:
+          LoginResp = other.LoginResp.Clone();
+          break;
       }
 
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -973,12 +1090,38 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "registResp" field.</summary>
+    public const int RegistRespFieldNumber = 4;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PRegistResponse RegistResp {
+      get { return contentCase_ == ContentOneofCase.RegistResp ? (global::Network.Proto.PRegistResponse) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.RegistResp;
+      }
+    }
+
+    /// <summary>Field number for the "loginResp" field.</summary>
+    public const int LoginRespFieldNumber = 5;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PLoginResponse LoginResp {
+      get { return contentCase_ == ContentOneofCase.LoginResp ? (global::Network.Proto.PLoginResponse) content_ : null; }
+      set {
+        content_ = value;
+        contentCase_ = value == null ? ContentOneofCase.None : ContentOneofCase.LoginResp;
+      }
+    }
+
     private object content_;
     /// <summary>Enum of possible cases for the "content" oneof.</summary>
     public enum ContentOneofCase {
       None = 0,
       Error = 2,
       CommonResponse = 3,
+      RegistResp = 4,
+      LoginResp = 5,
     }
     private ContentOneofCase contentCase_ = ContentOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1012,6 +1155,8 @@ namespace Network.Proto {
       if (!object.Equals(Header, other.Header)) return false;
       if (!object.Equals(Error, other.Error)) return false;
       if (!object.Equals(CommonResponse, other.CommonResponse)) return false;
+      if (!object.Equals(RegistResp, other.RegistResp)) return false;
+      if (!object.Equals(LoginResp, other.LoginResp)) return false;
       if (ContentCase != other.ContentCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1023,6 +1168,8 @@ namespace Network.Proto {
       if (header_ != null) hash ^= Header.GetHashCode();
       if (contentCase_ == ContentOneofCase.Error) hash ^= Error.GetHashCode();
       if (contentCase_ == ContentOneofCase.CommonResponse) hash ^= CommonResponse.GetHashCode();
+      if (contentCase_ == ContentOneofCase.RegistResp) hash ^= RegistResp.GetHashCode();
+      if (contentCase_ == ContentOneofCase.LoginResp) hash ^= LoginResp.GetHashCode();
       hash ^= (int) contentCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1054,6 +1201,14 @@ namespace Network.Proto {
         output.WriteRawTag(26);
         output.WriteMessage(CommonResponse);
       }
+      if (contentCase_ == ContentOneofCase.RegistResp) {
+        output.WriteRawTag(34);
+        output.WriteMessage(RegistResp);
+      }
+      if (contentCase_ == ContentOneofCase.LoginResp) {
+        output.WriteRawTag(42);
+        output.WriteMessage(LoginResp);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1076,6 +1231,14 @@ namespace Network.Proto {
         output.WriteRawTag(26);
         output.WriteMessage(CommonResponse);
       }
+      if (contentCase_ == ContentOneofCase.RegistResp) {
+        output.WriteRawTag(34);
+        output.WriteMessage(RegistResp);
+      }
+      if (contentCase_ == ContentOneofCase.LoginResp) {
+        output.WriteRawTag(42);
+        output.WriteMessage(LoginResp);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1094,6 +1257,12 @@ namespace Network.Proto {
       }
       if (contentCase_ == ContentOneofCase.CommonResponse) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(CommonResponse);
+      }
+      if (contentCase_ == ContentOneofCase.RegistResp) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(RegistResp);
+      }
+      if (contentCase_ == ContentOneofCase.LoginResp) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoginResp);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1125,6 +1294,18 @@ namespace Network.Proto {
             CommonResponse = new global::Network.Proto.PCommonResponse();
           }
           CommonResponse.MergeFrom(other.CommonResponse);
+          break;
+        case ContentOneofCase.RegistResp:
+          if (RegistResp == null) {
+            RegistResp = new global::Network.Proto.PRegistResponse();
+          }
+          RegistResp.MergeFrom(other.RegistResp);
+          break;
+        case ContentOneofCase.LoginResp:
+          if (LoginResp == null) {
+            LoginResp = new global::Network.Proto.PLoginResponse();
+          }
+          LoginResp.MergeFrom(other.LoginResp);
           break;
       }
 
@@ -1172,6 +1353,24 @@ namespace Network.Proto {
             CommonResponse = subBuilder;
             break;
           }
+          case 34: {
+            global::Network.Proto.PRegistResponse subBuilder = new global::Network.Proto.PRegistResponse();
+            if (contentCase_ == ContentOneofCase.RegistResp) {
+              subBuilder.MergeFrom(RegistResp);
+            }
+            input.ReadMessage(subBuilder);
+            RegistResp = subBuilder;
+            break;
+          }
+          case 42: {
+            global::Network.Proto.PLoginResponse subBuilder = new global::Network.Proto.PLoginResponse();
+            if (contentCase_ == ContentOneofCase.LoginResp) {
+              subBuilder.MergeFrom(LoginResp);
+            }
+            input.ReadMessage(subBuilder);
+            LoginResp = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -1214,6 +1413,24 @@ namespace Network.Proto {
             }
             input.ReadMessage(subBuilder);
             CommonResponse = subBuilder;
+            break;
+          }
+          case 34: {
+            global::Network.Proto.PRegistResponse subBuilder = new global::Network.Proto.PRegistResponse();
+            if (contentCase_ == ContentOneofCase.RegistResp) {
+              subBuilder.MergeFrom(RegistResp);
+            }
+            input.ReadMessage(subBuilder);
+            RegistResp = subBuilder;
+            break;
+          }
+          case 42: {
+            global::Network.Proto.PLoginResponse subBuilder = new global::Network.Proto.PLoginResponse();
+            if (contentCase_ == ContentOneofCase.LoginResp) {
+              subBuilder.MergeFrom(LoginResp);
+            }
+            input.ReadMessage(subBuilder);
+            LoginResp = subBuilder;
             break;
           }
         }

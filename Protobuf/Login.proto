@@ -1,0 +1,52 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+message PRegistRequest {
+    string account = 1;
+    string password = 2;
+}
+
+message PRegistResponse {
+    enum Result {
+        RESULT_UNKNOWN = 0;
+
+        RESULT_SUCCESS = 1;
+
+        RESULT_ACCOUNT_EXISTS = 2;
+
+        RESULT_ACCOUNT_TOO_LONG = 3;
+        RESULT_ACCOUNT_TOO_SHORT = 4;
+        RESULT_ACCOUNT_FORMAT_INVALID = 5;
+
+        RESULT_PASSWORD_TOO_LONG = 6;
+        RESULT_PASSWORD_TOO_SHORT = 7;
+        RESULT_PASSWORD_FORMAT_INVALID = 8;
+    }
+
+    Result result = 1;
+}
+
+
+
+message PLoginRequest {
+    string account = 1;
+    string password = 2;
+}
+
+message PLoginResponse {
+    enum Result {
+        RESULT_UNKNOWN = 0;
+
+        RESULT_SUCCESS = 1;
+        
+        RESULT_ACCOUNT_NOT_EXISTS = 2;
+        
+        RESULT_PASSWORD_WRONG = 3;
+    }
+
+    Result result = 1;
+    string playerId = 2;
+}
