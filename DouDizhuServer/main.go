@@ -19,7 +19,7 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer(":8080")
 
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.GameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
 
 	if err := network.Server.Start(); err != nil {
 		logger.ErrorWith("服务器启动失败", "error", err)

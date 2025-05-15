@@ -24,13 +24,13 @@ namespace Network.Proto {
     static ErrorReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUiJgoFRXJyb3ISDAoEY29kZRgBIAEo",
-            "CRIPCgdtZXNzYWdlGAIgASgJQiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1OZXR3",
-            "b3JrLlByb3RvYgZwcm90bzM="));
+            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUiJwoGUEVycm9yEgwKBGNvZGUYASAB",
+            "KAkSDwoHbWVzc2FnZRgCIAEoCUIiWhBuZXR3b3JrL3Byb3RvZGVmqgINTmV0",
+            "d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.Error), global::Network.Proto.Error.Parser, new[]{ "Code", "Message" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PError), global::Network.Proto.PError.Parser, new[]{ "Code", "Message" }, null, null, null, null)
           }));
     }
     #endregion
@@ -38,16 +38,16 @@ namespace Network.Proto {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Error : pb::IMessage<Error>
+  public sealed partial class PError : pb::IMessage<PError>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Error> _parser = new pb::MessageParser<Error>(() => new Error());
+    private static readonly pb::MessageParser<PError> _parser = new pb::MessageParser<PError>(() => new PError());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Error> Parser { get { return _parser; } }
+    public static pb::MessageParser<PError> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -63,7 +63,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Error() {
+    public PError() {
       OnConstruction();
     }
 
@@ -71,7 +71,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Error(Error other) : this() {
+    public PError(PError other) : this() {
       code_ = other.code_;
       message_ = other.message_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -79,8 +79,8 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Error Clone() {
-      return new Error(this);
+    public PError Clone() {
+      return new PError(this);
     }
 
     /// <summary>Field number for the "code" field.</summary>
@@ -110,12 +110,12 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Error);
+      return Equals(other as PError);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Error other) {
+    public bool Equals(PError other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -201,7 +201,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Error other) {
+    public void MergeFrom(PError other) {
       if (other == null) {
         return;
       }

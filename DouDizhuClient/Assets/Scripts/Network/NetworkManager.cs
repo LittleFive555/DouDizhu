@@ -38,8 +38,8 @@ namespace Network
 
         private const int REQUEST_TIMEOUT = 5;
 
-        private readonly ConcurrentDictionary<long, TaskCompletionSource<GameMsgRespPacket>> m_PendingRequests = new();
-        private readonly Dictionary<GameNotificationPacket.ContentOneofCase, Action<IMessage>> m_NotificationHandlers = new();
+        private readonly ConcurrentDictionary<long, TaskCompletionSource<PGameMsgRespPacket>> m_PendingRequests = new();
+        private readonly Dictionary<PGameNotificationPacket.ContentOneofCase, Action<IMessage>> m_NotificationHandlers = new();
 
         public NetworkManager()
         {
@@ -67,20 +67,20 @@ namespace Network
             Debug.Log("TCP连接已关闭");
         }
 
-        public async Task<NetworkResult<CommonResponse>> RequestAsync<TReq>(GameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        public async Task<NetworkResult<PCommonResponse>> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
-            return await RequestAsync<TReq, CommonResponse>(requestType, request);
+            return await RequestAsync<TReq, PCommonResponse>(requestType, request);
         }
 
-        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(GameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage
+        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage
         {
             if (!m_IsConnected || m_TcpClient == null || !m_TcpClient.Connected)
                 return NetworkResult<TResp>.Failure("TCP连接未建立，无法发送消息");
 
             try
             {
-                GameClientMessage gameClientMessage = PackRequest(requestType, request);
-                var tcs = new TaskCompletionSource<GameMsgRespPacket>();
+                PGameClientMessage gameClientMessage = PackRequest(requestType, request);
+                var tcs = new TaskCompletionSource<PGameMsgRespPacket>();
                 m_PendingRequests.TryAdd(gameClientMessage.Header.MessageId, tcs);
                 
                 await m_MessageReadWriter.WriteTo(m_NetworkStream, gameClientMessage.ToByteArray());
@@ -90,7 +90,7 @@ namespace Network
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
                 timeoutCts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
                 var serverPacket = await tcs.Task;
-                if (serverPacket.ContentCase == GameMsgRespPacket.ContentOneofCase.Error)
+                if (serverPacket.ContentCase == PGameMsgRespPacket.ContentOneofCase.Error)
                     return NetworkResult<TResp>.Failure($"服务器返回错误: ErrorCode {serverPacket.Error.Code}: {serverPacket.Error.Message}");
                 
                 TResp response = UnpackResponse<TResp>(serverPacket);
@@ -102,7 +102,7 @@ namespace Network
             }
         }
 
-        public void RegisterNotificationHandler<TNotification>(GameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        public void RegisterNotificationHandler<TNotification>(PGameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
         {
             var adapter = new NotificationHandlerAdapter<TNotification>(handler);
             if (m_NotificationHandlers.ContainsKey(notificationType))
@@ -111,7 +111,7 @@ namespace Network
                 m_NotificationHandlers[notificationType] = adapter.Handle;
         }
 
-        public void UnregisterNotificationHandler<TNotification>(GameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        public void UnregisterNotificationHandler<TNotification>(PGameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
         {
             // 查找对应的适配器
             var adapter = new NotificationHandlerAdapter<TNotification>(handler);
@@ -154,10 +154,10 @@ namespace Network
                         break;
                     }
 
-                    GameServerMessage gameServerMessage = GameServerMessage.Parser.ParseFrom(responseBuffer);
-                    if (gameServerMessage.ContentCase == GameServerMessage.ContentOneofCase.Notification)
+                    PGameServerMessage gameServerMessage = PGameServerMessage.Parser.ParseFrom(responseBuffer);
+                    if (gameServerMessage.ContentCase == PGameServerMessage.ContentOneofCase.Notification)
                         OnNotified(gameServerMessage.Notification);
-                    else if (gameServerMessage.ContentCase == GameServerMessage.ContentOneofCase.Response)
+                    else if (gameServerMessage.ContentCase == PGameServerMessage.ContentOneofCase.Response)
                         OnResponse(gameServerMessage.Response);
                 }
             }
@@ -167,7 +167,7 @@ namespace Network
             }
         }
 
-        private void OnResponse(GameMsgRespPacket gameMsgRespPacket)
+        private void OnResponse(PGameMsgRespPacket gameMsgRespPacket)
         {
             if (m_PendingRequests.TryGetValue(gameMsgRespPacket.Header.MessageId, out var tcs))
             {
@@ -176,7 +176,7 @@ namespace Network
             }
         }
 
-        private void OnNotified(GameNotificationPacket notification)
+        private void OnNotified(PGameNotificationPacket notification)
         {
             if (m_NotificationHandlers.TryGetValue(notification.ContentCase, out var handler))
             {
@@ -193,14 +193,14 @@ namespace Network
             }
         }
 
-        private GameClientMessage PackRequest<TReq>(GameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        private PGameClientMessage PackRequest<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
-            GameClientMessage gameClientMessage = new GameClientMessage()
+            PGameClientMessage gameClientMessage = new PGameClientMessage()
             {
-                Header = new GameMsgHeader()
+                Header = new PGameMsgHeader()
                 { 
                     MessageId = GenerateRequestId(),
-                    Player = new Player()
+                    Player = new PPlayer()
                     {
                         PlayerId = "", // TODO
                         Nickname = ""
@@ -209,7 +209,7 @@ namespace Network
             };
             
             string propertyName = requestType.ToString();
-            Type packetType = typeof(GameClientMessage);
+            Type packetType = typeof(PGameClientMessage);
             var property = packetType.GetProperty(propertyName);
             if (property != null)
                 property.SetValue(gameClientMessage, request);
@@ -218,11 +218,11 @@ namespace Network
             return gameClientMessage;
         }
 
-        private TResp UnpackResponse<TResp>(GameMsgRespPacket response) where TResp : IMessage
+        private TResp UnpackResponse<TResp>(PGameMsgRespPacket response) where TResp : IMessage
         {
             string propertyName = response.ContentCase.ToString();
             
-            Type packetType = typeof(GameMsgRespPacket);
+            Type packetType = typeof(PGameMsgRespPacket);
             var property = packetType.GetProperty(propertyName);
             if (property != null)
             {

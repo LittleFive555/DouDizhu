@@ -18,14 +18,14 @@ func GetServer() *GameServer {
 
 type GameServer struct {
 	server   *tcp.TCPServer
-	handlers map[reflect.Type]func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)
+	handlers map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)
 }
 
 func NewGameServer(addr string) *GameServer {
 	server := tcp.NewTCPServer(addr, tcp.NewLengthPrefixConnIO())
 	gameServer := &GameServer{
 		server:   server,
-		handlers: make(map[reflect.Type]func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)),
+		handlers: make(map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)),
 	}
 	server.SetMessageConsumer(gameServer.handleMessage)
 	return gameServer
@@ -40,13 +40,13 @@ func (s *GameServer) Stop() error {
 }
 
 // RegisterHandler 注册消息处理器
-func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.GameClientMessage) (*protodef.GameMsgRespPacket, error)) {
+func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)) {
 	s.handlers[msgType] = handler
 }
 
-func (s *GameServer) SendNotification(notification *protodef.GameNotificationPacket) error {
-	notificationMessage := &protodef.GameServerMessage{
-		Content: &protodef.GameServerMessage_Notification{
+func (s *GameServer) SendNotification(notification *protodef.PGameNotificationPacket) error {
+	notificationMessage := &protodef.PGameServerMessage{
+		Content: &protodef.PGameServerMessage_Notification{
 			Notification: notification,
 		},
 	}
@@ -90,8 +90,8 @@ func (s *GameServer) handleMessage(data []byte) ([]byte, error) {
 
 	// 包装为 GameServerMessage
 	respPacket.Header.MessageId = reqPacket.Header.MessageId
-	serverMessage := &protodef.GameServerMessage{
-		Content: &protodef.GameServerMessage_Response{
+	serverMessage := &protodef.PGameServerMessage{
+		Content: &protodef.PGameServerMessage_Response{
 			Response: respPacket,
 		},
 	}

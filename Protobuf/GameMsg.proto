@@ -8,41 +8,41 @@ import "Error.proto";
 import "ChatMsg.proto";
 import "Player.proto";
 
-message GameMsgHeader {
+message PGameMsgHeader {
 	// 用于标识请求的唯一id
 	int64 messageId = 1;
-	Player player = 2;
+	PPlayer player = 2;
 }
 
-message GameClientMessage {
-	GameMsgHeader header = 1;
+message PGameClientMessage {
+	PGameMsgHeader header = 1;
 	oneof content {
-		ChatMsgRequest chatMsg = 2;
+		PChatMsgRequest chatMsg = 2;
 	}
 }
 
-message GameServerMessage {
+message PGameServerMessage {
 	oneof content {
-		GameMsgRespPacket response = 1;
-		GameNotificationPacket notification = 2;
+		PGameMsgRespPacket response = 1;
+		PGameNotificationPacket notification = 2;
 	}
 }
 
-message GameMsgRespPacket {
-	GameMsgHeader header = 1;
+message PGameMsgRespPacket {
+	PGameMsgHeader header = 1;
 	oneof content {
-		Error error = 2;
-		CommonResponse commonResponse = 3;
+		PError error = 2;
+		PCommonResponse commonResponse = 3;
 	}
 }
 
-message GameNotificationPacket {
+message PGameNotificationPacket {
 	oneof content {
-		ChatMsgNotification chatMsg = 1;
+		PChatMsgNotification chatMsg = 1;
 	}
 }
 
 // 不需要返回值可用这个
-message CommonResponse {
+message PCommonResponse {
 	
 }

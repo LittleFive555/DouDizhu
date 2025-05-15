@@ -6,11 +6,11 @@ option csharp_namespace = "Network.Proto";
 
 import "Player.proto";
 
-message ChatMsgRequest {
+message PChatMsgRequest {
 	string content = 1;
 }
 
-message ChatMsgNotification {
-	Player from = 1;
+message PChatMsgNotification {
+	PPlayer from = 1;
 	string content = 2;
 }

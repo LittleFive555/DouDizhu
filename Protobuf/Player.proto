@@ -4,7 +4,7 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
-message Player {
+message PPlayer {
     string playerId = 1;
     string nickname = 2;
 }

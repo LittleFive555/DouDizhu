@@ -21,27 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ChatMsgRequest struct {
+type PChatMsgRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ChatMsgRequest) Reset() {
-	*x = ChatMsgRequest{}
+func (x *PChatMsgRequest) Reset() {
+	*x = PChatMsgRequest{}
 	mi := &file_ChatMsg_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ChatMsgRequest) String() string {
+func (x *PChatMsgRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChatMsgRequest) ProtoMessage() {}
+func (*PChatMsgRequest) ProtoMessage() {}
 
-func (x *ChatMsgRequest) ProtoReflect() protoreflect.Message {
+func (x *PChatMsgRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_ChatMsg_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,40 +53,40 @@ func (x *ChatMsgRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChatMsgRequest.ProtoReflect.Descriptor instead.
-func (*ChatMsgRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PChatMsgRequest.ProtoReflect.Descriptor instead.
+func (*PChatMsgRequest) Descriptor() ([]byte, []int) {
 	return file_ChatMsg_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ChatMsgRequest) GetContent() string {
+func (x *PChatMsgRequest) GetContent() string {
 	if x != nil {
 		return x.Content
 	}
 	return ""
 }
 
-type ChatMsgNotification struct {
+type PChatMsgNotification struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Player                `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
+	From          *PPlayer               `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ChatMsgNotification) Reset() {
-	*x = ChatMsgNotification{}
+func (x *PChatMsgNotification) Reset() {
+	*x = PChatMsgNotification{}
 	mi := &file_ChatMsg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ChatMsgNotification) String() string {
+func (x *PChatMsgNotification) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChatMsgNotification) ProtoMessage() {}
+func (*PChatMsgNotification) ProtoMessage() {}
 
-func (x *ChatMsgNotification) ProtoReflect() protoreflect.Message {
+func (x *PChatMsgNotification) ProtoReflect() protoreflect.Message {
 	mi := &file_ChatMsg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -98,19 +98,19 @@ func (x *ChatMsgNotification) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChatMsgNotification.ProtoReflect.Descriptor instead.
-func (*ChatMsgNotification) Descriptor() ([]byte, []int) {
+// Deprecated: Use PChatMsgNotification.ProtoReflect.Descriptor instead.
+func (*PChatMsgNotification) Descriptor() ([]byte, []int) {
 	return file_ChatMsg_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ChatMsgNotification) GetFrom() *Player {
+func (x *PChatMsgNotification) GetFrom() *PPlayer {
 	if x != nil {
 		return x.From
 	}
 	return nil
 }
 
-func (x *ChatMsgNotification) GetContent() string {
+func (x *PChatMsgNotification) GetContent() string {
 	if x != nil {
 		return x.Content
 	}
@@ -121,11 +121,11 @@ var File_ChatMsg_proto protoreflect.FileDescriptor
 
 const file_ChatMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rChatMsg.proto\x12\bDouDizhu\x1a\fPlayer.proto\"*\n" +
-	"\x0eChatMsgRequest\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"U\n" +
-	"\x13ChatMsgNotification\x12$\n" +
-	"\x04from\x18\x01 \x01(\v2\x10.DouDizhu.PlayerR\x04from\x12\x18\n" +
+	"\rChatMsg.proto\x12\bDouDizhu\x1a\fPlayer.proto\"+\n" +
+	"\x0fPChatMsgRequest\x12\x18\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\"W\n" +
+	"\x14PChatMsgNotification\x12%\n" +
+	"\x04from\x18\x01 \x01(\v2\x11.DouDizhu.PPlayerR\x04from\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontentB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
@@ -142,12 +142,12 @@ func file_ChatMsg_proto_rawDescGZIP() []byte {
 
 var file_ChatMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_ChatMsg_proto_goTypes = []any{
-	(*ChatMsgRequest)(nil),      // 0: DouDizhu.ChatMsgRequest
-	(*ChatMsgNotification)(nil), // 1: DouDizhu.ChatMsgNotification
-	(*Player)(nil),              // 2: DouDizhu.Player
+	(*PChatMsgRequest)(nil),      // 0: DouDizhu.PChatMsgRequest
+	(*PChatMsgNotification)(nil), // 1: DouDizhu.PChatMsgNotification
+	(*PPlayer)(nil),              // 2: DouDizhu.PPlayer
 }
 var file_ChatMsg_proto_depIdxs = []int32{
-	2, // 0: DouDizhu.ChatMsgNotification.from:type_name -> DouDizhu.Player
+	2, // 0: DouDizhu.PChatMsgNotification.from:type_name -> DouDizhu.PPlayer
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

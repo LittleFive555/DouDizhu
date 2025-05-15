@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Error struct {
+type PError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
@@ -29,20 +29,20 @@ type Error struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Error) Reset() {
-	*x = Error{}
+func (x *PError) Reset() {
+	*x = PError{}
 	mi := &file_Error_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Error) String() string {
+func (x *PError) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Error) ProtoMessage() {}
+func (*PError) ProtoMessage() {}
 
-func (x *Error) ProtoReflect() protoreflect.Message {
+func (x *PError) ProtoReflect() protoreflect.Message {
 	mi := &file_Error_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,19 +54,19 @@ func (x *Error) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Error.ProtoReflect.Descriptor instead.
-func (*Error) Descriptor() ([]byte, []int) {
+// Deprecated: Use PError.ProtoReflect.Descriptor instead.
+func (*PError) Descriptor() ([]byte, []int) {
 	return file_Error_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Error) GetCode() string {
+func (x *PError) GetCode() string {
 	if x != nil {
 		return x.Code
 	}
 	return ""
 }
 
-func (x *Error) GetMessage() string {
+func (x *PError) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -77,8 +77,8 @@ var File_Error_proto protoreflect.FileDescriptor
 
 const file_Error_proto_rawDesc = "" +
 	"\n" +
-	"\vError.proto\x12\bDouDizhu\"5\n" +
-	"\x05Error\x12\x12\n" +
+	"\vError.proto\x12\bDouDizhu\"6\n" +
+	"\x06PError\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessageB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
@@ -96,7 +96,7 @@ func file_Error_proto_rawDescGZIP() []byte {
 
 var file_Error_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_Error_proto_goTypes = []any{
-	(*Error)(nil), // 0: DouDizhu.Error
+	(*PError)(nil), // 0: DouDizhu.PError
 }
 var file_Error_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

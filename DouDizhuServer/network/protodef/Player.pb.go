@@ -21,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Player struct {
+type PPlayer struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PlayerId      string                 `protobuf:"bytes,1,opt,name=playerId,proto3" json:"playerId,omitempty"`
 	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
@@ -29,20 +29,20 @@ type Player struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Player) Reset() {
-	*x = Player{}
+func (x *PPlayer) Reset() {
+	*x = PPlayer{}
 	mi := &file_Player_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Player) String() string {
+func (x *PPlayer) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Player) ProtoMessage() {}
+func (*PPlayer) ProtoMessage() {}
 
-func (x *Player) ProtoReflect() protoreflect.Message {
+func (x *PPlayer) ProtoReflect() protoreflect.Message {
 	mi := &file_Player_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,19 +54,19 @@ func (x *Player) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Player.ProtoReflect.Descriptor instead.
-func (*Player) Descriptor() ([]byte, []int) {
+// Deprecated: Use PPlayer.ProtoReflect.Descriptor instead.
+func (*PPlayer) Descriptor() ([]byte, []int) {
 	return file_Player_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Player) GetPlayerId() string {
+func (x *PPlayer) GetPlayerId() string {
 	if x != nil {
 		return x.PlayerId
 	}
 	return ""
 }
 
-func (x *Player) GetNickname() string {
+func (x *PPlayer) GetNickname() string {
 	if x != nil {
 		return x.Nickname
 	}
@@ -77,8 +77,8 @@ var File_Player_proto protoreflect.FileDescriptor
 
 const file_Player_proto_rawDesc = "" +
 	"\n" +
-	"\fPlayer.proto\x12\bDouDizhu\"@\n" +
-	"\x06Player\x12\x1a\n" +
+	"\fPlayer.proto\x12\bDouDizhu\"A\n" +
+	"\aPPlayer\x12\x1a\n" +
 	"\bplayerId\x18\x01 \x01(\tR\bplayerId\x12\x1a\n" +
 	"\bnickname\x18\x02 \x01(\tR\bnicknameB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
@@ -96,7 +96,7 @@ func file_Player_proto_rawDescGZIP() []byte {
 
 var file_Player_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_Player_proto_goTypes = []any{
-	(*Player)(nil), // 0: DouDizhu.Player
+	(*PPlayer)(nil), // 0: DouDizhu.PPlayer
 }
 var file_Player_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

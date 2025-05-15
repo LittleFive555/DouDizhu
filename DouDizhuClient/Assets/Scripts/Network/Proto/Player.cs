@@ -24,13 +24,13 @@ namespace Network.Proto {
     static PlayerReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxQbGF5ZXIucHJvdG8SCERvdURpemh1IiwKBlBsYXllchIQCghwbGF5ZXJJ",
-            "ZBgBIAEoCRIQCghuaWNrbmFtZRgCIAEoCUIiWhBuZXR3b3JrL3Byb3RvZGVm",
-            "qgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
+            "CgxQbGF5ZXIucHJvdG8SCERvdURpemh1Ii0KB1BQbGF5ZXISEAoIcGxheWVy",
+            "SWQYASABKAkSEAoIbmlja25hbWUYAiABKAlCIloQbmV0d29yay9wcm90b2Rl",
+            "ZqoCDU5ldHdvcmsuUHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.Player), global::Network.Proto.Player.Parser, new[]{ "PlayerId", "Nickname" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PPlayer), global::Network.Proto.PPlayer.Parser, new[]{ "PlayerId", "Nickname" }, null, null, null, null)
           }));
     }
     #endregion
@@ -38,16 +38,16 @@ namespace Network.Proto {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Player : pb::IMessage<Player>
+  public sealed partial class PPlayer : pb::IMessage<PPlayer>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Player> _parser = new pb::MessageParser<Player>(() => new Player());
+    private static readonly pb::MessageParser<PPlayer> _parser = new pb::MessageParser<PPlayer>(() => new PPlayer());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Player> Parser { get { return _parser; } }
+    public static pb::MessageParser<PPlayer> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -63,7 +63,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Player() {
+    public PPlayer() {
       OnConstruction();
     }
 
@@ -71,7 +71,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Player(Player other) : this() {
+    public PPlayer(PPlayer other) : this() {
       playerId_ = other.playerId_;
       nickname_ = other.nickname_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -79,8 +79,8 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Player Clone() {
-      return new Player(this);
+    public PPlayer Clone() {
+      return new PPlayer(this);
     }
 
     /// <summary>Field number for the "playerId" field.</summary>
@@ -110,12 +110,12 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Player);
+      return Equals(other as PPlayer);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Player other) {
+    public bool Equals(PPlayer other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -201,7 +201,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Player other) {
+    public void MergeFrom(PPlayer other) {
       if (other == null) {
         return;
       }

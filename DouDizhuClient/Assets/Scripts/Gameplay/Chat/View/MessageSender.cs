@@ -27,7 +27,7 @@ namespace Gameplay.Chat.View
             // 设置按钮点击事件
             sendButton.onClick.AddListener(SendMessage);
 
-            NetworkManager.Instance.RegisterNotificationHandler<ChatMsgNotification>(GameNotificationPacket.ContentOneofCase.ChatMsg, OnReceivedChatMsg);
+            NetworkManager.Instance.RegisterNotificationHandler<PChatMsgNotification>(PGameNotificationPacket.ContentOneofCase.ChatMsg, OnReceivedChatMsg);
         }
 
         void SendMessage()
@@ -43,14 +43,14 @@ namespace Gameplay.Chat.View
             ID = IDInput.text;
             Name = NameInput.text;
 
-            var response = await NetworkManager.Instance.RequestAsync(GameClientMessage.ContentOneofCase.ChatMsg, new ChatMsgRequest() { Content = message });
+            var response = await NetworkManager.Instance.RequestAsync(PGameClientMessage.ContentOneofCase.ChatMsg, new PChatMsgRequest() { Content = message });
             if (response.IsSuccess)
             {
                 messageInput.text = ""; // 清空输入框
             }
         }
 
-        private void OnReceivedChatMsg(ChatMsgNotification notification)
+        private void OnReceivedChatMsg(PChatMsgNotification notification)
         {
             Debug.Log($"收到聊天消息: {notification.Content}");
         }

@@ -4,7 +4,7 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
-message Error {
+message PError {
 	string code = 1;
 	string message = 2;
 }
