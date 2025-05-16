@@ -24,7 +24,7 @@ func main() {
 
 	message.Dispatcher = message.NewMessageDispatcher(10)
 	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
-	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegistReq{}), login.HandleRegist)
+	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), login.HandleRegist)
 	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), login.HandleLogin)
 
 	player.Manager = player.NewPlayerManager()

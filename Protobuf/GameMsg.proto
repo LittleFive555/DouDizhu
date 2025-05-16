@@ -19,7 +19,7 @@ message PGameClientMessage {
 	PGameMsgHeader header = 1;
 	oneof content {
 		PChatMsgRequest chatMsg = 2;
-		PRegistRequest registReq = 3;
+		PRegisterRequest registerReq = 3;
 		PLoginRequest loginReq = 4;
 	}
 }
@@ -36,7 +36,7 @@ message PGameMsgRespPacket {
 	oneof content {
 		PError error = 2;
 		PCommonResponse commonResponse = 3;
-		PRegistResponse registResp = 4;
+		PRegisterResponse registerResp = 4;
 		PLoginResponse loginResp = 5;
 	}
 }

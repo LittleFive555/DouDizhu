@@ -4,12 +4,12 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
-message PRegistRequest {
+message PRegisterRequest {
     string account = 1;
     string password = 2;
 }
 
-message PRegistResponse {
+message PRegisterResponse {
     enum Result {
         RESULT_UNKNOWN = 0;
 

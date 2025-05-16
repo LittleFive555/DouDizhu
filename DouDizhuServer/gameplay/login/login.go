@@ -7,23 +7,23 @@ import (
 )
 
 func HandleRegist(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error) {
-	account := req.GetRegistReq().GetAccount()
-	password := req.GetRegistReq().GetPassword()
+	account := req.GetRegisterReq().GetAccount()
+	password := req.GetRegisterReq().GetPassword()
 
 	respPacket := message.CreateRespPacket(req.Header)
 	result := ValidateAccount(account)
-	if result != protodef.PRegistResponse_RESULT_SUCCESS {
-		respPacket.Content = &protodef.PGameMsgRespPacket_RegistResp{
-			RegistResp: &protodef.PRegistResponse{
+	if result != protodef.PRegisterResponse_RESULT_SUCCESS {
+		respPacket.Content = &protodef.PGameMsgRespPacket_RegisterResp{
+			RegisterResp: &protodef.PRegisterResponse{
 				Result: result,
 			},
 		}
 		return respPacket, nil
 	}
 	result = ValidatePassword(password)
-	if result != protodef.PRegistResponse_RESULT_SUCCESS {
-		respPacket.Content = &protodef.PGameMsgRespPacket_RegistResp{
-			RegistResp: &protodef.PRegistResponse{
+	if result != protodef.PRegisterResponse_RESULT_SUCCESS {
+		respPacket.Content = &protodef.PGameMsgRespPacket_RegisterResp{
+			RegisterResp: &protodef.PRegisterResponse{
 				Result: result,
 			},
 		}
@@ -34,9 +34,9 @@ func HandleRegist(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacke
 	if err != nil {
 		return message.CreateErrorPacket(req.Header, protodef.PError_CODE_DATABASE_WRITE_ERROR, err.Error()), nil
 	}
-	respPacket.Content = &protodef.PGameMsgRespPacket_RegistResp{
-		RegistResp: &protodef.PRegistResponse{
-			Result: protodef.PRegistResponse_RESULT_SUCCESS,
+	respPacket.Content = &protodef.PGameMsgRespPacket_RegisterResp{
+		RegisterResp: &protodef.PRegisterResponse{
+			Result: protodef.PRegisterResponse_RESULT_SUCCESS,
 		},
 	}
 	return respPacket, nil
@@ -63,12 +63,12 @@ func HandleLogin(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket
 	}, nil
 }
 
-func ValidateAccount(account string) protodef.PRegistResponse_Result {
+func ValidateAccount(account string) protodef.PRegisterResponse_Result {
 	// TODO
-	return protodef.PRegistResponse_RESULT_SUCCESS
+	return protodef.PRegisterResponse_RESULT_SUCCESS
 }
 
-func ValidatePassword(password string) protodef.PRegistResponse_Result {
+func ValidatePassword(password string) protodef.PRegisterResponse_Result {
 	// TODO
-	return protodef.PRegistResponse_RESULT_SUCCESS
+	return protodef.PRegisterResponse_RESULT_SUCCESS
 }

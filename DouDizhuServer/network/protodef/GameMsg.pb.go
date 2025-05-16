@@ -80,7 +80,7 @@ type PGameClientMessage struct {
 	// Types that are valid to be assigned to Content:
 	//
 	//	*PGameClientMessage_ChatMsg
-	//	*PGameClientMessage_RegistReq
+	//	*PGameClientMessage_RegisterReq
 	//	*PGameClientMessage_LoginReq
 	Content       isPGameClientMessage_Content `protobuf_oneof:"content"`
 	unknownFields protoimpl.UnknownFields
@@ -140,10 +140,10 @@ func (x *PGameClientMessage) GetChatMsg() *PChatMsgRequest {
 	return nil
 }
 
-func (x *PGameClientMessage) GetRegistReq() *PRegistRequest {
+func (x *PGameClientMessage) GetRegisterReq() *PRegisterRequest {
 	if x != nil {
-		if x, ok := x.Content.(*PGameClientMessage_RegistReq); ok {
-			return x.RegistReq
+		if x, ok := x.Content.(*PGameClientMessage_RegisterReq); ok {
+			return x.RegisterReq
 		}
 	}
 	return nil
@@ -166,8 +166,8 @@ type PGameClientMessage_ChatMsg struct {
 	ChatMsg *PChatMsgRequest `protobuf:"bytes,2,opt,name=chatMsg,proto3,oneof"`
 }
 
-type PGameClientMessage_RegistReq struct {
-	RegistReq *PRegistRequest `protobuf:"bytes,3,opt,name=registReq,proto3,oneof"`
+type PGameClientMessage_RegisterReq struct {
+	RegisterReq *PRegisterRequest `protobuf:"bytes,3,opt,name=registerReq,proto3,oneof"`
 }
 
 type PGameClientMessage_LoginReq struct {
@@ -176,7 +176,7 @@ type PGameClientMessage_LoginReq struct {
 
 func (*PGameClientMessage_ChatMsg) isPGameClientMessage_Content() {}
 
-func (*PGameClientMessage_RegistReq) isPGameClientMessage_Content() {}
+func (*PGameClientMessage_RegisterReq) isPGameClientMessage_Content() {}
 
 func (*PGameClientMessage_LoginReq) isPGameClientMessage_Content() {}
 
@@ -269,7 +269,7 @@ type PGameMsgRespPacket struct {
 	//
 	//	*PGameMsgRespPacket_Error
 	//	*PGameMsgRespPacket_CommonResponse
-	//	*PGameMsgRespPacket_RegistResp
+	//	*PGameMsgRespPacket_RegisterResp
 	//	*PGameMsgRespPacket_LoginResp
 	Content       isPGameMsgRespPacket_Content `protobuf_oneof:"content"`
 	unknownFields protoimpl.UnknownFields
@@ -338,10 +338,10 @@ func (x *PGameMsgRespPacket) GetCommonResponse() *PCommonResponse {
 	return nil
 }
 
-func (x *PGameMsgRespPacket) GetRegistResp() *PRegistResponse {
+func (x *PGameMsgRespPacket) GetRegisterResp() *PRegisterResponse {
 	if x != nil {
-		if x, ok := x.Content.(*PGameMsgRespPacket_RegistResp); ok {
-			return x.RegistResp
+		if x, ok := x.Content.(*PGameMsgRespPacket_RegisterResp); ok {
+			return x.RegisterResp
 		}
 	}
 	return nil
@@ -368,8 +368,8 @@ type PGameMsgRespPacket_CommonResponse struct {
 	CommonResponse *PCommonResponse `protobuf:"bytes,3,opt,name=commonResponse,proto3,oneof"`
 }
 
-type PGameMsgRespPacket_RegistResp struct {
-	RegistResp *PRegistResponse `protobuf:"bytes,4,opt,name=registResp,proto3,oneof"`
+type PGameMsgRespPacket_RegisterResp struct {
+	RegisterResp *PRegisterResponse `protobuf:"bytes,4,opt,name=registerResp,proto3,oneof"`
 }
 
 type PGameMsgRespPacket_LoginResp struct {
@@ -380,7 +380,7 @@ func (*PGameMsgRespPacket_Error) isPGameMsgRespPacket_Content() {}
 
 func (*PGameMsgRespPacket_CommonResponse) isPGameMsgRespPacket_Content() {}
 
-func (*PGameMsgRespPacket_RegistResp) isPGameMsgRespPacket_Content() {}
+func (*PGameMsgRespPacket_RegisterResp) isPGameMsgRespPacket_Content() {}
 
 func (*PGameMsgRespPacket_LoginResp) isPGameMsgRespPacket_Content() {}
 
@@ -494,24 +494,22 @@ const file_GameMsg_proto_rawDesc = "" +
 	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\x1a\fPlayer.proto\x1a\vLogin.proto\"Y\n" +
 	"\x0ePGameMsgHeader\x12\x1c\n" +
 	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\x12)\n" +
-	"\x06player\x18\x02 \x01(\v2\x11.DouDizhu.PPlayerR\x06player\"\xf9\x01\n" +
+	"\x06player\x18\x02 \x01(\v2\x11.DouDizhu.PPlayerR\x06player\"\xff\x01\n" +
 	"\x12PGameClientMessage\x120\n" +
 	"\x06header\x18\x01 \x01(\v2\x18.DouDizhu.PGameMsgHeaderR\x06header\x125\n" +
-	"\achatMsg\x18\x02 \x01(\v2\x19.DouDizhu.PChatMsgRequestH\x00R\achatMsg\x128\n" +
-	"\tregistReq\x18\x03 \x01(\v2\x18.DouDizhu.PRegistRequestH\x00R\tregistReq\x125\n" +
+	"\achatMsg\x18\x02 \x01(\v2\x19.DouDizhu.PChatMsgRequestH\x00R\achatMsg\x12>\n" +
+	"\vregisterReq\x18\x03 \x01(\v2\x1a.DouDizhu.PRegisterRequestH\x00R\vregisterReq\x125\n" +
 	"\bloginReq\x18\x04 \x01(\v2\x17.DouDizhu.PLoginRequestH\x00R\bloginReqB\t\n" +
 	"\acontent\"\xa4\x01\n" +
 	"\x12PGameServerMessage\x12:\n" +
 	"\bresponse\x18\x01 \x01(\v2\x1c.DouDizhu.PGameMsgRespPacketH\x00R\bresponse\x12G\n" +
 	"\fnotification\x18\x02 \x01(\v2!.DouDizhu.PGameNotificationPacketH\x00R\fnotificationB\t\n" +
-	"\acontent\"\xb7\x02\n" +
+	"\acontent\"\xbd\x02\n" +
 	"\x12PGameMsgRespPacket\x120\n" +
 	"\x06header\x18\x01 \x01(\v2\x18.DouDizhu.PGameMsgHeaderR\x06header\x12(\n" +
 	"\x05error\x18\x02 \x01(\v2\x10.DouDizhu.PErrorH\x00R\x05error\x12C\n" +
-	"\x0ecommonResponse\x18\x03 \x01(\v2\x19.DouDizhu.PCommonResponseH\x00R\x0ecommonResponse\x12;\n" +
-	"\n" +
-	"registResp\x18\x04 \x01(\v2\x19.DouDizhu.PRegistResponseH\x00R\n" +
-	"registResp\x128\n" +
+	"\x0ecommonResponse\x18\x03 \x01(\v2\x19.DouDizhu.PCommonResponseH\x00R\x0ecommonResponse\x12A\n" +
+	"\fregisterResp\x18\x04 \x01(\v2\x1b.DouDizhu.PRegisterResponseH\x00R\fregisterResp\x128\n" +
 	"\tloginResp\x18\x05 \x01(\v2\x18.DouDizhu.PLoginResponseH\x00R\tloginRespB\t\n" +
 	"\acontent\"`\n" +
 	"\x17PGameNotificationPacket\x12:\n" +
@@ -541,10 +539,10 @@ var file_GameMsg_proto_goTypes = []any{
 	(*PCommonResponse)(nil),         // 5: DouDizhu.PCommonResponse
 	(*PPlayer)(nil),                 // 6: DouDizhu.PPlayer
 	(*PChatMsgRequest)(nil),         // 7: DouDizhu.PChatMsgRequest
-	(*PRegistRequest)(nil),          // 8: DouDizhu.PRegistRequest
+	(*PRegisterRequest)(nil),        // 8: DouDizhu.PRegisterRequest
 	(*PLoginRequest)(nil),           // 9: DouDizhu.PLoginRequest
 	(*PError)(nil),                  // 10: DouDizhu.PError
-	(*PRegistResponse)(nil),         // 11: DouDizhu.PRegistResponse
+	(*PRegisterResponse)(nil),       // 11: DouDizhu.PRegisterResponse
 	(*PLoginResponse)(nil),          // 12: DouDizhu.PLoginResponse
 	(*PChatMsgNotification)(nil),    // 13: DouDizhu.PChatMsgNotification
 }
@@ -552,14 +550,14 @@ var file_GameMsg_proto_depIdxs = []int32{
 	6,  // 0: DouDizhu.PGameMsgHeader.player:type_name -> DouDizhu.PPlayer
 	0,  // 1: DouDizhu.PGameClientMessage.header:type_name -> DouDizhu.PGameMsgHeader
 	7,  // 2: DouDizhu.PGameClientMessage.chatMsg:type_name -> DouDizhu.PChatMsgRequest
-	8,  // 3: DouDizhu.PGameClientMessage.registReq:type_name -> DouDizhu.PRegistRequest
+	8,  // 3: DouDizhu.PGameClientMessage.registerReq:type_name -> DouDizhu.PRegisterRequest
 	9,  // 4: DouDizhu.PGameClientMessage.loginReq:type_name -> DouDizhu.PLoginRequest
 	3,  // 5: DouDizhu.PGameServerMessage.response:type_name -> DouDizhu.PGameMsgRespPacket
 	4,  // 6: DouDizhu.PGameServerMessage.notification:type_name -> DouDizhu.PGameNotificationPacket
 	0,  // 7: DouDizhu.PGameMsgRespPacket.header:type_name -> DouDizhu.PGameMsgHeader
 	10, // 8: DouDizhu.PGameMsgRespPacket.error:type_name -> DouDizhu.PError
 	5,  // 9: DouDizhu.PGameMsgRespPacket.commonResponse:type_name -> DouDizhu.PCommonResponse
-	11, // 10: DouDizhu.PGameMsgRespPacket.registResp:type_name -> DouDizhu.PRegistResponse
+	11, // 10: DouDizhu.PGameMsgRespPacket.registerResp:type_name -> DouDizhu.PRegisterResponse
 	12, // 11: DouDizhu.PGameMsgRespPacket.loginResp:type_name -> DouDizhu.PLoginResponse
 	13, // 12: DouDizhu.PGameNotificationPacket.chatMsg:type_name -> DouDizhu.PChatMsgNotification
 	13, // [13:13] is the sub-list for method output_type
@@ -580,7 +578,7 @@ func file_GameMsg_proto_init() {
 	file_Login_proto_init()
 	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
 		(*PGameClientMessage_ChatMsg)(nil),
-		(*PGameClientMessage_RegistReq)(nil),
+		(*PGameClientMessage_RegisterReq)(nil),
 		(*PGameClientMessage_LoginReq)(nil),
 	}
 	file_GameMsg_proto_msgTypes[2].OneofWrappers = []any{
@@ -590,7 +588,7 @@ func file_GameMsg_proto_init() {
 	file_GameMsg_proto_msgTypes[3].OneofWrappers = []any{
 		(*PGameMsgRespPacket_Error)(nil),
 		(*PGameMsgRespPacket_CommonResponse)(nil),
-		(*PGameMsgRespPacket_RegistResp)(nil),
+		(*PGameMsgRespPacket_RegisterResp)(nil),
 		(*PGameMsgRespPacket_LoginResp)(nil),
 	}
 	file_GameMsg_proto_msgTypes[4].OneofWrappers = []any{
