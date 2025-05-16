@@ -5,24 +5,24 @@ import (
 	"reflect"
 )
 
-var Dispatcher *MessageDispatcher
-
 type MessageDispatcher struct {
 	messageQueue chan *Message // 消息队列
 	workers      []*Worker     // 工作协程池
 	handlers     map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)
+	handler      func(message *Message) error
 }
 
 // 初始化消息分发器
-func NewMessageDispatcher(workerCount int) *MessageDispatcher {
+func NewMessageDispatcher(workerCount int, handler func(message *Message) error) *MessageDispatcher {
 	md := &MessageDispatcher{
 		messageQueue: make(chan *Message, 10000), // 带缓冲的队列
 		handlers:     make(map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)),
+		handler:      handler,
 	}
 
 	// 初始化工作协程
 	for i := 0; i < workerCount; i++ {
-		worker := NewWorker(md.messageQueue, md.handlers)
+		worker := NewWorker(md.messageQueue, md.handler)
 		md.workers = append(md.workers, worker)
 		go worker.Run()
 	}
@@ -35,7 +35,11 @@ func (md *MessageDispatcher) RegisterHandler(msgType reflect.Type, handler func(
 	md.handlers[msgType] = handler
 }
 
+func (md *MessageDispatcher) GetHandler(msgType reflect.Type) func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error) {
+	return md.handlers[msgType]
+}
+
 // 接收消息
-func (md *MessageDispatcher) PostMessage(msg *Message) {
+func (md *MessageDispatcher) EnqueueMessage(msg *Message) {
 	md.messageQueue <- msg
 }

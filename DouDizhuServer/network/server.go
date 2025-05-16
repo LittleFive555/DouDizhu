@@ -2,9 +2,14 @@ package network
 
 import (
 	"DouDizhuServer/logger"
+	"DouDizhuServer/network/message"
+	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/network/serialize"
 	"DouDizhuServer/network/session"
+	"errors"
 	"fmt"
 	"net"
+	"reflect"
 )
 
 var Server *GameServer
@@ -17,12 +22,13 @@ func GetServer() *GameServer {
 type GameServer struct {
 	listener   net.Listener
 	sessionMgr *session.SessionManager
+	dispatcher *message.MessageDispatcher
 }
 
 func NewGameServer() *GameServer {
-	gameServer := &GameServer{
-		sessionMgr: session.NewSessionManager(),
-	}
+	gameServer := &GameServer{}
+	gameServer.sessionMgr = session.NewSessionManager()
+	gameServer.dispatcher = message.NewMessageDispatcher(10, gameServer.handleMessage)
 	return gameServer
 }
 
@@ -54,6 +60,10 @@ func (s *GameServer) Stop() error {
 	return nil
 }
 
+func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)) {
+	s.dispatcher.RegisterHandler(msgType, handler)
+}
+
 // handleConnection 处理单个连接
 func (s *GameServer) handleConnection(conn net.Conn) {
 	session, err := s.sessionMgr.CreatePlayerSession(conn)
@@ -62,6 +72,65 @@ func (s *GameServer) handleConnection(conn net.Conn) {
 		conn.Close()
 		return
 	}
+	logger.InfoWith("创建会话成功，开始处理消息", "sessionId", session.Id)
 	defer s.sessionMgr.CloseSession(session.Id)
-	session.StartReading()
+	session.StartReading(s.dispatcher.EnqueueMessage)
+}
+
+// HandleMessage 实现Handler接口
+func (s *GameServer) handleMessage(message *message.Message) error {
+	reqPacket, err := serialize.Deserialize(message.Data)
+	if err != nil {
+		logger.ErrorWith("解析消息失败", "error", err)
+		return err
+	}
+	// 查找对应的消息处理器
+	content := reqPacket.GetContent()
+	if content == nil {
+		logger.ErrorWith("消息内容为空")
+		return errors.New("消息内容为空")
+	}
+
+	// 获取消息的实际类型
+	msgType := reflect.TypeOf(content).Elem()
+	handler := s.dispatcher.GetHandler(msgType)
+	if handler == nil {
+		logger.ErrorWith("未找到消息处理器", "type", msgType.String())
+		return errors.New("未找到消息处理器")
+	}
+
+	// 处理消息
+	respPacket, err := handler(reqPacket)
+	if err != nil {
+		logger.ErrorWith("处理消息失败", "error", err)
+		return err
+	}
+
+	// 包装为 GameServerMessage
+	respPacket.Header.MessageId = reqPacket.Header.MessageId
+	serverMessage := &protodef.PGameServerMessage{
+		Content: &protodef.PGameServerMessage_Response{
+			Response: respPacket,
+		},
+	}
+
+	responseData, err := serialize.Serialize(serverMessage)
+	if err != nil {
+		logger.ErrorWith("序列化响应失败", "error", err)
+		return err
+	}
+	session, err := s.sessionMgr.GetSession(message.SessionId)
+	if err != nil {
+		logger.ErrorWith("获取会话失败", "error", err)
+		return err
+	}
+	err = session.SendMessage(responseData)
+	if err != nil {
+		logger.ErrorWith("发送消息失败", "error", err)
+		return err
+	}
+
+	logger.InfoWith("发送消息成功", "message", serverMessage)
+
+	return nil
 }

@@ -6,7 +6,6 @@ import (
 	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
-	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
 	"reflect"
 )
@@ -22,10 +21,9 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer()
 
-	message.Dispatcher = message.NewMessageDispatcher(10)
-	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
-	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), login.HandleRegist)
-	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), login.HandleLogin)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), login.HandleRegist)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), login.HandleLogin)
 
 	player.Manager = player.NewPlayerManager()
 

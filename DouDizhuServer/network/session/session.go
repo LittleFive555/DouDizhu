@@ -27,7 +27,7 @@ type PlayerSession struct {
 	PlayerId string
 }
 
-func (s *PlayerSession) StartReading() {
+func (s *PlayerSession) StartReading(handler func(message *message.Message)) {
 	defer s.Conn.Close()
 
 	remoteAddr := s.Conn.RemoteAddr().String()
@@ -42,18 +42,18 @@ func (s *PlayerSession) StartReading() {
 			break
 		}
 
-		message.Dispatcher.PostMessage(&message.Message{
+		handler(&message.Message{
 			SessionId: s.Id,
 			Data:      rawMessage,
 		})
 	}
 }
 
-func (s *PlayerSession) SendMessage(message *message.Message) error {
+func (s *PlayerSession) SendMessage(data []byte) error {
 	if s.Conn == nil {
 		return fmt.Errorf("连接已关闭")
 	}
-	return write(s.Conn, message.Data)
+	return write(s.Conn, data)
 }
 
 func (s *PlayerSession) Close() error {
