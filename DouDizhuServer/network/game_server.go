@@ -2,10 +2,9 @@ package network
 
 import (
 	"DouDizhuServer/logger"
-	"DouDizhuServer/network/protodef"
-	"DouDizhuServer/network/serialize"
 	"DouDizhuServer/network/session"
-	"DouDizhuServer/network/tcp"
+	"fmt"
+	"net"
 )
 
 var Server *GameServer
@@ -16,45 +15,53 @@ func GetServer() *GameServer {
 }
 
 type GameServer struct {
-	server  *tcp.TCPServer
-	session *session.SessionManager
+	listener   net.Listener
+	sessionMgr *session.SessionManager
 }
 
-func NewGameServer(addr string) *GameServer {
-	server := tcp.NewTCPServer(addr)
+func NewGameServer() *GameServer {
 	gameServer := &GameServer{
-		server:  server,
-		session: session.NewSessionManager(),
+		sessionMgr: session.NewSessionManager(),
 	}
 	return gameServer
 }
 
-func (s *GameServer) Start() error {
-	return s.server.Start()
-}
-
-func (s *GameServer) Stop() error {
-	return s.server.Stop()
-}
-
-func (s *GameServer) SendNotificationToPlayer(playerId string, notification *protodef.PGameNotificationPacket) {
-	playerSession := s.session.GetPlayerSession(playerId)
-	if playerSession == nil {
-		logger.ErrorWith("玩家不存在", "playerId", playerId)
-		return
-	}
-
-	notificationMessage := &protodef.PGameServerMessage{
-		Content: &protodef.PGameServerMessage_Notification{
-			Notification: notification,
-		},
-	}
-	logger.InfoWith("发送通知", "notification", notificationMessage)
-	notificationData, err := serialize.Serialize(notificationMessage)
+// Start 启动TCP服务器
+func (s *GameServer) Start(addr string) error {
+	ln, err := net.Listen("tcp", addr)
 	if err != nil {
-		logger.ErrorWith("序列化通知失败", "error", err)
+		return fmt.Errorf("启动服务器失败: %v", err)
+	}
+	s.listener = ln
+
+	logger.InfoWith("TCP服务器启动成功", "addr", addr)
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			logger.ErrorWith("接受连接失败", "error", err)
+			continue
+		}
+		go s.handleConnection(conn)
+	}
+}
+
+// Stop 停止TCP服务器
+func (s *GameServer) Stop() error {
+	if s.listener != nil {
+		return s.listener.Close()
+	}
+	return nil
+}
+
+// handleConnection 处理单个连接
+func (s *GameServer) handleConnection(conn net.Conn) {
+	session, err := s.sessionMgr.CreatePlayerSession(conn)
+	if err != nil {
+		logger.ErrorWith("创建会话失败", "error", err)
+		conn.Close()
 		return
 	}
-
-	s.server.SendMessage(playerSession.SessionId, notificationData)
+	defer s.sessionMgr.CloseSession(session.Id)
+	session.StartReading()
 }

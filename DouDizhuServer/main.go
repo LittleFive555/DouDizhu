@@ -20,7 +20,7 @@ func main() {
 	logger.Info("日志系统初始化成功")
 
 	// 创建并启动TCP服务器
-	network.Server = network.NewGameServer(":8080")
+	network.Server = network.NewGameServer()
 
 	message.Dispatcher = message.NewMessageDispatcher(10)
 	message.Dispatcher.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
@@ -29,7 +29,7 @@ func main() {
 
 	player.Manager = player.NewPlayerManager()
 
-	if err := network.Server.Start(); err != nil {
+	if err := network.Server.Start(":8080"); err != nil {
 		logger.ErrorWith("服务器启动失败", "error", err)
 		panic(err)
 	}
