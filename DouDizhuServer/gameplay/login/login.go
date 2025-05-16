@@ -2,7 +2,7 @@ package login
 
 import (
 	"DouDizhuServer/gameplay/player"
-	"DouDizhuServer/network"
+	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
 )
 
@@ -10,7 +10,7 @@ func HandleRegist(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacke
 	account := req.GetRegistReq().GetAccount()
 	password := req.GetRegistReq().GetPassword()
 
-	respPacket := network.CreateRespPacket(req.Header)
+	respPacket := message.CreateRespPacket(req.Header)
 	result := ValidateAccount(account)
 	if result != protodef.PRegistResponse_RESULT_SUCCESS {
 		respPacket.Content = &protodef.PGameMsgRespPacket_RegistResp{
@@ -32,7 +32,7 @@ func HandleRegist(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacke
 
 	_, err := player.Manager.CreatePlayer(account, password)
 	if err != nil {
-		return network.CreateErrorPacket(req.Header, protodef.PError_CODE_DATABASE_WRITE_ERROR, err.Error()), nil
+		return message.CreateErrorPacket(req.Header, protodef.PError_CODE_DATABASE_WRITE_ERROR, err.Error()), nil
 	}
 	respPacket.Content = &protodef.PGameMsgRespPacket_RegistResp{
 		RegistResp: &protodef.PRegistResponse{
@@ -48,7 +48,7 @@ func HandleLogin(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket
 
 	player, err := player.Manager.Login(account, password)
 	if err != nil {
-		return network.CreateErrorPacket(req.Header, protodef.PError_CODE_DATABASE_READ_ERROR, err.Error()), nil
+		return message.CreateErrorPacket(req.Header, protodef.PError_CODE_DATABASE_READ_ERROR, err.Error()), nil
 	}
 
 	return &protodef.PGameMsgRespPacket{
