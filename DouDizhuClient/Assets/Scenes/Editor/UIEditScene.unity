@@ -548,6 +548,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 90852511}
+    - target: {fileID: 7033414856385694092, guid: 0ea5e7827abc2074fb184b2446d59df6, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 8752742749923680585, guid: 0ea5e7827abc2074fb184b2446d59df6, type: 3}
       propertyPath: m_Name
       value: UIRoot

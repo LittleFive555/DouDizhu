@@ -24,27 +24,27 @@ namespace Network.Proto {
     static LoginReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtMb2dpbi5wcm90bxIIRG91RGl6aHUiMwoOUFJlZ2lzdFJlcXVlc3QSDwoH",
-            "YWNjb3VudBgBIAEoCRIQCghwYXNzd29yZBgCIAEoCSLQAgoPUFJlZ2lzdFJl",
-            "c3BvbnNlEjAKBnJlc3VsdBgBIAEoDjIgLkRvdURpemh1LlBSZWdpc3RSZXNw",
-            "b25zZS5SZXN1bHQiigIKBlJlc3VsdBISCg5SRVNVTFRfVU5LTk9XThAAEhIK",
-            "DlJFU1VMVF9TVUNDRVNTEAESGQoVUkVTVUxUX0FDQ09VTlRfRVhJU1RTEAIS",
-            "GwoXUkVTVUxUX0FDQ09VTlRfVE9PX0xPTkcQAxIcChhSRVNVTFRfQUNDT1VO",
-            "VF9UT09fU0hPUlQQBBIhCh1SRVNVTFRfQUNDT1VOVF9GT1JNQVRfSU5WQUxJ",
-            "RBAFEhwKGFJFU1VMVF9QQVNTV09SRF9UT09fTE9ORxAGEh0KGVJFU1VMVF9Q",
-            "QVNTV09SRF9UT09fU0hPUlQQBxIiCh5SRVNVTFRfUEFTU1dPUkRfRk9STUFU",
-            "X0lOVkFMSUQQCCIyCg1QTG9naW5SZXF1ZXN0Eg8KB2FjY291bnQYASABKAkS",
-            "EAoIcGFzc3dvcmQYAiABKAkivwEKDlBMb2dpblJlc3BvbnNlEi8KBnJlc3Vs",
-            "dBgBIAEoDjIfLkRvdURpemh1LlBMb2dpblJlc3BvbnNlLlJlc3VsdBIQCghw",
-            "bGF5ZXJJZBgCIAEoCSJqCgZSZXN1bHQSEgoOUkVTVUxUX1VOS05PV04QABIS",
-            "Cg5SRVNVTFRfU1VDQ0VTUxABEh0KGVJFU1VMVF9BQ0NPVU5UX05PVF9FWElT",
-            "VFMQAhIZChVSRVNVTFRfUEFTU1dPUkRfV1JPTkcQA0IiWhBuZXR3b3JrL3By",
-            "b3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
+            "CgtMb2dpbi5wcm90bxIIRG91RGl6aHUiNQoQUFJlZ2lzdGVyUmVxdWVzdBIP",
+            "CgdhY2NvdW50GAEgASgJEhAKCHBhc3N3b3JkGAIgASgJItQCChFQUmVnaXN0",
+            "ZXJSZXNwb25zZRIyCgZyZXN1bHQYASABKA4yIi5Eb3VEaXpodS5QUmVnaXN0",
+            "ZXJSZXNwb25zZS5SZXN1bHQiigIKBlJlc3VsdBISCg5SRVNVTFRfVU5LTk9X",
+            "ThAAEhIKDlJFU1VMVF9TVUNDRVNTEAESGQoVUkVTVUxUX0FDQ09VTlRfRVhJ",
+            "U1RTEAISGwoXUkVTVUxUX0FDQ09VTlRfVE9PX0xPTkcQAxIcChhSRVNVTFRf",
+            "QUNDT1VOVF9UT09fU0hPUlQQBBIhCh1SRVNVTFRfQUNDT1VOVF9GT1JNQVRf",
+            "SU5WQUxJRBAFEhwKGFJFU1VMVF9QQVNTV09SRF9UT09fTE9ORxAGEh0KGVJF",
+            "U1VMVF9QQVNTV09SRF9UT09fU0hPUlQQBxIiCh5SRVNVTFRfUEFTU1dPUkRf",
+            "Rk9STUFUX0lOVkFMSUQQCCIyCg1QTG9naW5SZXF1ZXN0Eg8KB2FjY291bnQY",
+            "ASABKAkSEAoIcGFzc3dvcmQYAiABKAkivwEKDlBMb2dpblJlc3BvbnNlEi8K",
+            "BnJlc3VsdBgBIAEoDjIfLkRvdURpemh1LlBMb2dpblJlc3BvbnNlLlJlc3Vs",
+            "dBIQCghwbGF5ZXJJZBgCIAEoCSJqCgZSZXN1bHQSEgoOUkVTVUxUX1VOS05P",
+            "V04QABISCg5SRVNVTFRfU1VDQ0VTUxABEh0KGVJFU1VMVF9BQ0NPVU5UX05P",
+            "VF9FWElTVFMQAhIZChVSRVNVTFRfUEFTU1dPUkRfV1JPTkcQA0IiWhBuZXR3",
+            "b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegistRequest), global::Network.Proto.PRegistRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegistResponse), global::Network.Proto.PRegistResponse.Parser, new[]{ "Result" }, null, new[]{ typeof(global::Network.Proto.PRegistResponse.Types.Result) }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegisterRequest), global::Network.Proto.PRegisterRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegisterResponse), global::Network.Proto.PRegisterResponse.Parser, new[]{ "Result" }, null, new[]{ typeof(global::Network.Proto.PRegisterResponse.Types.Result) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginRequest), global::Network.Proto.PLoginRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginResponse), global::Network.Proto.PLoginResponse.Parser, new[]{ "Result", "PlayerId" }, null, new[]{ typeof(global::Network.Proto.PLoginResponse.Types.Result) }, null, null)
           }));
@@ -54,16 +54,16 @@ namespace Network.Proto {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class PRegistRequest : pb::IMessage<PRegistRequest>
+  public sealed partial class PRegisterRequest : pb::IMessage<PRegisterRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<PRegistRequest> _parser = new pb::MessageParser<PRegistRequest>(() => new PRegistRequest());
+    private static readonly pb::MessageParser<PRegisterRequest> _parser = new pb::MessageParser<PRegisterRequest>(() => new PRegisterRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<PRegistRequest> Parser { get { return _parser; } }
+    public static pb::MessageParser<PRegisterRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -79,7 +79,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistRequest() {
+    public PRegisterRequest() {
       OnConstruction();
     }
 
@@ -87,7 +87,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistRequest(PRegistRequest other) : this() {
+    public PRegisterRequest(PRegisterRequest other) : this() {
       account_ = other.account_;
       password_ = other.password_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -95,8 +95,8 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistRequest Clone() {
-      return new PRegistRequest(this);
+    public PRegisterRequest Clone() {
+      return new PRegisterRequest(this);
     }
 
     /// <summary>Field number for the "account" field.</summary>
@@ -126,12 +126,12 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as PRegistRequest);
+      return Equals(other as PRegisterRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(PRegistRequest other) {
+    public bool Equals(PRegisterRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -217,7 +217,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(PRegistRequest other) {
+    public void MergeFrom(PRegisterRequest other) {
       if (other == null) {
         return;
       }
@@ -289,16 +289,16 @@ namespace Network.Proto {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class PRegistResponse : pb::IMessage<PRegistResponse>
+  public sealed partial class PRegisterResponse : pb::IMessage<PRegisterResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<PRegistResponse> _parser = new pb::MessageParser<PRegistResponse>(() => new PRegistResponse());
+    private static readonly pb::MessageParser<PRegisterResponse> _parser = new pb::MessageParser<PRegisterResponse>(() => new PRegisterResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<PRegistResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<PRegisterResponse> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -314,7 +314,7 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistResponse() {
+    public PRegisterResponse() {
       OnConstruction();
     }
 
@@ -322,23 +322,23 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistResponse(PRegistResponse other) : this() {
+    public PRegisterResponse(PRegisterResponse other) : this() {
       result_ = other.result_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegistResponse Clone() {
-      return new PRegistResponse(this);
+    public PRegisterResponse Clone() {
+      return new PRegisterResponse(this);
     }
 
     /// <summary>Field number for the "result" field.</summary>
     public const int ResultFieldNumber = 1;
-    private global::Network.Proto.PRegistResponse.Types.Result result_ = global::Network.Proto.PRegistResponse.Types.Result.Unknown;
+    private global::Network.Proto.PRegisterResponse.Types.Result result_ = global::Network.Proto.PRegisterResponse.Types.Result.Unknown;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Network.Proto.PRegistResponse.Types.Result Result {
+    public global::Network.Proto.PRegisterResponse.Types.Result Result {
       get { return result_; }
       set {
         result_ = value;
@@ -348,12 +348,12 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as PRegistResponse);
+      return Equals(other as PRegisterResponse);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(PRegistResponse other) {
+    public bool Equals(PRegisterResponse other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -368,7 +368,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Result != global::Network.Proto.PRegistResponse.Types.Result.Unknown) hash ^= Result.GetHashCode();
+      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) hash ^= Result.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -387,7 +387,7 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Result != global::Network.Proto.PRegistResponse.Types.Result.Unknown) {
+      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Result);
       }
@@ -401,7 +401,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Result != global::Network.Proto.PRegistResponse.Types.Result.Unknown) {
+      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Result);
       }
@@ -415,7 +415,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Result != global::Network.Proto.PRegistResponse.Types.Result.Unknown) {
+      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
       }
       if (_unknownFields != null) {
@@ -426,11 +426,11 @@ namespace Network.Proto {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(PRegistResponse other) {
+    public void MergeFrom(PRegisterResponse other) {
       if (other == null) {
         return;
       }
-      if (other.Result != global::Network.Proto.PRegistResponse.Types.Result.Unknown) {
+      if (other.Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
         Result = other.Result;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -453,7 +453,7 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Result = (global::Network.Proto.PRegistResponse.Types.Result) input.ReadEnum();
+            Result = (global::Network.Proto.PRegisterResponse.Types.Result) input.ReadEnum();
             break;
           }
         }
@@ -476,7 +476,7 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Result = (global::Network.Proto.PRegistResponse.Types.Result) input.ReadEnum();
+            Result = (global::Network.Proto.PRegisterResponse.Types.Result) input.ReadEnum();
             break;
           }
         }
@@ -485,7 +485,7 @@ namespace Network.Proto {
     #endif
 
     #region Nested types
-    /// <summary>Container for nested types declared in the PRegistResponse message type.</summary>
+    /// <summary>Container for nested types declared in the PRegisterResponse message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {

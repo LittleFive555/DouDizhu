@@ -21,6 +21,12 @@ namespace UIModule
         public void AppendToLayer(EnumUILayer layer, GameObject gameObject)
         {
             gameObject.transform.SetParent(m_UILayers[layer].transform, false);
+            gameObject.transform.SetAsLastSibling();
+        }
+
+        public void RemoveFromLayer(EnumUILayer layer, GameObject gameObject)
+        {
+            gameObject.transform.SetParent(null);
         }
     }
 }

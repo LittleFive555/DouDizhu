@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Network;
+using UIModule;
+using Gameplay.Login.View;
 
 namespace Gameplay
 {
@@ -25,7 +27,10 @@ namespace Gameplay
 
             Debug.Log("GameManager Launch");
 
-            SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single);
+            SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single).completed += (AsyncOperation obj) =>
+            {
+                UIManager.Instance.ShowUI<UILogin>();
+            };
         }
 
         public void Exit()

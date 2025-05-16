@@ -4,11 +4,12 @@ using TMPro;
 using Network;
 using Network.Proto;
 using UIModule;
+using System.Threading.Tasks;
 
 namespace Gameplay.Chat.View
 {
     [UIComponent(OpenLayer = EnumUILayer.View, ResPath = "Assets/Res/Gameplay/UI/Chat/UIChat.prefab")]
-    public class MessageSender : UIComponentBase
+    public class UIMessageSender : UIComponentBase
     {
         [SerializeField]
         private TMP_InputField messageInput;
@@ -35,7 +36,7 @@ namespace Gameplay.Chat.View
             SendMessageImpl(messageInput.text);
         }
 
-        private async void SendMessageImpl(string message)
+        private async Task SendMessageImpl(string message)
         {
             if (string.IsNullOrEmpty(message))
                 return;
