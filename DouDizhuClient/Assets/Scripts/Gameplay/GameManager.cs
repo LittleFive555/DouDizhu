@@ -20,10 +20,10 @@ namespace Gameplay
             }
         }
 
-        public async Task Launch()
+        public async Task Launch(string serverHost)
         {
             CreateMainBehaviour();
-            await NetworkManager.Instance.ConnectAsync();
+            await NetworkManager.Instance.ConnectAsync(serverHost);
 
             Debug.Log("GameManager Launch");
 
