@@ -31,8 +31,6 @@ namespace Network
         public bool IsConnected => m_IsConnected;
 
         
-        // 替换为你的服务器IP和端口
-        private const string SERVER_IP = "127.0.0.1";
         private const int SERVER_PORT = 8080;
 
 
@@ -46,9 +44,9 @@ namespace Network
             m_MessageReadWriter = new LengthPrefixReadWriter();
         }
 
-        public async Task ConnectAsync()
+        public async Task ConnectAsync(string serverHost)
         {
-            await ConnectAsync(SERVER_IP, SERVER_PORT);
+            await ConnectAsync(serverHost, SERVER_PORT);
         }
 
         public void Disconnect()
@@ -123,12 +121,12 @@ namespace Network
             }
         }
 
-        private async Task ConnectAsync(string serverIp, int port)
+        private async Task ConnectAsync(string serverHost, int port)
         {
             try
             {
                 m_TcpClient = new TcpClient();
-                await m_TcpClient.ConnectAsync(serverIp, port);
+                await m_TcpClient.ConnectAsync(serverHost, port);
                 m_NetworkStream = m_TcpClient.GetStream();
                 m_IsConnected = true;
                 Debug.Log("TCP连接已建立");

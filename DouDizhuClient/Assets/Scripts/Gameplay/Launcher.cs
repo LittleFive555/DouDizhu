@@ -4,9 +4,12 @@ namespace Gameplay
 {
     public class Launcher : MonoBehaviour
     {
+        [SerializeField]
+        private string m_ServerHost;
+
         void Awake()
         {
-            GameManager.Instance.Launch();
+            GameManager.Instance.Launch(m_ServerHost);
         }
     }
 }
