@@ -84,6 +84,8 @@ func (s *GameServer) handleMessage(message *message.Message) error {
 		logger.ErrorWith("解析消息失败", "error", err)
 		return err
 	}
+	logger.InfoWith("收到消息", "sessionId", message.SessionId, "message", reqPacket)
+
 	// 查找对应的消息处理器
 	content := reqPacket.GetContent()
 	if content == nil {
