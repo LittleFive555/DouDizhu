@@ -1,6 +1,6 @@
 package player
 
-import "github.com/pborman/uuid"
+import "github.com/google/uuid"
 
 var Manager *PlayerManager
 
@@ -14,12 +14,12 @@ func NewPlayerManager() *PlayerManager {
 
 func (m *PlayerManager) CreatePlayer(account string, password string) (*Player, error) {
 	// TODO Save to database
-	return NewPlayer(uuid.New(), "NewPlayer"), nil
+	return NewPlayer(uuid.New().String(), "NewPlayer"), nil
 }
 
 func (m *PlayerManager) Login(account string, password string) (*Player, error) {
 	// TODO Check password
-	return NewPlayer(uuid.New(), "NewPlayer"), nil
+	return NewPlayer(uuid.New().String(), "NewPlayer"), nil
 }
 
 func (m *PlayerManager) GetPlayer(playerId string) *Player {
