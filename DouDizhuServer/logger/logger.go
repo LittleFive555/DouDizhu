@@ -65,8 +65,8 @@ func WithFields(fields map[string]interface{}) *zap.SugaredLogger {
 }
 
 // Info 输出info级别日志
-func Info(msg string) {
-	sugar.Info(msg)
+func Info(args ...interface{}) {
+	sugar.Info(args)
 }
 
 // Infof 输出info级别日志（格式化）
@@ -79,8 +79,8 @@ func InfoWith(msg string, fields ...interface{}) {
 }
 
 // Error 输出error级别日志
-func Error(msg string) {
-	sugar.Error(msg)
+func Error(args ...interface{}) {
+	sugar.Error(args)
 }
 
 // Errorf 输出error级别日志（格式化）
@@ -93,8 +93,8 @@ func ErrorWith(msg string, fields ...interface{}) {
 }
 
 // Debug 输出debug级别日志
-func Debug(msg string) {
-	sugar.Debug(msg)
+func Debug(args ...interface{}) {
+	sugar.Debug(args)
 }
 
 // Debugf 输出debug级别日志（格式化）
@@ -107,8 +107,8 @@ func DebugWith(msg string, fields ...interface{}) {
 }
 
 // Warn 输出warn级别日志
-func Warn(msg string) {
-	sugar.Warn(msg)
+func Warn(args ...interface{}) {
+	sugar.Warn(args)
 }
 
 // Warnf 输出warn级别日志（格式化）
@@ -121,8 +121,8 @@ func WarnWith(msg string, fields ...interface{}) {
 }
 
 // Fatal 输出fatal级别日志并退出程序
-func Fatal(msg string) {
-	sugar.Fatal(msg)
+func Fatal(args ...interface{}) {
+	sugar.Fatal(args)
 }
 
 // Fatalf 输出fatal级别日志并退出程序（格式化）
@@ -135,8 +135,8 @@ func FatalWith(msg string, fields ...interface{}) {
 }
 
 // Panic 输出panic级别日志
-func Panic(msg string) {
-	sugar.Panic(msg)
+func Panic(args ...interface{}) {
+	sugar.Panic(args)
 }
 
 // Panicf 输出panic级别日志（格式化）
@@ -149,8 +149,8 @@ func PanicWith(msg string, fields ...interface{}) {
 }
 
 // DPanic 输出dpanic级别日志
-func DPanic(msg string) {
-	sugar.DPanic(msg)
+func DPanic(args ...interface{}) {
+	sugar.DPanic(args)
 }
 
 // DPanicf 输出dpanic级别日志（格式化）
