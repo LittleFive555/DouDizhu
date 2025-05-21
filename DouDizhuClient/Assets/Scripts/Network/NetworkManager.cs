@@ -1,6 +1,5 @@
 using System;
 using System.Net.Sockets;
-using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using Google.Protobuf;
 using Network.Tcp;
 using Network.Proto;
+using Serilog;
 
 namespace Network
 {
@@ -62,18 +62,21 @@ namespace Network
                 m_TcpClient = null;
             }
             m_IsConnected = false;
-            Debug.Log("TCP连接已关闭");
+            Log.Information("TCP连接已关闭");
         }
 
-        public async Task<NetworkResult<PCommonResponse>> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        public async Task<PCommonResponse> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
             return await RequestAsync<TReq, PCommonResponse>(requestType, request);
         }
 
-        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : IMessage
+        public async Task<TResp> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : class, IMessage
         {
             if (!m_IsConnected || m_TcpClient == null || !m_TcpClient.Connected)
-                return NetworkResult<TResp>.Failure("TCP连接未建立，无法发送消息");
+            {
+                Log.Error("TCP连接未建立，无法发送消息");
+                return null;
+            }
 
             try
             {
@@ -82,21 +85,26 @@ namespace Network
                 m_PendingRequests.TryAdd(gameClientMessage.Header.MessageId, tcs);
                 
                 await m_MessageReadWriter.WriteTo(m_NetworkStream, gameClientMessage.ToByteArray());
-                Debug.Log("消息已发送: " + request.ToString());
+                Log.Information("消息已发送: {request}", request);
 
                 // 设置超时
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
                 timeoutCts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
                 var serverPacket = await tcs.Task;
                 if (serverPacket.ContentCase == PGameMsgRespPacket.ContentOneofCase.Error)
-                    return NetworkResult<TResp>.Failure($"服务器返回错误: ErrorCode {serverPacket.Error.Code}: {serverPacket.Error.Message}");
+                {
+                    Log.Error("服务器返回错误: ErrorCode {errorCode}: {errorMessage}", serverPacket.Error.Code, serverPacket.Error.Message);
+                    return null;
+                }
                 
                 TResp response = UnpackResponse<TResp>(serverPacket);
-                return NetworkResult<TResp>.Success(response);
+                Log.Information("收到服务器响应: {response}", response);
+                return response;
             }
             catch (Exception ex)
             {
-                return NetworkResult<TResp>.Failure($"发送消息时发生错误: {ex.Message}");
+                Log.Error("发送消息时发生错误: {exception}", ex.Message);
+                return null;
             }
         }
 
@@ -129,12 +137,12 @@ namespace Network
                 await m_TcpClient.ConnectAsync(serverHost, port);
                 m_NetworkStream = m_TcpClient.GetStream();
                 m_IsConnected = true;
-                Debug.Log("TCP连接已建立");
+                Log.Information("TCP连接已建立");
                 _ = ReceiveLoopAsync();
             }
             catch (SocketException ex)
             {
-                Debug.LogError("TCP连接失败: " + ex.Message);
+                Log.Error("TCP连接失败: {exception}", ex.Message);
                 m_IsConnected = false;
             }
         }
@@ -148,7 +156,7 @@ namespace Network
                     byte[] responseBuffer = await m_MessageReadWriter.ReadFrom(m_NetworkStream);
                     if (responseBuffer == null || responseBuffer.Length == 0)
                     {
-                        Debug.LogError("服务器正常断开");
+                        Log.Information("服务器正常断开");
                         break;
                     }
 
@@ -161,7 +169,7 @@ namespace Network
             }
             catch (Exception ex)
             {
-                Debug.LogError("接收消息时发生错误: " + ex.Message);
+                Log.Error("接收消息时发生错误: {exception}", ex.Message);
             }
         }
 
@@ -186,7 +194,7 @@ namespace Network
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"通知处理程序发生错误: {ex.Message}");
+                    Log.Error("通知处理程序发生错误: {exception}", ex.Message);
                 }
             }
         }
@@ -209,10 +217,10 @@ namespace Network
             string propertyName = requestType.ToString();
             Type packetType = typeof(PGameClientMessage);
             var property = packetType.GetProperty(propertyName);
-            if (property != null)
-                property.SetValue(gameClientMessage, request);
-            else
-                Debug.LogError($"未找到对应的属性: {propertyName}");
+            if (property == null)
+                throw new Exception($"未找到对应的属性: {propertyName}");
+                
+            property.SetValue(gameClientMessage, request);
             return gameClientMessage;
         }
 
@@ -222,16 +230,15 @@ namespace Network
             
             Type packetType = typeof(PGameMsgRespPacket);
             var property = packetType.GetProperty(propertyName);
-            if (property != null)
-            {
-                // 获取属性值并转换为目标类型
-                var value = property.GetValue(response);
-                if (value is TResp typedValue)
-                    return typedValue;
-            }
+            if (property == null)
+                throw new Exception($"响应 PGameMsgRespPacket 中未找到对应的属性: {propertyName}");
+                
+            // 获取属性值并转换为目标类型
+            var value = property.GetValue(response);
+            if (value is TResp typedValue)
+                return typedValue;
             
-            Debug.LogError($"无法从响应中获取类型 {typeof(TResp).Name} 的数据");
-            return default(TResp);
+            throw new Exception($"无法从响应中获取类型 {typeof(TResp).Name} 的数据");
         }
 
         private static long GenerateRequestId() => DateTimeOffset.UtcNow.Ticks;

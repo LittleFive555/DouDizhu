@@ -5,6 +5,7 @@ using Network;
 using Network.Proto;
 using UIModule;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Gameplay.Chat.View
 {
@@ -45,7 +46,7 @@ namespace Gameplay.Chat.View
             Name = NameInput.text;
 
             var response = await NetworkManager.Instance.RequestAsync(PGameClientMessage.ContentOneofCase.ChatMsg, new PChatMsgRequest() { Content = message });
-            if (response.IsSuccess)
+            if (response != null)
             {
                 messageInput.text = ""; // 清空输入框
             }
@@ -53,7 +54,7 @@ namespace Gameplay.Chat.View
 
         private void OnReceivedChatMsg(PChatMsgNotification notification)
         {
-            Debug.Log($"收到聊天消息: {notification.Content}");
+            Log.Information("收到聊天消息: {content}", notification.Content);
         }
     }
 }

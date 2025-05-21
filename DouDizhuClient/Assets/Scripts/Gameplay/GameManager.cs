@@ -5,6 +5,7 @@ using Network;
 using UIModule;
 using Gameplay.Login.View;
 using Serilog;
+using Logger;
 
 namespace Gameplay
 {
@@ -23,21 +24,17 @@ namespace Gameplay
 
         public async Task Launch(string serverHost)
         {
-            // 初始化日志
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File("log.txt",
-                    rollingInterval: RollingInterval.Day,
-                    rollOnFileSizeLimit: true)
-                .CreateLogger();
+            InitializeLogger();
+            Log.Information("Logger Initialized");
 
             CreateMainBehaviour();
+
             await NetworkManager.Instance.ConnectAsync(serverHost);
 
-            Debug.Log("GameManager Launch");
-
+            Log.Information("Start Loading Main Scene");
             SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single).completed += (AsyncOperation obj) =>
             {
+                Log.Information("Main Scene Loaded");
                 UIManager.Instance.ShowUI<UILogin>();
             };
         }
@@ -45,13 +42,25 @@ namespace Gameplay
         public void Exit()
         {
             NetworkManager.Instance.Disconnect();
+            Log.CloseAndFlush();
+        }
+
+        private void InitializeLogger()
+        {
+            // 初始化日志
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Sink(new UnityDebugSink())
+                .WriteTo.File("log.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true)
+                .CreateLogger();
         }
 
         private void CreateMainBehaviour()
         {
             GameObject mainBehaviour = new GameObject("MainBehaviour");
             mainBehaviour.AddComponent<MainBehaviour>();
-            UnityEngine.Object.DontDestroyOnLoad(mainBehaviour);
+            Object.DontDestroyOnLoad(mainBehaviour);
         }
     }
 }

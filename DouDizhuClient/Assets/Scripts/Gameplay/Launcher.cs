@@ -1,3 +1,4 @@
+using Serilog;
 using UnityEngine;
 
 namespace Gameplay

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Network.Proto;
+using Serilog;
 using UnityEngine;
 
 namespace Gameplay.Player
@@ -28,17 +29,17 @@ namespace Gameplay.Player
                 Account = account,
                 Password = password
             });
-            if (response.IsSuccess)
+            if (response == null)
+                return false;
+
+            if (response.Result != PRegisterResponse.Types.Result.Success)
             {
-                if (response.Data.Result != PRegisterResponse.Types.Result.Success)
-                {
-                    Debug.LogError("注册失败，错误码：" + response.Data.Result);
-                    return false;
-                }
-                return true;
+                Log.Error("注册失败，错误码：{result}", response.Result);
+                return false;
             }
-            return false;
+            return true;
         }
+        
         public async Task<bool> Login(string account, string password)
         {
             var response = await Network.NetworkManager.Instance.RequestAsync<PLoginRequest, PLoginResponse>(PGameClientMessage.ContentOneofCase.LoginReq, new PLoginRequest()
@@ -46,18 +47,17 @@ namespace Gameplay.Player
                 Account = account,
                 Password = password
             });
-            if (response.IsSuccess)
-            {
-                if (response.Data.Result != PLoginResponse.Types.Result.Success)
-                {
-                    Debug.LogError("登录失败，错误码：" + response.Data.Result);
-                    return false;
-                }
+            if (response == null)
+                return false;
 
-                ID = response.Data.PlayerId;
-                return true;
+            if (response.Result != PLoginResponse.Types.Result.Success)
+            {
+                Log.Error("登录失败，错误码：{result}", response.Result);
+                return false;
             }
-            return false;
+
+            ID = response.PlayerId;
+            return true;
         }
     }
 }

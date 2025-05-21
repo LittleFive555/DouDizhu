@@ -3,6 +3,7 @@ using UnityEngine;
 using EdenMeng.AssetManager;
 using System.Collections.Generic;
 using System;
+using Serilog;
 
 namespace UIModule
 {
@@ -87,7 +88,7 @@ namespace UIModule
             var componentAttribute = componentType.GetCustomAttribute(typeof(UIComponentAttribute)) as UIComponentAttribute;
             if (componentAttribute == null)
             {
-                Debug.LogError($"未找到{componentType.FullName}的属性定义");
+                Log.Error("未找到{component}的属性定义", componentType.FullName);
                 return;
             }
             var uiObjAsset = AssetManager.LoadAsset<GameObject>(componentAttribute.ResPath);
@@ -95,7 +96,7 @@ namespace UIModule
             var uiComponent = uiObj.GetComponent(componentType) as UIComponentBase;
             if (uiComponent == null)
             {
-                Debug.LogError($"未找到{componentType.FullName}的UI组件");
+                Log.Error("未找到{component}的UI组件", componentType.FullName);
                 return;
             }
             var showingUIInfo = new ShowingUIInfo()
@@ -107,6 +108,8 @@ namespace UIModule
             uiComponent.Initialize(identifier);
             m_ShowingUIInfos.Add(showingUIInfo);
             UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
+            Log.Information("显示UI：{component}，标识：{identifier}", componentType.FullName, identifier);
+
             uiComponent.OnShowBegin(args);
             uiComponent.OnShowFinish(args);
             m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
@@ -153,6 +156,7 @@ namespace UIModule
 
         private void HideUIImpl(ShowingUIInfo showingUIInfo)
         {
+            Log.Information("隐藏UI：{component}，标识：{identifier}", showingUIInfo.UIComponent.GetType().FullName, showingUIInfo.Identifier);
             showingUIInfo.UIComponent.OnHideBegin();
             showingUIInfo.UIComponent.OnHideFinish();
             m_ShowingUIInfos.Remove(showingUIInfo);
