@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using Network;
 using UIModule;
 using Gameplay.Login.View;
+using Serilog;
 
 namespace Gameplay
 {
@@ -22,6 +23,14 @@ namespace Gameplay
 
         public async Task Launch(string serverHost)
         {
+            // 初始化日志
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("log.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true)
+                .CreateLogger();
+
             CreateMainBehaviour();
             await NetworkManager.Instance.ConnectAsync(serverHost);
 
