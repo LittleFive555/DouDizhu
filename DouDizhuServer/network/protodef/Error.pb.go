@@ -21,59 +21,60 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PError_Code int32
+type PError_Type int32
 
 const (
-	PError_CODE_UNKNOWN              PError_Code = 0
-	PError_CODE_DATABASE_READ_ERROR  PError_Code = 1
-	PError_CODE_DATABASE_WRITE_ERROR PError_Code = 2
+	PError_TYPE_UNKNOWN      PError_Type = 0
+	PError_TYPE_SERVER_ERROR PError_Type = 1
+	PError_TYPE_BUSINESS     PError_Type = 2
 )
 
-// Enum value maps for PError_Code.
+// Enum value maps for PError_Type.
 var (
-	PError_Code_name = map[int32]string{
-		0: "CODE_UNKNOWN",
-		1: "CODE_DATABASE_READ_ERROR",
-		2: "CODE_DATABASE_WRITE_ERROR",
+	PError_Type_name = map[int32]string{
+		0: "TYPE_UNKNOWN",
+		1: "TYPE_SERVER_ERROR",
+		2: "TYPE_BUSINESS",
 	}
-	PError_Code_value = map[string]int32{
-		"CODE_UNKNOWN":              0,
-		"CODE_DATABASE_READ_ERROR":  1,
-		"CODE_DATABASE_WRITE_ERROR": 2,
+	PError_Type_value = map[string]int32{
+		"TYPE_UNKNOWN":      0,
+		"TYPE_SERVER_ERROR": 1,
+		"TYPE_BUSINESS":     2,
 	}
 )
 
-func (x PError_Code) Enum() *PError_Code {
-	p := new(PError_Code)
+func (x PError_Type) Enum() *PError_Type {
+	p := new(PError_Type)
 	*p = x
 	return p
 }
 
-func (x PError_Code) String() string {
+func (x PError_Type) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (PError_Code) Descriptor() protoreflect.EnumDescriptor {
+func (PError_Type) Descriptor() protoreflect.EnumDescriptor {
 	return file_Error_proto_enumTypes[0].Descriptor()
 }
 
-func (PError_Code) Type() protoreflect.EnumType {
+func (PError_Type) Type() protoreflect.EnumType {
 	return &file_Error_proto_enumTypes[0]
 }
 
-func (x PError_Code) Number() protoreflect.EnumNumber {
+func (x PError_Type) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use PError_Code.Descriptor instead.
-func (PError_Code) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PError_Type.Descriptor instead.
+func (PError_Type) EnumDescriptor() ([]byte, []int) {
 	return file_Error_proto_rawDescGZIP(), []int{0, 0}
 }
 
 type PError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Code          PError_Code            `protobuf:"varint,1,opt,name=code,proto3,enum=DouDizhu.PError_Code" json:"code,omitempty"`
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Type          PError_Type            `protobuf:"varint,1,opt,name=type,proto3,enum=DouDizhu.PError_Type" json:"type,omitempty"`
+	ErrorCode     string                 `protobuf:"bytes,2,opt,name=errorCode,proto3" json:"errorCode,omitempty"`
+	Message       string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -108,11 +109,18 @@ func (*PError) Descriptor() ([]byte, []int) {
 	return file_Error_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PError) GetCode() PError_Code {
+func (x *PError) GetType() PError_Type {
 	if x != nil {
-		return x.Code
+		return x.Type
 	}
-	return PError_CODE_UNKNOWN
+	return PError_TYPE_UNKNOWN
+}
+
+func (x *PError) GetErrorCode() string {
+	if x != nil {
+		return x.ErrorCode
+	}
+	return ""
 }
 
 func (x *PError) GetMessage() string {
@@ -126,14 +134,15 @@ var File_Error_proto protoreflect.FileDescriptor
 
 const file_Error_proto_rawDesc = "" +
 	"\n" +
-	"\vError.proto\x12\bDouDizhu\"\xa4\x01\n" +
+	"\vError.proto\x12\bDouDizhu\"\xaf\x01\n" +
 	"\x06PError\x12)\n" +
-	"\x04code\x18\x01 \x01(\x0e2\x15.DouDizhu.PError.CodeR\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"U\n" +
-	"\x04Code\x12\x10\n" +
-	"\fCODE_UNKNOWN\x10\x00\x12\x1c\n" +
-	"\x18CODE_DATABASE_READ_ERROR\x10\x01\x12\x1d\n" +
-	"\x19CODE_DATABASE_WRITE_ERROR\x10\x02B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\x04type\x18\x01 \x01(\x0e2\x15.DouDizhu.PError.TypeR\x04type\x12\x1c\n" +
+	"\terrorCode\x18\x02 \x01(\tR\terrorCode\x12\x18\n" +
+	"\amessage\x18\x03 \x01(\tR\amessage\"B\n" +
+	"\x04Type\x12\x10\n" +
+	"\fTYPE_UNKNOWN\x10\x00\x12\x15\n" +
+	"\x11TYPE_SERVER_ERROR\x10\x01\x12\x11\n" +
+	"\rTYPE_BUSINESS\x10\x02B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Error_proto_rawDescOnce sync.Once
@@ -150,11 +159,11 @@ func file_Error_proto_rawDescGZIP() []byte {
 var file_Error_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_Error_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_Error_proto_goTypes = []any{
-	(PError_Code)(0), // 0: DouDizhu.PError.Code
+	(PError_Type)(0), // 0: DouDizhu.PError.Type
 	(*PError)(nil),   // 1: DouDizhu.PError
 }
 var file_Error_proto_depIdxs = []int32{
-	0, // 0: DouDizhu.PError.code:type_name -> DouDizhu.PError.Code
+	0, // 0: DouDizhu.PError.type:type_name -> DouDizhu.PError.Type
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

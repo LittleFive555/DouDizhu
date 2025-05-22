@@ -21,125 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PRegisterResponse_Result int32
-
-const (
-	PRegisterResponse_RESULT_UNKNOWN                 PRegisterResponse_Result = 0
-	PRegisterResponse_RESULT_SUCCESS                 PRegisterResponse_Result = 1
-	PRegisterResponse_RESULT_ACCOUNT_EXISTS          PRegisterResponse_Result = 2
-	PRegisterResponse_RESULT_ACCOUNT_TOO_LONG        PRegisterResponse_Result = 3
-	PRegisterResponse_RESULT_ACCOUNT_TOO_SHORT       PRegisterResponse_Result = 4
-	PRegisterResponse_RESULT_ACCOUNT_FORMAT_INVALID  PRegisterResponse_Result = 5
-	PRegisterResponse_RESULT_PASSWORD_TOO_LONG       PRegisterResponse_Result = 6
-	PRegisterResponse_RESULT_PASSWORD_TOO_SHORT      PRegisterResponse_Result = 7
-	PRegisterResponse_RESULT_PASSWORD_FORMAT_INVALID PRegisterResponse_Result = 8
-)
-
-// Enum value maps for PRegisterResponse_Result.
-var (
-	PRegisterResponse_Result_name = map[int32]string{
-		0: "RESULT_UNKNOWN",
-		1: "RESULT_SUCCESS",
-		2: "RESULT_ACCOUNT_EXISTS",
-		3: "RESULT_ACCOUNT_TOO_LONG",
-		4: "RESULT_ACCOUNT_TOO_SHORT",
-		5: "RESULT_ACCOUNT_FORMAT_INVALID",
-		6: "RESULT_PASSWORD_TOO_LONG",
-		7: "RESULT_PASSWORD_TOO_SHORT",
-		8: "RESULT_PASSWORD_FORMAT_INVALID",
-	}
-	PRegisterResponse_Result_value = map[string]int32{
-		"RESULT_UNKNOWN":                 0,
-		"RESULT_SUCCESS":                 1,
-		"RESULT_ACCOUNT_EXISTS":          2,
-		"RESULT_ACCOUNT_TOO_LONG":        3,
-		"RESULT_ACCOUNT_TOO_SHORT":       4,
-		"RESULT_ACCOUNT_FORMAT_INVALID":  5,
-		"RESULT_PASSWORD_TOO_LONG":       6,
-		"RESULT_PASSWORD_TOO_SHORT":      7,
-		"RESULT_PASSWORD_FORMAT_INVALID": 8,
-	}
-)
-
-func (x PRegisterResponse_Result) Enum() *PRegisterResponse_Result {
-	p := new(PRegisterResponse_Result)
-	*p = x
-	return p
-}
-
-func (x PRegisterResponse_Result) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PRegisterResponse_Result) Descriptor() protoreflect.EnumDescriptor {
-	return file_Login_proto_enumTypes[0].Descriptor()
-}
-
-func (PRegisterResponse_Result) Type() protoreflect.EnumType {
-	return &file_Login_proto_enumTypes[0]
-}
-
-func (x PRegisterResponse_Result) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PRegisterResponse_Result.Descriptor instead.
-func (PRegisterResponse_Result) EnumDescriptor() ([]byte, []int) {
-	return file_Login_proto_rawDescGZIP(), []int{1, 0}
-}
-
-type PLoginResponse_Result int32
-
-const (
-	PLoginResponse_RESULT_UNKNOWN            PLoginResponse_Result = 0
-	PLoginResponse_RESULT_SUCCESS            PLoginResponse_Result = 1
-	PLoginResponse_RESULT_ACCOUNT_NOT_EXISTS PLoginResponse_Result = 2
-	PLoginResponse_RESULT_PASSWORD_WRONG     PLoginResponse_Result = 3
-)
-
-// Enum value maps for PLoginResponse_Result.
-var (
-	PLoginResponse_Result_name = map[int32]string{
-		0: "RESULT_UNKNOWN",
-		1: "RESULT_SUCCESS",
-		2: "RESULT_ACCOUNT_NOT_EXISTS",
-		3: "RESULT_PASSWORD_WRONG",
-	}
-	PLoginResponse_Result_value = map[string]int32{
-		"RESULT_UNKNOWN":            0,
-		"RESULT_SUCCESS":            1,
-		"RESULT_ACCOUNT_NOT_EXISTS": 2,
-		"RESULT_PASSWORD_WRONG":     3,
-	}
-)
-
-func (x PLoginResponse_Result) Enum() *PLoginResponse_Result {
-	p := new(PLoginResponse_Result)
-	*p = x
-	return p
-}
-
-func (x PLoginResponse_Result) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PLoginResponse_Result) Descriptor() protoreflect.EnumDescriptor {
-	return file_Login_proto_enumTypes[1].Descriptor()
-}
-
-func (PLoginResponse_Result) Type() protoreflect.EnumType {
-	return &file_Login_proto_enumTypes[1]
-}
-
-func (x PLoginResponse_Result) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PLoginResponse_Result.Descriptor instead.
-func (PLoginResponse_Result) EnumDescriptor() ([]byte, []int) {
-	return file_Login_proto_rawDescGZIP(), []int{3, 0}
-}
-
 type PRegisterRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Account       string                 `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
@@ -192,50 +73,6 @@ func (x *PRegisterRequest) GetPassword() string {
 	return ""
 }
 
-type PRegisterResponse struct {
-	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Result        PRegisterResponse_Result `protobuf:"varint,1,opt,name=result,proto3,enum=DouDizhu.PRegisterResponse_Result" json:"result,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PRegisterResponse) Reset() {
-	*x = PRegisterResponse{}
-	mi := &file_Login_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PRegisterResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PRegisterResponse) ProtoMessage() {}
-
-func (x *PRegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_Login_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PRegisterResponse.ProtoReflect.Descriptor instead.
-func (*PRegisterResponse) Descriptor() ([]byte, []int) {
-	return file_Login_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PRegisterResponse) GetResult() PRegisterResponse_Result {
-	if x != nil {
-		return x.Result
-	}
-	return PRegisterResponse_RESULT_UNKNOWN
-}
-
 type PLoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Account       string                 `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
@@ -246,7 +83,7 @@ type PLoginRequest struct {
 
 func (x *PLoginRequest) Reset() {
 	*x = PLoginRequest{}
-	mi := &file_Login_proto_msgTypes[2]
+	mi := &file_Login_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +95,7 @@ func (x *PLoginRequest) String() string {
 func (*PLoginRequest) ProtoMessage() {}
 
 func (x *PLoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_Login_proto_msgTypes[2]
+	mi := &file_Login_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +108,7 @@ func (x *PLoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PLoginRequest.ProtoReflect.Descriptor instead.
 func (*PLoginRequest) Descriptor() ([]byte, []int) {
-	return file_Login_proto_rawDescGZIP(), []int{2}
+	return file_Login_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *PLoginRequest) GetAccount() string {
@@ -290,15 +127,14 @@ func (x *PLoginRequest) GetPassword() string {
 
 type PLoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        PLoginResponse_Result  `protobuf:"varint,1,opt,name=result,proto3,enum=DouDizhu.PLoginResponse_Result" json:"result,omitempty"`
-	PlayerId      string                 `protobuf:"bytes,2,opt,name=playerId,proto3" json:"playerId,omitempty"`
+	PlayerId      string                 `protobuf:"bytes,1,opt,name=playerId,proto3" json:"playerId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PLoginResponse) Reset() {
 	*x = PLoginResponse{}
-	mi := &file_Login_proto_msgTypes[3]
+	mi := &file_Login_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -310,7 +146,7 @@ func (x *PLoginResponse) String() string {
 func (*PLoginResponse) ProtoMessage() {}
 
 func (x *PLoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_Login_proto_msgTypes[3]
+	mi := &file_Login_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -323,14 +159,7 @@ func (x *PLoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PLoginResponse.ProtoReflect.Descriptor instead.
 func (*PLoginResponse) Descriptor() ([]byte, []int) {
-	return file_Login_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *PLoginResponse) GetResult() PLoginResponse_Result {
-	if x != nil {
-		return x.Result
-	}
-	return PLoginResponse_RESULT_UNKNOWN
+	return file_Login_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PLoginResponse) GetPlayerId() string {
@@ -347,30 +176,12 @@ const file_Login_proto_rawDesc = "" +
 	"\vLogin.proto\x12\bDouDizhu\"H\n" +
 	"\x10PRegisterRequest\x12\x18\n" +
 	"\aaccount\x18\x01 \x01(\tR\aaccount\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"\xdc\x02\n" +
-	"\x11PRegisterResponse\x12:\n" +
-	"\x06result\x18\x01 \x01(\x0e2\".DouDizhu.PRegisterResponse.ResultR\x06result\"\x8a\x02\n" +
-	"\x06Result\x12\x12\n" +
-	"\x0eRESULT_UNKNOWN\x10\x00\x12\x12\n" +
-	"\x0eRESULT_SUCCESS\x10\x01\x12\x19\n" +
-	"\x15RESULT_ACCOUNT_EXISTS\x10\x02\x12\x1b\n" +
-	"\x17RESULT_ACCOUNT_TOO_LONG\x10\x03\x12\x1c\n" +
-	"\x18RESULT_ACCOUNT_TOO_SHORT\x10\x04\x12!\n" +
-	"\x1dRESULT_ACCOUNT_FORMAT_INVALID\x10\x05\x12\x1c\n" +
-	"\x18RESULT_PASSWORD_TOO_LONG\x10\x06\x12\x1d\n" +
-	"\x19RESULT_PASSWORD_TOO_SHORT\x10\a\x12\"\n" +
-	"\x1eRESULT_PASSWORD_FORMAT_INVALID\x10\b\"E\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"E\n" +
 	"\rPLoginRequest\x12\x18\n" +
 	"\aaccount\x18\x01 \x01(\tR\aaccount\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"\xd1\x01\n" +
-	"\x0ePLoginResponse\x127\n" +
-	"\x06result\x18\x01 \x01(\x0e2\x1f.DouDizhu.PLoginResponse.ResultR\x06result\x12\x1a\n" +
-	"\bplayerId\x18\x02 \x01(\tR\bplayerId\"j\n" +
-	"\x06Result\x12\x12\n" +
-	"\x0eRESULT_UNKNOWN\x10\x00\x12\x12\n" +
-	"\x0eRESULT_SUCCESS\x10\x01\x12\x1d\n" +
-	"\x19RESULT_ACCOUNT_NOT_EXISTS\x10\x02\x12\x19\n" +
-	"\x15RESULT_PASSWORD_WRONG\x10\x03B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\bpassword\x18\x02 \x01(\tR\bpassword\",\n" +
+	"\x0ePLoginResponse\x12\x1a\n" +
+	"\bplayerId\x18\x01 \x01(\tR\bplayerIdB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Login_proto_rawDescOnce sync.Once
@@ -384,24 +195,18 @@ func file_Login_proto_rawDescGZIP() []byte {
 	return file_Login_proto_rawDescData
 }
 
-var file_Login_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_Login_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_Login_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_Login_proto_goTypes = []any{
-	(PRegisterResponse_Result)(0), // 0: DouDizhu.PRegisterResponse.Result
-	(PLoginResponse_Result)(0),    // 1: DouDizhu.PLoginResponse.Result
-	(*PRegisterRequest)(nil),      // 2: DouDizhu.PRegisterRequest
-	(*PRegisterResponse)(nil),     // 3: DouDizhu.PRegisterResponse
-	(*PLoginRequest)(nil),         // 4: DouDizhu.PLoginRequest
-	(*PLoginResponse)(nil),        // 5: DouDizhu.PLoginResponse
+	(*PRegisterRequest)(nil), // 0: DouDizhu.PRegisterRequest
+	(*PLoginRequest)(nil),    // 1: DouDizhu.PLoginRequest
+	(*PLoginResponse)(nil),   // 2: DouDizhu.PLoginResponse
 }
 var file_Login_proto_depIdxs = []int32{
-	0, // 0: DouDizhu.PRegisterResponse.result:type_name -> DouDizhu.PRegisterResponse.Result
-	1, // 1: DouDizhu.PLoginResponse.result:type_name -> DouDizhu.PLoginResponse.Result
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_Login_proto_init() }
@@ -414,14 +219,13 @@ func file_Login_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_Login_proto_rawDesc), len(file_Login_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   4,
+			NumEnums:      0,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_Login_proto_goTypes,
 		DependencyIndexes: file_Login_proto_depIdxs,
-		EnumInfos:         file_Login_proto_enumTypes,
 		MessageInfos:      file_Login_proto_msgTypes,
 	}.Build()
 	File_Login_proto = out.File

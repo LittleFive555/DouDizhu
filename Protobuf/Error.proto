@@ -5,11 +5,12 @@ option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
 message PError {
-	enum Code {
-		CODE_UNKNOWN = 0;
-		CODE_DATABASE_READ_ERROR = 1;
-		CODE_DATABASE_WRITE_ERROR = 2;
+	enum Type {
+		TYPE_UNKNOWN = 0;
+		TYPE_SERVER_ERROR = 1;
+		TYPE_BUSINESS = 2;
 	}
-	Code code = 1;
-	string message = 2;
+	Type type = 1;
+	string errorCode = 2;
+	string message = 3;
 }

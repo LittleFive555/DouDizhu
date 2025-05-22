@@ -24,17 +24,14 @@ namespace Gameplay.Player
 
         public async Task<bool> Register(string account, string password)
         {
-            var response = await Network.NetworkManager.Instance.RequestAsync<PRegisterRequest, PRegisterResponse>(PGameClientMessage.ContentOneofCase.RegisterReq, new PRegisterRequest()
+            var response = await Network.NetworkManager.Instance.RequestAsync(PGameClientMessage.ContentOneofCase.RegisterReq, new PRegisterRequest()
             {
                 Account = account,
                 Password = password
             });
-            if (response == null)
-                return false;
-
-            if (response.Result != PRegisterResponse.Types.Result.Success)
+            if (!response.IsSuccess)
             {
-                Log.Error("注册失败，错误码：{result}", response.Result);
+                Log.Error("注册失败，错误码：{errorCode}", response.ErrorCode);
                 return false;
             }
             return true;
@@ -47,16 +44,13 @@ namespace Gameplay.Player
                 Account = account,
                 Password = password
             });
-            if (response == null)
-                return false;
-
-            if (response.Result != PLoginResponse.Types.Result.Success)
+            if (!response.IsSuccess)
             {
-                Log.Error("登录失败，错误码：{result}", response.Result);
+                Log.Error("登录失败，错误码：{errorCode}", response.ErrorCode);
                 return false;
             }
 
-            ID = response.PlayerId;
+            ID = response.Data.PlayerId;
             return true;
         }
     }

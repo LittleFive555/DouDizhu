@@ -9,10 +9,9 @@ import "ChatMsg.proto";
 import "Login.proto";
 
 message PGameMsgHeader {
-	reserved 2;
+	string playerId = 1;
 	// 用于标识请求的唯一id
-	int64 messageId = 1;
-	string playerId = 3;
+	int64 messageId = 2;
 }
 
 message PGameClientMessage {
@@ -31,23 +30,22 @@ message PGameServerMessage {
 	}
 }
 
-message PGameMsgRespPacket {
-	PGameMsgHeader header = 1;
-	oneof content {
-		PError error = 2;
-		PCommonResponse commonResponse = 3;
-		PRegisterResponse registerResp = 4;
-		PLoginResponse loginResp = 5;
-	}
-}
-
 message PGameNotificationPacket {
 	oneof content {
 		PChatMsgNotification chatMsg = 1;
 	}
 }
 
+message PGameMsgRespPacket {
+	PGameMsgHeader header = 1;
+	oneof content {
+		PError error = 2;
+		PEmptyResponse emptyResponse = 3;
+		PLoginResponse loginResp = 4;
+	}
+}
+
 // 不需要返回值可用这个
-message PCommonResponse {
+message PEmptyResponse {
 	
 }

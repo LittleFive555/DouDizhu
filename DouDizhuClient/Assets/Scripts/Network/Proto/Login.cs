@@ -25,28 +25,16 @@ namespace Network.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgtMb2dpbi5wcm90bxIIRG91RGl6aHUiNQoQUFJlZ2lzdGVyUmVxdWVzdBIP",
-            "CgdhY2NvdW50GAEgASgJEhAKCHBhc3N3b3JkGAIgASgJItQCChFQUmVnaXN0",
-            "ZXJSZXNwb25zZRIyCgZyZXN1bHQYASABKA4yIi5Eb3VEaXpodS5QUmVnaXN0",
-            "ZXJSZXNwb25zZS5SZXN1bHQiigIKBlJlc3VsdBISCg5SRVNVTFRfVU5LTk9X",
-            "ThAAEhIKDlJFU1VMVF9TVUNDRVNTEAESGQoVUkVTVUxUX0FDQ09VTlRfRVhJ",
-            "U1RTEAISGwoXUkVTVUxUX0FDQ09VTlRfVE9PX0xPTkcQAxIcChhSRVNVTFRf",
-            "QUNDT1VOVF9UT09fU0hPUlQQBBIhCh1SRVNVTFRfQUNDT1VOVF9GT1JNQVRf",
-            "SU5WQUxJRBAFEhwKGFJFU1VMVF9QQVNTV09SRF9UT09fTE9ORxAGEh0KGVJF",
-            "U1VMVF9QQVNTV09SRF9UT09fU0hPUlQQBxIiCh5SRVNVTFRfUEFTU1dPUkRf",
-            "Rk9STUFUX0lOVkFMSUQQCCIyCg1QTG9naW5SZXF1ZXN0Eg8KB2FjY291bnQY",
-            "ASABKAkSEAoIcGFzc3dvcmQYAiABKAkivwEKDlBMb2dpblJlc3BvbnNlEi8K",
-            "BnJlc3VsdBgBIAEoDjIfLkRvdURpemh1LlBMb2dpblJlc3BvbnNlLlJlc3Vs",
-            "dBIQCghwbGF5ZXJJZBgCIAEoCSJqCgZSZXN1bHQSEgoOUkVTVUxUX1VOS05P",
-            "V04QABISCg5SRVNVTFRfU1VDQ0VTUxABEh0KGVJFU1VMVF9BQ0NPVU5UX05P",
-            "VF9FWElTVFMQAhIZChVSRVNVTFRfUEFTU1dPUkRfV1JPTkcQA0IiWhBuZXR3",
-            "b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
+            "CgdhY2NvdW50GAEgASgJEhAKCHBhc3N3b3JkGAIgASgJIjIKDVBMb2dpblJl",
+            "cXVlc3QSDwoHYWNjb3VudBgBIAEoCRIQCghwYXNzd29yZBgCIAEoCSIiCg5Q",
+            "TG9naW5SZXNwb25zZRIQCghwbGF5ZXJJZBgBIAEoCUIiWhBuZXR3b3JrL3By",
+            "b3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegisterRequest), global::Network.Proto.PRegisterRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegisterResponse), global::Network.Proto.PRegisterResponse.Parser, new[]{ "Result" }, null, new[]{ typeof(global::Network.Proto.PRegisterResponse.Types.Result) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginRequest), global::Network.Proto.PLoginRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginResponse), global::Network.Proto.PLoginResponse.Parser, new[]{ "Result", "PlayerId" }, null, new[]{ typeof(global::Network.Proto.PLoginResponse.Types.Result) }, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginResponse), global::Network.Proto.PLoginResponse.Parser, new[]{ "PlayerId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -289,224 +277,6 @@ namespace Network.Proto {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class PRegisterResponse : pb::IMessage<PRegisterResponse>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<PRegisterResponse> _parser = new pb::MessageParser<PRegisterResponse>(() => new PRegisterResponse());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<PRegisterResponse> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.LoginReflection.Descriptor.MessageTypes[1]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegisterResponse() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegisterResponse(PRegisterResponse other) : this() {
-      result_ = other.result_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public PRegisterResponse Clone() {
-      return new PRegisterResponse(this);
-    }
-
-    /// <summary>Field number for the "result" field.</summary>
-    public const int ResultFieldNumber = 1;
-    private global::Network.Proto.PRegisterResponse.Types.Result result_ = global::Network.Proto.PRegisterResponse.Types.Result.Unknown;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Network.Proto.PRegisterResponse.Types.Result Result {
-      get { return result_; }
-      set {
-        result_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as PRegisterResponse);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(PRegisterResponse other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Result != other.Result) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) hash ^= Result.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) Result);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) Result);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(PRegisterResponse other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Result != global::Network.Proto.PRegisterResponse.Types.Result.Unknown) {
-        Result = other.Result;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 8: {
-            Result = (global::Network.Proto.PRegisterResponse.Types.Result) input.ReadEnum();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            Result = (global::Network.Proto.PRegisterResponse.Types.Result) input.ReadEnum();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the PRegisterResponse message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static partial class Types {
-      public enum Result {
-        [pbr::OriginalName("RESULT_UNKNOWN")] Unknown = 0,
-        [pbr::OriginalName("RESULT_SUCCESS")] Success = 1,
-        [pbr::OriginalName("RESULT_ACCOUNT_EXISTS")] AccountExists = 2,
-        [pbr::OriginalName("RESULT_ACCOUNT_TOO_LONG")] AccountTooLong = 3,
-        [pbr::OriginalName("RESULT_ACCOUNT_TOO_SHORT")] AccountTooShort = 4,
-        [pbr::OriginalName("RESULT_ACCOUNT_FORMAT_INVALID")] AccountFormatInvalid = 5,
-        [pbr::OriginalName("RESULT_PASSWORD_TOO_LONG")] PasswordTooLong = 6,
-        [pbr::OriginalName("RESULT_PASSWORD_TOO_SHORT")] PasswordTooShort = 7,
-        [pbr::OriginalName("RESULT_PASSWORD_FORMAT_INVALID")] PasswordFormatInvalid = 8,
-      }
-
-    }
-    #endregion
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PLoginRequest : pb::IMessage<PLoginRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -521,7 +291,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.LoginReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Network.Proto.LoginReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -756,7 +526,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Network.Proto.LoginReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Network.Proto.LoginReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -776,7 +546,6 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PLoginResponse(PLoginResponse other) : this() {
-      result_ = other.result_;
       playerId_ = other.playerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -787,20 +556,8 @@ namespace Network.Proto {
       return new PLoginResponse(this);
     }
 
-    /// <summary>Field number for the "result" field.</summary>
-    public const int ResultFieldNumber = 1;
-    private global::Network.Proto.PLoginResponse.Types.Result result_ = global::Network.Proto.PLoginResponse.Types.Result.Unknown;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Network.Proto.PLoginResponse.Types.Result Result {
-      get { return result_; }
-      set {
-        result_ = value;
-      }
-    }
-
     /// <summary>Field number for the "playerId" field.</summary>
-    public const int PlayerIdFieldNumber = 2;
+    public const int PlayerIdFieldNumber = 1;
     private string playerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -826,7 +583,6 @@ namespace Network.Proto {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Result != other.Result) return false;
       if (PlayerId != other.PlayerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -835,7 +591,6 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Result != global::Network.Proto.PLoginResponse.Types.Result.Unknown) hash ^= Result.GetHashCode();
       if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -855,12 +610,8 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Result != global::Network.Proto.PLoginResponse.Types.Result.Unknown) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) Result);
-      }
       if (PlayerId.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(PlayerId);
       }
       if (_unknownFields != null) {
@@ -873,12 +624,8 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Result != global::Network.Proto.PLoginResponse.Types.Result.Unknown) {
-        output.WriteRawTag(8);
-        output.WriteEnum((int) Result);
-      }
       if (PlayerId.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(PlayerId);
       }
       if (_unknownFields != null) {
@@ -891,9 +638,6 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Result != global::Network.Proto.PLoginResponse.Types.Result.Unknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Result);
-      }
       if (PlayerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
       }
@@ -908,9 +652,6 @@ namespace Network.Proto {
     public void MergeFrom(PLoginResponse other) {
       if (other == null) {
         return;
-      }
-      if (other.Result != global::Network.Proto.PLoginResponse.Types.Result.Unknown) {
-        Result = other.Result;
       }
       if (other.PlayerId.Length != 0) {
         PlayerId = other.PlayerId;
@@ -934,11 +675,7 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
-            Result = (global::Network.Proto.PLoginResponse.Types.Result) input.ReadEnum();
-            break;
-          }
-          case 18: {
+          case 10: {
             PlayerId = input.ReadString();
             break;
           }
@@ -961,11 +698,7 @@ namespace Network.Proto {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 8: {
-            Result = (global::Network.Proto.PLoginResponse.Types.Result) input.ReadEnum();
-            break;
-          }
-          case 18: {
+          case 10: {
             PlayerId = input.ReadString();
             break;
           }
@@ -973,21 +706,6 @@ namespace Network.Proto {
       }
     }
     #endif
-
-    #region Nested types
-    /// <summary>Container for nested types declared in the PLoginResponse message type.</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static partial class Types {
-      public enum Result {
-        [pbr::OriginalName("RESULT_UNKNOWN")] Unknown = 0,
-        [pbr::OriginalName("RESULT_SUCCESS")] Success = 1,
-        [pbr::OriginalName("RESULT_ACCOUNT_NOT_EXISTS")] AccountNotExists = 2,
-        [pbr::OriginalName("RESULT_PASSWORD_WRONG")] PasswordWrong = 3,
-      }
-
-    }
-    #endregion
 
   }
 

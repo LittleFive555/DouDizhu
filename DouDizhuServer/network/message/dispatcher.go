@@ -9,11 +9,11 @@ type MessageDispatcher struct {
 	messageQueue chan *Message // 消息队列
 	workers      []*Worker     // 工作协程池
 	handlers     map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)
-	handler      func(message *Message) error
+	handler      func(message *Message)
 }
 
 // 初始化消息分发器
-func NewMessageDispatcher(workerCount int, handler func(message *Message) error) *MessageDispatcher {
+func NewMessageDispatcher(workerCount int, handler func(message *Message)) *MessageDispatcher {
 	md := &MessageDispatcher{
 		messageQueue: make(chan *Message, 10000), // 带缓冲的队列
 		handlers:     make(map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)),

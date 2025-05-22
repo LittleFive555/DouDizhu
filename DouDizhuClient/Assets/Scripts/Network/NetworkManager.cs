@@ -65,17 +65,17 @@ namespace Network
             Log.Information("TCP连接已关闭");
         }
 
-        public async Task<PCommonResponse> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        public async Task<NetworkResult<PEmptyResponse>> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
         {
-            return await RequestAsync<TReq, PCommonResponse>(requestType, request);
+            return await RequestAsync<TReq, PEmptyResponse>(requestType, request);
         }
 
-        public async Task<TResp> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : class, IMessage
+        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : class, IMessage
         {
             if (!m_IsConnected || m_TcpClient == null || !m_TcpClient.Connected)
             {
                 Log.Error("TCP连接未建立，无法发送消息");
-                return null;
+                return NetworkResult<TResp>.Error(null, "TCP连接未建立，无法发送消息");
             }
 
             try
@@ -93,18 +93,21 @@ namespace Network
                 var serverPacket = await tcs.Task;
                 if (serverPacket.ContentCase == PGameMsgRespPacket.ContentOneofCase.Error)
                 {
-                    Log.Error("服务器返回错误: ErrorCode {errorCode}: {errorMessage}", serverPacket.Error.Code, serverPacket.Error.Message);
-                    return null;
+                    if (serverPacket.Error.Type == PError.Types.Type.ServerError)
+                        Log.Error("服务器内部错误: {errorCode}: {errorMessage}", serverPacket.Error.ErrorCode, serverPacket.Error.Message);
+                    else
+                        Log.Error("服务器返回游戏逻辑错误: {errorCode}: {errorMessage}", serverPacket.Error.ErrorCode, serverPacket.Error.Message);
+                    return NetworkResult<TResp>.Error(serverPacket.Error.ErrorCode, serverPacket.Error.Message);
                 }
                 
                 TResp response = UnpackResponse<TResp>(serverPacket);
                 Log.Information("收到服务器响应: {response}", response);
-                return response;
+                return NetworkResult<TResp>.Success(response);
             }
             catch (Exception ex)
             {
                 Log.Error("发送消息时发生错误: {exception}", ex.Message);
-                return null;
+                return NetworkResult<TResp>.Error(null, ex.Message);
             }
         }
 

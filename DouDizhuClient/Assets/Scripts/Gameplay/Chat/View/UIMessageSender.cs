@@ -46,7 +46,7 @@ namespace Gameplay.Chat.View
             Name = NameInput.text;
 
             var response = await NetworkManager.Instance.RequestAsync(PGameClientMessage.ContentOneofCase.ChatMsg, new PChatMsgRequest() { Content = message });
-            if (response != null)
+            if (response.IsSuccess)
             {
                 messageInput.text = ""; // 清空输入框
             }

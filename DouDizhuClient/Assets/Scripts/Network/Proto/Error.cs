@@ -24,15 +24,15 @@ namespace Network.Proto {
     static ErrorReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUilQEKBlBFcnJvchIjCgRjb2RlGAEg",
-            "ASgOMhUuRG91RGl6aHUuUEVycm9yLkNvZGUSDwoHbWVzc2FnZRgCIAEoCSJV",
-            "CgRDb2RlEhAKDENPREVfVU5LTk9XThAAEhwKGENPREVfREFUQUJBU0VfUkVB",
-            "RF9FUlJPUhABEh0KGUNPREVfREFUQUJBU0VfV1JJVEVfRVJST1IQAkIiWhBu",
+            "CgtFcnJvci5wcm90bxIIRG91RGl6aHUilQEKBlBFcnJvchIjCgR0eXBlGAEg",
+            "ASgOMhUuRG91RGl6aHUuUEVycm9yLlR5cGUSEQoJZXJyb3JDb2RlGAIgASgJ",
+            "Eg8KB21lc3NhZ2UYAyABKAkiQgoEVHlwZRIQCgxUWVBFX1VOS05PV04QABIV",
+            "ChFUWVBFX1NFUlZFUl9FUlJPUhABEhEKDVRZUEVfQlVTSU5FU1MQAkIiWhBu",
             "ZXR3b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PError), global::Network.Proto.PError.Parser, new[]{ "Code", "Message" }, null, new[]{ typeof(global::Network.Proto.PError.Types.Code) }, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PError), global::Network.Proto.PError.Parser, new[]{ "Type", "ErrorCode", "Message" }, null, new[]{ typeof(global::Network.Proto.PError.Types.Type) }, null, null)
           }));
     }
     #endregion
@@ -74,7 +74,8 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PError(PError other) : this() {
-      code_ = other.code_;
+      type_ = other.type_;
+      errorCode_ = other.errorCode_;
       message_ = other.message_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -85,20 +86,32 @@ namespace Network.Proto {
       return new PError(this);
     }
 
-    /// <summary>Field number for the "code" field.</summary>
-    public const int CodeFieldNumber = 1;
-    private global::Network.Proto.PError.Types.Code code_ = global::Network.Proto.PError.Types.Code.Unknown;
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 1;
+    private global::Network.Proto.PError.Types.Type type_ = global::Network.Proto.PError.Types.Type.Unknown;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Network.Proto.PError.Types.Code Code {
-      get { return code_; }
+    public global::Network.Proto.PError.Types.Type Type {
+      get { return type_; }
       set {
-        code_ = value;
+        type_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "errorCode" field.</summary>
+    public const int ErrorCodeFieldNumber = 2;
+    private string errorCode_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ErrorCode {
+      get { return errorCode_; }
+      set {
+        errorCode_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
     /// <summary>Field number for the "message" field.</summary>
-    public const int MessageFieldNumber = 2;
+    public const int MessageFieldNumber = 3;
     private string message_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -124,7 +137,8 @@ namespace Network.Proto {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Code != other.Code) return false;
+      if (Type != other.Type) return false;
+      if (ErrorCode != other.ErrorCode) return false;
       if (Message != other.Message) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -133,7 +147,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Code != global::Network.Proto.PError.Types.Code.Unknown) hash ^= Code.GetHashCode();
+      if (Type != global::Network.Proto.PError.Types.Type.Unknown) hash ^= Type.GetHashCode();
+      if (ErrorCode.Length != 0) hash ^= ErrorCode.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -153,12 +168,16 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
+      if (Type != global::Network.Proto.PError.Types.Type.Unknown) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) Code);
+        output.WriteEnum((int) Type);
+      }
+      if (ErrorCode.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ErrorCode);
       }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -171,12 +190,16 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
+      if (Type != global::Network.Proto.PError.Types.Type.Unknown) {
         output.WriteRawTag(8);
-        output.WriteEnum((int) Code);
+        output.WriteEnum((int) Type);
+      }
+      if (ErrorCode.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ErrorCode);
       }
       if (Message.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(Message);
       }
       if (_unknownFields != null) {
@@ -189,8 +212,11 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Code != global::Network.Proto.PError.Types.Code.Unknown) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Code);
+      if (Type != global::Network.Proto.PError.Types.Type.Unknown) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      }
+      if (ErrorCode.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ErrorCode);
       }
       if (Message.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
@@ -207,8 +233,11 @@ namespace Network.Proto {
       if (other == null) {
         return;
       }
-      if (other.Code != global::Network.Proto.PError.Types.Code.Unknown) {
-        Code = other.Code;
+      if (other.Type != global::Network.Proto.PError.Types.Type.Unknown) {
+        Type = other.Type;
+      }
+      if (other.ErrorCode.Length != 0) {
+        ErrorCode = other.ErrorCode;
       }
       if (other.Message.Length != 0) {
         Message = other.Message;
@@ -233,10 +262,14 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Code = (global::Network.Proto.PError.Types.Code) input.ReadEnum();
+            Type = (global::Network.Proto.PError.Types.Type) input.ReadEnum();
             break;
           }
           case 18: {
+            ErrorCode = input.ReadString();
+            break;
+          }
+          case 26: {
             Message = input.ReadString();
             break;
           }
@@ -260,10 +293,14 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Code = (global::Network.Proto.PError.Types.Code) input.ReadEnum();
+            Type = (global::Network.Proto.PError.Types.Type) input.ReadEnum();
             break;
           }
           case 18: {
+            ErrorCode = input.ReadString();
+            break;
+          }
+          case 26: {
             Message = input.ReadString();
             break;
           }
@@ -277,10 +314,10 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
-      public enum Code {
-        [pbr::OriginalName("CODE_UNKNOWN")] Unknown = 0,
-        [pbr::OriginalName("CODE_DATABASE_READ_ERROR")] DatabaseReadError = 1,
-        [pbr::OriginalName("CODE_DATABASE_WRITE_ERROR")] DatabaseWriteError = 2,
+      public enum Type {
+        [pbr::OriginalName("TYPE_UNKNOWN")] Unknown = 0,
+        [pbr::OriginalName("TYPE_SERVER_ERROR")] ServerError = 1,
+        [pbr::OriginalName("TYPE_BUSINESS")] Business = 2,
       }
 
     }

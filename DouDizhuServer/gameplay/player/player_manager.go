@@ -2,7 +2,7 @@ package player
 
 import (
 	"DouDizhuServer/database"
-	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/errors"
 	"encoding/base64"
 
 	"github.com/google/uuid"
@@ -19,53 +19,70 @@ func NewPlayerManager() *PlayerManager {
 	return &PlayerManager{players: make(map[string]*Player)}
 }
 
-func (m *PlayerManager) Register(accountStr string, password string) (protodef.PRegisterResponse_Result, error) {
-	result := validateAccount(accountStr)
-	if result != protodef.PRegisterResponse_RESULT_SUCCESS {
-		return result, nil
+func (m *PlayerManager) Register(accountStr string, password string) error {
+	// 验证账号格式，并且检查是否存在
+	err := validateAccount(accountStr)
+	if err != nil {
+		return err
 	}
-	result = validatePassword(password)
-	if result != protodef.PRegisterResponse_RESULT_SUCCESS {
-		return result, nil
+	account, err := database.GetAccount(accountStr)
+	if err != nil {
+		return errors.NewDatabaseError(errors.CodeDBReadError, err)
+	}
+	if account.IsExists() {
+		return errors.NewGameplayError(errors.CodeAccountExists)
 	}
 
-	// 生成哈希
+	// 验证密码
+	err = validatePassword(password)
+	if err != nil {
+		return err
+	}
+
+	// 生成密码哈希
 	hashedPasswordBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return protodef.PRegisterResponse_RESULT_UNKNOWN, err
+		return errors.NewThirdPartyError(errors.CodeUnknown, err)
 	}
 	hashedPaswordStr := base64.StdEncoding.EncodeToString(hashedPasswordBytes)
 
+	// 生成玩家ID
 	playerId := uuid.New().String()
 
-	account := database.Account{
+	account = database.Account{
 		Account:        accountStr,
 		HashedPassword: hashedPaswordStr,
 		PlayerId:       playerId,
 	}
-	err = database.AddPlayer(&account)
+	err = database.AddAccount(&account)
 	if err != nil {
-		return protodef.PRegisterResponse_RESULT_ACCOUNT_EXISTS, nil
+		return errors.NewDatabaseError(errors.CodeDBWriteError, err)
 	}
-	return protodef.PRegisterResponse_RESULT_SUCCESS, nil
+	return nil
 }
 
-func (m *PlayerManager) Login(accountStr string, password string) (*Player, protodef.PLoginResponse_Result, error) {
-	account, err := database.GetPlayer(accountStr)
+func (m *PlayerManager) Login(accountStr string, password string) (*Player, error) {
+	// 判断账号是否存在
+	account, err := database.GetAccount(accountStr)
 	if err != nil {
-		return nil, protodef.PLoginResponse_RESULT_ACCOUNT_NOT_EXISTS, nil
+		return nil, errors.NewDatabaseError(errors.CodeDBReadError, err)
 	}
+	if !account.IsExists() {
+		return nil, errors.NewGameplayError(errors.CodeAccountNotExists)
+	}
+	// 验证密码
 	hashedPassword, err := base64.StdEncoding.DecodeString(account.HashedPassword)
 	if err != nil {
-		return nil, protodef.PLoginResponse_RESULT_UNKNOWN, err
+		return nil, errors.NewThirdPartyError(errors.CodeUnknown, err)
 	}
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err != nil {
-		return nil, protodef.PLoginResponse_RESULT_PASSWORD_WRONG, nil
+		return nil, errors.NewGameplayError(errors.CodePasswordWrong)
 	}
+
 	player := NewPlayer(account.PlayerId, "NewPlayer")
 	m.players[account.PlayerId] = player
-	return player, protodef.PLoginResponse_RESULT_SUCCESS, nil
+	return player, nil
 }
 
 func (m *PlayerManager) GetPlayer(playerId string) *Player {
@@ -76,12 +93,12 @@ func (m *PlayerManager) RemovePlayer(playerId string) {
 	delete(m.players, playerId)
 }
 
-func validateAccount(account string) protodef.PRegisterResponse_Result {
+func validateAccount(account string) error {
 	// TODO
-	return protodef.PRegisterResponse_RESULT_SUCCESS
+	return nil
 }
 
-func validatePassword(password string) protodef.PRegisterResponse_Result {
+func validatePassword(password string) error {
 	// TODO
-	return protodef.PRegisterResponse_RESULT_SUCCESS
+	return nil
 }
