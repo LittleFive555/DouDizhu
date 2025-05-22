@@ -84,6 +84,7 @@ namespace Network
                 var tcs = new TaskCompletionSource<PGameMsgRespPacket>();
                 m_PendingRequests.TryAdd(gameClientMessage.Header.MessageId, tcs);
                 
+                // TODO 对消息进行加密
                 await m_MessageReadWriter.WriteTo(m_NetworkStream, gameClientMessage.ToByteArray());
                 Log.Information("消息已发送: {request}", request);
 

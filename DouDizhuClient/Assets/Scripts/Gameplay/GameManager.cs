@@ -47,6 +47,7 @@ namespace Gameplay
 
         private void InitializeLogger()
         {
+            // TODO 日志文件在Editor下和Build下分开
             // 初始化日志
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Unity3D()

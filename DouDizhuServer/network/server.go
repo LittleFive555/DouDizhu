@@ -84,6 +84,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("解析消息失败", "error", err)
 		return
 	}
+	// TODO 敏感信息不进行输出
 	logger.InfoWith("收到消息", "sessionId", msg.SessionId, "message", reqPacket)
 
 	// 查找对应的消息处理器
@@ -124,6 +125,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("序列化响应失败", "error", err)
 		return
 	}
+	// TODO 对消息进行加密
 	session, err := s.sessionMgr.GetSession(msg.SessionId)
 	if err != nil {
 		logger.ErrorWith("获取会话失败", "error", err)
