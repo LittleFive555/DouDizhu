@@ -6,13 +6,13 @@ option csharp_namespace = "Network.Proto";
 
 import "Error.proto";
 import "ChatMsg.proto";
-import "Player.proto";
 import "Login.proto";
 
 message PGameMsgHeader {
+	reserved 2;
 	// 用于标识请求的唯一id
 	int64 messageId = 1;
-	PPlayer player = 2;
+	string playerId = 3;
 }
 
 message PGameClientMessage {

@@ -8,7 +8,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-var DBInstance *sql.DB
+var instance *sql.DB
 
 func ConnectDB() *sql.DB {
 	cfg := mysql.NewConfig()
@@ -18,16 +18,21 @@ func ConnectDB() *sql.DB {
 	cfg.Addr = "127.0.0.1:3306"
 	cfg.DBName = "doudizhu_db"
 
-	db, err := sql.Open("mysql", cfg.FormatDSN())
+	var err error
+	instance, err = sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		logger.Fatal(err)
 	}
 
-	pingErr := db.Ping()
-	if pingErr != nil {
-		logger.Fatal(pingErr)
+	err = instance.Ping()
+	if err != nil {
+		logger.Fatal(err)
 	}
 
 	logger.Info("数据库连接成功")
-	return db
+	return instance
+}
+
+func GetDB() *sql.DB {
+	return instance
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"DouDizhuServer/database"
 	"DouDizhuServer/gameplay"
-	"DouDizhuServer/gameplay/login"
 	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
@@ -23,14 +22,14 @@ func main() {
 	}
 	defer logger.Sync()
 	logger.Info("日志系统初始化成功")
-	database.DBInstance = database.ConnectDB()
+	database.ConnectDB()
 
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer()
 
 	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), gameplay.HandleChatMessage)
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), login.HandleRegist)
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), login.HandleLogin)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), player.HandleRegister)
+	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), player.HandleLogin)
 
 	player.Manager = player.NewPlayerManager()
 

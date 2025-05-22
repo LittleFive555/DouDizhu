@@ -24,8 +24,8 @@ const (
 type PGameMsgHeader struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 用于标识请求的唯一id
-	MessageId     int64    `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
-	Player        *PPlayer `protobuf:"bytes,2,opt,name=player,proto3" json:"player,omitempty"`
+	MessageId     int64  `protobuf:"varint,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
+	PlayerId      string `protobuf:"bytes,3,opt,name=playerId,proto3" json:"playerId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,11 +67,11 @@ func (x *PGameMsgHeader) GetMessageId() int64 {
 	return 0
 }
 
-func (x *PGameMsgHeader) GetPlayer() *PPlayer {
+func (x *PGameMsgHeader) GetPlayerId() string {
 	if x != nil {
-		return x.Player
+		return x.PlayerId
 	}
-	return nil
+	return ""
 }
 
 type PGameClientMessage struct {
@@ -491,10 +491,10 @@ var File_GameMsg_proto protoreflect.FileDescriptor
 
 const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\x1a\fPlayer.proto\x1a\vLogin.proto\"Y\n" +
+	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\x1a\vLogin.proto\"P\n" +
 	"\x0ePGameMsgHeader\x12\x1c\n" +
-	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\x12)\n" +
-	"\x06player\x18\x02 \x01(\v2\x11.DouDizhu.PPlayerR\x06player\"\xff\x01\n" +
+	"\tmessageId\x18\x01 \x01(\x03R\tmessageId\x12\x1a\n" +
+	"\bplayerId\x18\x03 \x01(\tR\bplayerIdJ\x04\b\x02\x10\x03\"\xff\x01\n" +
 	"\x12PGameClientMessage\x120\n" +
 	"\x06header\x18\x01 \x01(\v2\x18.DouDizhu.PGameMsgHeaderR\x06header\x125\n" +
 	"\achatMsg\x18\x02 \x01(\v2\x19.DouDizhu.PChatMsgRequestH\x00R\achatMsg\x12>\n" +
@@ -537,34 +537,32 @@ var file_GameMsg_proto_goTypes = []any{
 	(*PGameMsgRespPacket)(nil),      // 3: DouDizhu.PGameMsgRespPacket
 	(*PGameNotificationPacket)(nil), // 4: DouDizhu.PGameNotificationPacket
 	(*PCommonResponse)(nil),         // 5: DouDizhu.PCommonResponse
-	(*PPlayer)(nil),                 // 6: DouDizhu.PPlayer
-	(*PChatMsgRequest)(nil),         // 7: DouDizhu.PChatMsgRequest
-	(*PRegisterRequest)(nil),        // 8: DouDizhu.PRegisterRequest
-	(*PLoginRequest)(nil),           // 9: DouDizhu.PLoginRequest
-	(*PError)(nil),                  // 10: DouDizhu.PError
-	(*PRegisterResponse)(nil),       // 11: DouDizhu.PRegisterResponse
-	(*PLoginResponse)(nil),          // 12: DouDizhu.PLoginResponse
-	(*PChatMsgNotification)(nil),    // 13: DouDizhu.PChatMsgNotification
+	(*PChatMsgRequest)(nil),         // 6: DouDizhu.PChatMsgRequest
+	(*PRegisterRequest)(nil),        // 7: DouDizhu.PRegisterRequest
+	(*PLoginRequest)(nil),           // 8: DouDizhu.PLoginRequest
+	(*PError)(nil),                  // 9: DouDizhu.PError
+	(*PRegisterResponse)(nil),       // 10: DouDizhu.PRegisterResponse
+	(*PLoginResponse)(nil),          // 11: DouDizhu.PLoginResponse
+	(*PChatMsgNotification)(nil),    // 12: DouDizhu.PChatMsgNotification
 }
 var file_GameMsg_proto_depIdxs = []int32{
-	6,  // 0: DouDizhu.PGameMsgHeader.player:type_name -> DouDizhu.PPlayer
-	0,  // 1: DouDizhu.PGameClientMessage.header:type_name -> DouDizhu.PGameMsgHeader
-	7,  // 2: DouDizhu.PGameClientMessage.chatMsg:type_name -> DouDizhu.PChatMsgRequest
-	8,  // 3: DouDizhu.PGameClientMessage.registerReq:type_name -> DouDizhu.PRegisterRequest
-	9,  // 4: DouDizhu.PGameClientMessage.loginReq:type_name -> DouDizhu.PLoginRequest
-	3,  // 5: DouDizhu.PGameServerMessage.response:type_name -> DouDizhu.PGameMsgRespPacket
-	4,  // 6: DouDizhu.PGameServerMessage.notification:type_name -> DouDizhu.PGameNotificationPacket
-	0,  // 7: DouDizhu.PGameMsgRespPacket.header:type_name -> DouDizhu.PGameMsgHeader
-	10, // 8: DouDizhu.PGameMsgRespPacket.error:type_name -> DouDizhu.PError
-	5,  // 9: DouDizhu.PGameMsgRespPacket.commonResponse:type_name -> DouDizhu.PCommonResponse
-	11, // 10: DouDizhu.PGameMsgRespPacket.registerResp:type_name -> DouDizhu.PRegisterResponse
-	12, // 11: DouDizhu.PGameMsgRespPacket.loginResp:type_name -> DouDizhu.PLoginResponse
-	13, // 12: DouDizhu.PGameNotificationPacket.chatMsg:type_name -> DouDizhu.PChatMsgNotification
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	0,  // 0: DouDizhu.PGameClientMessage.header:type_name -> DouDizhu.PGameMsgHeader
+	6,  // 1: DouDizhu.PGameClientMessage.chatMsg:type_name -> DouDizhu.PChatMsgRequest
+	7,  // 2: DouDizhu.PGameClientMessage.registerReq:type_name -> DouDizhu.PRegisterRequest
+	8,  // 3: DouDizhu.PGameClientMessage.loginReq:type_name -> DouDizhu.PLoginRequest
+	3,  // 4: DouDizhu.PGameServerMessage.response:type_name -> DouDizhu.PGameMsgRespPacket
+	4,  // 5: DouDizhu.PGameServerMessage.notification:type_name -> DouDizhu.PGameNotificationPacket
+	0,  // 6: DouDizhu.PGameMsgRespPacket.header:type_name -> DouDizhu.PGameMsgHeader
+	9,  // 7: DouDizhu.PGameMsgRespPacket.error:type_name -> DouDizhu.PError
+	5,  // 8: DouDizhu.PGameMsgRespPacket.commonResponse:type_name -> DouDizhu.PCommonResponse
+	10, // 9: DouDizhu.PGameMsgRespPacket.registerResp:type_name -> DouDizhu.PRegisterResponse
+	11, // 10: DouDizhu.PGameMsgRespPacket.loginResp:type_name -> DouDizhu.PLoginResponse
+	12, // 11: DouDizhu.PGameNotificationPacket.chatMsg:type_name -> DouDizhu.PChatMsgNotification
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_GameMsg_proto_init() }
@@ -574,7 +572,6 @@ func file_GameMsg_proto_init() {
 	}
 	file_Error_proto_init()
 	file_ChatMsg_proto_init()
-	file_Player_proto_init()
 	file_Login_proto_init()
 	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
 		(*PGameClientMessage_ChatMsg)(nil),

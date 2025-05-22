@@ -206,11 +206,7 @@ namespace Network
                 Header = new PGameMsgHeader()
                 { 
                     MessageId = GenerateRequestId(),
-                    Player = new PPlayer()
-                    {
-                        PlayerId = "", // TODO
-                        Nickname = ""
-                    }
+                    PlayerId = "" // TODO
                 },
             };
             
