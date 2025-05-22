@@ -62,6 +62,18 @@ func (s *SessionManager) GetSession(sessionId string) (*PlayerSession, error) {
 	return session, nil
 }
 
+func (s *SessionManager) GetAllSessions() []*PlayerSession {
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
+
+	allSessions := make([]*PlayerSession, 0, len(s.playerSessions))
+	for _, session := range s.playerSessions {
+		allSessions = append(allSessions, session)
+	}
+
+	return allSessions
+}
+
 func (s *SessionManager) CloseSession(sessionId string) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()

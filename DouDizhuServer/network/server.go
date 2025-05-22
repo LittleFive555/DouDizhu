@@ -60,7 +60,7 @@ func (s *GameServer) Stop() error {
 	return nil
 }
 
-func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error)) {
+func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error)) {
 	s.dispatcher.RegisterHandler(msgType, handler)
 }
 
@@ -101,7 +101,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	}
 
 	// 处理消息
-	respPacket, err := handler(reqPacket)
+	respPacket, notificationPacket, err := handler(reqPacket)
 
 	if gameError := errors.AsGameError(err); gameError != nil {
 		if gameError.Category == errors.CategoryGameplay {
@@ -113,14 +113,14 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	} else {
 		respPacket.Header.MessageId = reqPacket.Header.MessageId
 	}
-	// 包装为 GameServerMessage
-	serverMessage := &protodef.PGameServerMessage{
-		Content: &protodef.PGameServerMessage_Response{
-			Response: respPacket,
-		},
-	}
 
-	responseData, err := serialize.Serialize(serverMessage)
+	// 响应
+	// 包装为 GameServerMessage
+	serverRespMessage := message.CreateServerMessage()
+	serverRespMessage.Content = &protodef.PGameServerMessage_Response{
+		Response: respPacket,
+	}
+	responseData, err := serialize.Serialize(serverRespMessage)
 	if err != nil {
 		logger.ErrorWith("序列化响应失败", "error", err)
 		return
@@ -136,6 +136,29 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("发送消息失败", "error", err)
 		return
 	}
+	logger.InfoWith("发送消息成功", "message", serverRespMessage)
 
-	logger.InfoWith("发送消息成功", "message", serverMessage)
+	// 发送通知
+	// 包装为 GameServerMessage
+	if notificationPacket != nil {
+		serverNotificationMessage := message.CreateServerMessage()
+		serverNotificationMessage.Content = &protodef.PGameServerMessage_Notification{
+			Notification: notificationPacket,
+		}
+		notificationData, err := serialize.Serialize(serverNotificationMessage)
+		if err != nil {
+			logger.ErrorWith("序列化响应失败", "error", err)
+			return
+		}
+		// TODO 对消息进行加密
+		allSessions := s.sessionMgr.GetAllSessions()
+		for _, session := range allSessions {
+			err = session.SendMessage(notificationData)
+			if err != nil {
+				logger.ErrorWith("发送消息失败", "error", err)
+				continue
+			}
+		}
+		logger.InfoWith("发送通知结束", "message", serverNotificationMessage)
+	}
 }
