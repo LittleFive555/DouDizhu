@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Network.Tcp
 {
-    public class LengthPrefixReadWriter : MessageReadWriter
+    public class LengthPrefixReadWriter : IMessageReadWriter
     {
         public async Task<byte[]> ReadFrom(NetworkStream networkStream)
         {

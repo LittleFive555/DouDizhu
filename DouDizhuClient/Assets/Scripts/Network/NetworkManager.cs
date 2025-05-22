@@ -26,7 +26,7 @@ namespace Network
 
         private TcpClient m_TcpClient;
         private NetworkStream m_NetworkStream;
-        private MessageReadWriter m_MessageReadWriter;
+        private IMessageReadWriter m_MessageReadWriter;
         private bool m_IsConnected = false;
         public bool IsConnected => m_IsConnected;
 
