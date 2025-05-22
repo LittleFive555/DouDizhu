@@ -8,6 +8,7 @@ using Google.Protobuf;
 using Network.Tcp;
 using Network.Proto;
 using Serilog;
+using Gameplay.Player;
 
 namespace Network
 {
@@ -210,9 +211,10 @@ namespace Network
                 Header = new PGameMsgHeader()
                 { 
                     MessageId = GenerateRequestId(),
-                    PlayerId = "" // TODO
                 },
             };
+            if (!string.IsNullOrEmpty(PlayerManager.Instance.ID))
+                gameClientMessage.Header.PlayerId = PlayerManager.Instance.ID;
             
             string propertyName = requestType.ToString();
             Type packetType = typeof(PGameClientMessage);

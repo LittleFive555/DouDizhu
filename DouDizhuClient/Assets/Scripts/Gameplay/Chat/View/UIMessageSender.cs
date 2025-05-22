@@ -54,7 +54,7 @@ namespace Gameplay.Chat.View
 
         private void OnReceivedChatMsg(PChatMsgNotification notification)
         {
-            Log.Information("收到聊天消息: {content}", notification.Content);
+            Log.Information("收到聊天消息 {playerName}: {content}", notification.From.Nickname, notification.Content);
         }
     }
 }
