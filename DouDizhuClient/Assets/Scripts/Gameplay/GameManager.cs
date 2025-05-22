@@ -5,7 +5,7 @@ using Network;
 using UIModule;
 using Gameplay.Login.View;
 using Serilog;
-using Logger;
+using Serilog.Sinks.Unity3D;
 
 namespace Gameplay
 {
@@ -49,7 +49,7 @@ namespace Gameplay
         {
             // 初始化日志
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Sink(new UnityDebugSink())
+                .WriteTo.Unity3D()
                 .WriteTo.File("log.txt",
                     rollingInterval: RollingInterval.Day,
                     rollOnFileSizeLimit: true)
