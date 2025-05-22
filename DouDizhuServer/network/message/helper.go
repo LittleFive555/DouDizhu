@@ -11,7 +11,7 @@ func CreateRespPacket(requestHeader *protodef.PGameMsgHeader) *protodef.PGameMsg
 	}
 }
 
-func CreateEmptyResponsePacket(requestHeader *protodef.PGameMsgHeader) *protodef.PGameMsgRespPacket {
+func CreateEmptyRespPacket(requestHeader *protodef.PGameMsgHeader) *protodef.PGameMsgRespPacket {
 	return &protodef.PGameMsgRespPacket{
 		Header:  requestHeader,
 		Content: &protodef.PGameMsgRespPacket_EmptyResponse{},

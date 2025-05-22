@@ -12,9 +12,7 @@ func HandleRegister(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPac
 	if err != nil {
 		return nil, err
 	}
-	respPacket := message.CreateRespPacket(req.Header)
-	respPacket.Content = &protodef.PGameMsgRespPacket_EmptyResponse{}
-	return respPacket, nil
+	return message.CreateEmptyRespPacket(req.Header), nil
 }
 
 func HandleLogin(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, error) {
@@ -25,13 +23,13 @@ func HandleLogin(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket
 	if err != nil {
 		return nil, err
 	}
-	playerId := player.PlayerId
 
+	loginResp := &protodef.PLoginResponse{
+		PlayerId: player.PlayerId,
+	}
 	respPacket := message.CreateRespPacket(req.Header)
 	respPacket.Content = &protodef.PGameMsgRespPacket_LoginResp{
-		LoginResp: &protodef.PLoginResponse{
-			PlayerId: playerId,
-		},
+		LoginResp: loginResp,
 	}
 	return respPacket, nil
 }

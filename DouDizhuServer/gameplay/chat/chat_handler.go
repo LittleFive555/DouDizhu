@@ -1,4 +1,4 @@
-package gameplay
+package chat
 
 import (
 	"DouDizhuServer/logger"
@@ -18,5 +18,5 @@ func HandleChatMessage(req *protodef.PGameClientMessage) (*protodef.PGameMsgResp
 	// 	},
 	// }
 	// network.GetServer().SendNotificationToPlayer(req.Header.Player, notification)
-	return message.CreateEmptyResponsePacket(req.Header), nil
+	return message.CreateEmptyRespPacket(req.Header), nil
 }
