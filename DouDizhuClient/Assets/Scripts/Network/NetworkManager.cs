@@ -87,7 +87,10 @@ namespace Network
                 
                 // TODO 对消息进行加密
                 await m_MessageReadWriter.WriteTo(m_NetworkStream, gameClientMessage.ToByteArray());
-                Log.Information("消息已发送: {request}", request);
+                if (IsSecretMessage(requestType))
+                    Log.Information("消息已发送: [{requestType}]", requestType);
+                else
+                    Log.Information("消息已发送: [{requestType}] {request}", requestType, request);
 
                 // 设置超时
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
@@ -241,6 +244,15 @@ namespace Network
                 return typedValue;
             
             throw new Exception($"无法从响应中获取类型 {typeof(TResp).Name} 的数据");
+        }
+
+        private bool IsSecretMessage(PGameClientMessage.ContentOneofCase requestType)
+        {
+            if (requestType == PGameClientMessage.ContentOneofCase.LoginReq
+            || requestType == PGameClientMessage.ContentOneofCase.RegisterReq) {
+                return true;
+            }
+            return false;
         }
 
         private static long GenerateRequestId() => DateTimeOffset.UtcNow.Ticks;

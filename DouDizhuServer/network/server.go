@@ -84,8 +84,6 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("解析消息失败", "error", err)
 		return
 	}
-	// TODO 敏感信息不进行输出
-	logger.InfoWith("收到消息", "sessionId", msg.SessionId, "message", reqPacket)
 
 	// 查找对应的消息处理器
 	content := reqPacket.GetContent()
@@ -94,6 +92,13 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		return
 	}
 	msgType := reflect.TypeOf(content).Elem()
+
+	if isSecretMessage(reqPacket) {
+		logger.InfoWith("收到消息", "类型", msgType.String(), "sessionId", msg.SessionId)
+	} else {
+		logger.InfoWith("收到消息", "类型", msgType.String(), "sessionId", msg.SessionId, "message", reqPacket)
+	}
+
 	handler := s.dispatcher.GetHandler(msgType)
 	if handler == nil {
 		logger.ErrorWith("未找到消息处理器", "type", msgType.String())
@@ -161,4 +166,16 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		}
 		logger.InfoWith("发送通知结束", "message", serverNotificationMessage)
 	}
+}
+
+func isSecretMessage(msg *protodef.PGameClientMessage) bool {
+	if msg.Content == nil {
+		return false
+	}
+	contentType := reflect.TypeOf(msg.Content)
+	if contentType == reflect.TypeOf(&protodef.PGameClientMessage_RegisterReq{}) ||
+		contentType == reflect.TypeOf(&protodef.PGameClientMessage_LoginReq{}) {
+		return true
+	}
+	return false
 }
