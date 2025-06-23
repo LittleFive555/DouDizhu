@@ -7,6 +7,7 @@ option csharp_namespace = "Network.Proto";
 import "Error.proto";
 import "ChatMsg.proto";
 import "Login.proto";
+import "Handshake.proto";
 
 message PGameMsgHeader {
 	string playerId = 1;
@@ -20,6 +21,7 @@ message PGameClientMessage {
 		PChatMsgRequest chatMsg = 2;
 		PRegisterRequest registerReq = 3;
 		PLoginRequest loginReq = 4;
+		PHandshakeRequest handshake = 5;
 	}
 }
 
@@ -42,6 +44,7 @@ message PGameMsgRespPacket {
 		PError error = 2;
 		PEmptyResponse emptyResponse = 3;
 		PLoginResponse loginResp = 4;
+		PHandshakeResponse handshake = 5;
 	}
 }
 

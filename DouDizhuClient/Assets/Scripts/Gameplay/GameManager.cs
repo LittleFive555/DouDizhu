@@ -31,6 +31,8 @@ namespace Gameplay
 
             await NetworkManager.Instance.ConnectAsync(serverHost);
 
+            await NetworkManager.Instance.Handshake();
+
             Log.Information("Start Loading Main Scene");
             SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single).completed += (AsyncOperation obj) =>
             {

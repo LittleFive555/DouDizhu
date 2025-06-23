@@ -9,6 +9,7 @@ using Network.Tcp;
 using Network.Proto;
 using Serilog;
 using Gameplay.Player;
+using System.Security.Cryptography;
 
 namespace Network
 {
@@ -30,6 +31,7 @@ namespace Network
         private IMessageReadWriter m_MessageReadWriter;
         private bool m_IsConnected = false;
         public bool IsConnected => m_IsConnected;
+        private byte[] m_SharedSecret;
 
         
         private const int SERVER_PORT = 8080;
@@ -179,6 +181,30 @@ namespace Network
             {
                 Log.Error("接收消息时发生错误: {exception}", ex.Message);
             }
+        }
+
+        public async Task Handshake()
+        {
+            // 1. 生成客户端临时密钥对
+            using var ecdh = ECDiffieHellman.Create(ECCurve.NamedCurves.nistP256);
+            var clientPublicKey = ecdh.ExportSubjectPublicKeyInfo();
+
+            // 2. 发送握手请求
+            var handshakeRequest = new PHandshakeRequest()
+            {
+                PublicKey = Convert.ToBase64String(clientPublicKey),
+            };
+            var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PGameClientMessage.ContentOneofCase.Handshake, handshakeRequest);
+            if (!response.IsSuccess)
+                return;
+
+            // 3. 解密服务器响应
+            var serverPublicKey = Convert.FromBase64String(response.Data.PublicKey);
+            using var serverEcdh = ECDiffieHellman.Create();
+            serverEcdh.ImportSubjectPublicKeyInfo(serverPublicKey, out _);
+            m_SharedSecret = ecdh.DeriveKeyMaterial(serverEcdh.PublicKey);
+
+            Log.Information("握手成功，共享密钥为: {sharedSecret}", Convert.ToBase64String(m_SharedSecret));
         }
 
         private void OnResponse(PGameMsgRespPacket gameMsgRespPacket)

@@ -1,0 +1,13 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+message PHandshakeRequest {
+    string publicKey = 1;
+}
+
+message PHandshakeResponse {
+    string publicKey = 1;
+}
