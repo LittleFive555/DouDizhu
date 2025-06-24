@@ -1,12 +1,19 @@
 package session
 
 import (
+	"DouDizhuServer/cypher"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network/message"
+	"crypto/ecdh"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/binary"
 	"fmt"
 	"io"
 	"net"
+
+	"golang.org/x/crypto/hkdf"
 )
 
 type PlayerState int
@@ -23,7 +30,7 @@ type PlayerSession struct {
 	Conn      net.Conn
 	IP        string
 	State     PlayerState
-	SharedKey []byte
+	secureKey []byte
 
 	PlayerId string
 }
@@ -55,6 +62,44 @@ func (s *PlayerSession) SendMessage(data []byte) error {
 		return fmt.Errorf("连接已关闭")
 	}
 	return write(s.Conn, data)
+}
+
+func (s *PlayerSession) GenerateSecureKey(clientPublicKeyStr string, salt []byte, info []byte) (string, error) {
+	logger.InfoWith("客户端公钥", "clientPublicKeyStr", clientPublicKeyStr, "salt", salt, "info", info)
+	serverPrivateKey, err := ecdh.P256().GenerateKey(rand.Reader)
+	if err != nil {
+		return "", err
+	}
+	clientPublicKey, err := stringToPublicKey(clientPublicKeyStr)
+	if err != nil {
+		return "", err
+	}
+	serverSharedKey, err := serverPrivateKey.ECDH(clientPublicKey)
+	if err != nil {
+		return "", err
+	}
+	logger.InfoWith("生成共享密钥", "serverSharedKey", serverSharedKey)
+
+	serverPublicKey := serverPrivateKey.PublicKey()
+	serverPublicKeyStr := publicKeyToString(serverPublicKey)
+	logger.InfoWith("服务端公钥", "serverPublicKeyStr", serverPublicKeyStr)
+
+	secureKey := deriveSecureKey(serverSharedKey, salt, info)
+	logger.InfoWith("生成密钥", "secureKey", secureKey)
+	s.secureKey = secureKey
+	return serverPublicKeyStr, nil
+}
+
+func (s *PlayerSession) EncryptPayload(data []byte) ([]byte, []byte, error) {
+	return cypher.AesEncryptCBC(data, s.secureKey)
+}
+
+func (s *PlayerSession) DecryptPayload(cyphertext []byte, iv []byte) ([]byte, error) {
+	return cypher.AesDecryptCBC(cyphertext, iv, s.secureKey)
+}
+
+func (s *PlayerSession) IsSecureKeyValid() bool {
+	return s.secureKey != nil
 }
 
 func (s *PlayerSession) Close() error {
@@ -92,4 +137,30 @@ func write(conn net.Conn, data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func stringToPublicKey(str string) (*ecdh.PublicKey, error) {
+	publicKeyBytes, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return nil, err
+	}
+	publicKey, err := ecdh.P256().NewPublicKey(publicKeyBytes)
+	if err != nil {
+		return nil, err
+	}
+	return publicKey, nil
+}
+
+func publicKeyToString(publicKey *ecdh.PublicKey) string {
+	return base64.StdEncoding.EncodeToString(publicKey.Bytes())
+}
+
+func deriveSecureKey(sharedKey []byte, salt []byte, info []byte) []byte {
+	hkdf := hkdf.New(sha256.New, sharedKey, salt, info)
+
+	derivedKey := make([]byte, 32)
+	if _, err := io.ReadFull(hkdf, derivedKey); err != nil {
+		return nil
+	}
+	return derivedKey
 }

@@ -30,7 +30,7 @@ message PMsgHeader {
 	string playerId = 11;
 
 	// 安全字段
-	bool encrypted = 20;
+	bytes iv = 20;
 }
 
 message PClientMsg {

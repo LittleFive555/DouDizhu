@@ -2,7 +2,7 @@ package player
 
 import (
 	"DouDizhuServer/database"
-	"DouDizhuServer/errors"
+	"DouDizhuServer/errordef"
 	"encoding/base64"
 
 	"github.com/google/uuid"
@@ -27,10 +27,10 @@ func (m *PlayerManager) Register(accountStr string, password string) error {
 	}
 	account, err := database.GetAccount(accountStr)
 	if err != nil {
-		return errors.NewDatabaseError(errors.CodeDBReadError, err)
+		return errordef.NewDatabaseError(errordef.CodeDBReadError, err)
 	}
 	if account.IsExists() {
-		return errors.NewGameplayError(errors.CodeAccountExists)
+		return errordef.NewGameplayError(errordef.CodeAccountExists)
 	}
 
 	// 验证密码
@@ -42,7 +42,7 @@ func (m *PlayerManager) Register(accountStr string, password string) error {
 	// 生成密码哈希
 	hashedPasswordBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.NewThirdPartyError(errors.CodeUnknown, err)
+		return errordef.NewThirdPartyError(errordef.CodeUnknown, err)
 	}
 	hashedPaswordStr := base64.StdEncoding.EncodeToString(hashedPasswordBytes)
 
@@ -56,7 +56,7 @@ func (m *PlayerManager) Register(accountStr string, password string) error {
 	}
 	err = database.AddAccount(&account)
 	if err != nil {
-		return errors.NewDatabaseError(errors.CodeDBWriteError, err)
+		return errordef.NewDatabaseError(errordef.CodeDBWriteError, err)
 	}
 	return nil
 }
@@ -65,19 +65,19 @@ func (m *PlayerManager) Login(accountStr string, password string) (*Player, erro
 	// 判断账号是否存在
 	account, err := database.GetAccount(accountStr)
 	if err != nil {
-		return nil, errors.NewDatabaseError(errors.CodeDBReadError, err)
+		return nil, errordef.NewDatabaseError(errordef.CodeDBReadError, err)
 	}
 	if !account.IsExists() {
-		return nil, errors.NewGameplayError(errors.CodeAccountNotExists)
+		return nil, errordef.NewGameplayError(errordef.CodeAccountNotExists)
 	}
 	// 验证密码
 	hashedPassword, err := base64.StdEncoding.DecodeString(account.HashedPassword)
 	if err != nil {
-		return nil, errors.NewThirdPartyError(errors.CodeUnknown, err)
+		return nil, errordef.NewThirdPartyError(errordef.CodeUnknown, err)
 	}
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err != nil {
-		return nil, errors.NewGameplayError(errors.CodePasswordWrong)
+		return nil, errordef.NewGameplayError(errordef.CodePasswordWrong)
 	}
 
 	player := NewPlayer(account.PlayerId, "NewPlayer")

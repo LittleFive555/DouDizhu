@@ -24,6 +24,8 @@ const (
 type PHandshakeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PublicKey     string                 `protobuf:"bytes,1,opt,name=publicKey,proto3" json:"publicKey,omitempty"`
+	Salt          []byte                 `protobuf:"bytes,2,opt,name=salt,proto3" json:"salt,omitempty"`
+	Info          []byte                 `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -63,6 +65,20 @@ func (x *PHandshakeRequest) GetPublicKey() string {
 		return x.PublicKey
 	}
 	return ""
+}
+
+func (x *PHandshakeRequest) GetSalt() []byte {
+	if x != nil {
+		return x.Salt
+	}
+	return nil
+}
+
+func (x *PHandshakeRequest) GetInfo() []byte {
+	if x != nil {
+		return x.Info
+	}
+	return nil
 }
 
 type PHandshakeResponse struct {
@@ -113,9 +129,11 @@ var File_Handshake_proto protoreflect.FileDescriptor
 
 const file_Handshake_proto_rawDesc = "" +
 	"\n" +
-	"\x0fHandshake.proto\x12\bDouDizhu\"1\n" +
+	"\x0fHandshake.proto\x12\bDouDizhu\"Y\n" +
 	"\x11PHandshakeRequest\x12\x1c\n" +
-	"\tpublicKey\x18\x01 \x01(\tR\tpublicKey\"2\n" +
+	"\tpublicKey\x18\x01 \x01(\tR\tpublicKey\x12\x12\n" +
+	"\x04salt\x18\x02 \x01(\fR\x04salt\x12\x12\n" +
+	"\x04info\x18\x03 \x01(\fR\x04info\"2\n" +
 	"\x12PHandshakeResponse\x12\x1c\n" +
 	"\tpublicKey\x18\x01 \x01(\tR\tpublicKeyB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 

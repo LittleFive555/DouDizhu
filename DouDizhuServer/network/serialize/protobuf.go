@@ -17,9 +17,17 @@ func Deserialize(data []byte) (*protodef.PClientMsg, error) {
 }
 
 func Serialize(response *protodef.PServerMsg) ([]byte, error) {
-	responseData, err := proto.Marshal(response)
-	if err != nil {
+	return proto.Marshal(response)
+}
+
+func SerializePayload(payload proto.Message) ([]byte, error) {
+	return proto.Marshal(payload)
+}
+
+func DeserializePayload(msgId protodef.PMsgId, data []byte) (proto.Message, error) {
+	payload := GetMessage(msgId)
+	if err := proto.Unmarshal(data, payload); err != nil {
 		return nil, err
 	}
-	return responseData, nil
+	return payload, nil
 }

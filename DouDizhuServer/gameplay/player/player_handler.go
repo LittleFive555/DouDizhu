@@ -1,7 +1,7 @@
 package player
 
 import (
-	"DouDizhuServer/errors"
+	"DouDizhuServer/errordef"
 	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
 
@@ -11,7 +11,7 @@ import (
 func HandleRegister(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
 	reqMsg, ok := (*req).(*protodef.PRegisterRequest)
 	if !ok {
-		return nil, errors.NewGameplayError(errors.CodeInvalidRequest)
+		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
 	account := reqMsg.GetAccount()
 	password := reqMsg.GetPassword()
@@ -25,7 +25,7 @@ func HandleRegister(context *message.MessageContext, req *proto.Message) (*messa
 func HandleLogin(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
 	reqMsg, ok := (*req).(*protodef.PLoginRequest)
 	if !ok {
-		return nil, errors.NewGameplayError(errors.CodeInvalidRequest)
+		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
 	account := reqMsg.GetAccount()
 	password := reqMsg.GetPassword()

@@ -24,25 +24,25 @@ namespace Network.Proto {
     static GameMsgReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg1HYW1lTXNnLnByb3RvEghEb3VEaXpodSKKAQoKUE1zZ0hlYWRlchIQCgh1",
+            "Cg1HYW1lTXNnLnByb3RvEghEb3VEaXpodSKDAQoKUE1zZ0hlYWRlchIQCgh1",
             "bmlxdWVJZBgBIAEoAxIRCgl0aW1lc3RhbXAYAiABKAMSHwoFbXNnSWQYAyAB",
             "KA4yEC5Eb3VEaXpodS5QTXNnSWQSEQoJc2Vzc2lvbklkGAogASgJEhAKCHBs",
-            "YXllcklkGAsgASgJEhEKCWVuY3J5cHRlZBgUIAEoCCJDCgpQQ2xpZW50TXNn",
-            "EiQKBmhlYWRlchgBIAEoCzIULkRvdURpemh1LlBNc2dIZWFkZXISDwoHcGF5",
-            "bG9hZBgCIAEoDCJuCgpQU2VydmVyTXNnEiQKBmhlYWRlchgBIAEoCzIULkRv",
-            "dURpemh1LlBNc2dIZWFkZXISKQoHbXNnVHlwZRgCIAEoDjIYLkRvdURpemh1",
-            "LlBTZXJ2ZXJNc2dUeXBlEg8KB3BheWxvYWQYAyABKAwiEAoOUEVtcHR5UmVz",
-            "cG9uc2UqjAEKDlBTZXJ2ZXJNc2dUeXBlEhwKGFBTRVJWRVJfTVNHX1RZUEVf",
-            "VU5LTk9XThAAEh0KGVBTRVJWRVJfTVNHX1RZUEVfUkVTUE9OU0UQARIhCh1Q",
-            "U0VSVkVSX01TR19UWVBFX05PVElGSUNBVElPThACEhoKFlBTRVJWRVJfTVNH",
-            "X1RZUEVfRVJST1IQAypzCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAAS",
-            "EQoNUE1TR19JRF9MT0dJThABEhQKEFBNU0dfSURfUkVHSVNURVIQAhIVChFQ",
-            "TVNHX0lEX0hBTkRTSEFLRRADEhQKEFBNU0dfSURfQ0hBVF9NU0cQBEIiWhBu",
-            "ZXR3b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
+            "YXllcklkGAsgASgJEgoKAml2GBQgASgMIkMKClBDbGllbnRNc2cSJAoGaGVh",
+            "ZGVyGAEgASgLMhQuRG91RGl6aHUuUE1zZ0hlYWRlchIPCgdwYXlsb2FkGAIg",
+            "ASgMIm4KClBTZXJ2ZXJNc2cSJAoGaGVhZGVyGAEgASgLMhQuRG91RGl6aHUu",
+            "UE1zZ0hlYWRlchIpCgdtc2dUeXBlGAIgASgOMhguRG91RGl6aHUuUFNlcnZl",
+            "ck1zZ1R5cGUSDwoHcGF5bG9hZBgDIAEoDCIQCg5QRW1wdHlSZXNwb25zZSqM",
+            "AQoOUFNlcnZlck1zZ1R5cGUSHAoYUFNFUlZFUl9NU0dfVFlQRV9VTktOT1dO",
+            "EAASHQoZUFNFUlZFUl9NU0dfVFlQRV9SRVNQT05TRRABEiEKHVBTRVJWRVJf",
+            "TVNHX1RZUEVfTk9USUZJQ0FUSU9OEAISGgoWUFNFUlZFUl9NU0dfVFlQRV9F",
+            "UlJPUhADKnMKBlBNc2dJZBITCg9QTVNHX0lEX1VOS05PV04QABIRCg1QTVNH",
+            "X0lEX0xPR0lOEAESFAoQUE1TR19JRF9SRUdJU1RFUhACEhUKEVBNU0dfSURf",
+            "SEFORFNIQUtFEAMSFAoQUE1TR19JRF9DSEFUX01TRxAEQiJaEG5ldHdvcmsv",
+            "cHJvdG9kZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PServerMsgType), typeof(global::Network.Proto.PMsgId), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PMsgHeader), global::Network.Proto.PMsgHeader.Parser, new[]{ "UniqueId", "Timestamp", "MsgId", "SessionId", "PlayerId", "Encrypted" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PMsgHeader), global::Network.Proto.PMsgHeader.Parser, new[]{ "UniqueId", "Timestamp", "MsgId", "SessionId", "PlayerId", "Iv" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PClientMsg), global::Network.Proto.PClientMsg.Parser, new[]{ "Header", "Payload" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PServerMsg), global::Network.Proto.PServerMsg.Parser, new[]{ "Header", "MsgType", "Payload" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PEmptyResponse), global::Network.Proto.PEmptyResponse.Parser, null, null, null, null, null)
@@ -110,7 +110,7 @@ namespace Network.Proto {
       msgId_ = other.msgId_;
       sessionId_ = other.sessionId_;
       playerId_ = other.playerId_;
-      encrypted_ = other.encrypted_;
+      iv_ = other.iv_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -186,18 +186,18 @@ namespace Network.Proto {
       }
     }
 
-    /// <summary>Field number for the "encrypted" field.</summary>
-    public const int EncryptedFieldNumber = 20;
-    private bool encrypted_;
+    /// <summary>Field number for the "iv" field.</summary>
+    public const int IvFieldNumber = 20;
+    private pb::ByteString iv_ = pb::ByteString.Empty;
     /// <summary>
     /// 安全字段
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Encrypted {
-      get { return encrypted_; }
+    public pb::ByteString Iv {
+      get { return iv_; }
       set {
-        encrypted_ = value;
+        iv_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -221,7 +221,7 @@ namespace Network.Proto {
       if (MsgId != other.MsgId) return false;
       if (SessionId != other.SessionId) return false;
       if (PlayerId != other.PlayerId) return false;
-      if (Encrypted != other.Encrypted) return false;
+      if (Iv != other.Iv) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -234,7 +234,7 @@ namespace Network.Proto {
       if (MsgId != global::Network.Proto.PMsgId.Unknown) hash ^= MsgId.GetHashCode();
       if (SessionId.Length != 0) hash ^= SessionId.GetHashCode();
       if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
-      if (Encrypted != false) hash ^= Encrypted.GetHashCode();
+      if (Iv.Length != 0) hash ^= Iv.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -273,9 +273,9 @@ namespace Network.Proto {
         output.WriteRawTag(90);
         output.WriteString(PlayerId);
       }
-      if (Encrypted != false) {
-        output.WriteRawTag(160, 1);
-        output.WriteBool(Encrypted);
+      if (Iv.Length != 0) {
+        output.WriteRawTag(162, 1);
+        output.WriteBytes(Iv);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -307,9 +307,9 @@ namespace Network.Proto {
         output.WriteRawTag(90);
         output.WriteString(PlayerId);
       }
-      if (Encrypted != false) {
-        output.WriteRawTag(160, 1);
-        output.WriteBool(Encrypted);
+      if (Iv.Length != 0) {
+        output.WriteRawTag(162, 1);
+        output.WriteBytes(Iv);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -336,8 +336,8 @@ namespace Network.Proto {
       if (PlayerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
       }
-      if (Encrypted != false) {
-        size += 2 + 1;
+      if (Iv.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeBytesSize(Iv);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -366,8 +366,8 @@ namespace Network.Proto {
       if (other.PlayerId.Length != 0) {
         PlayerId = other.PlayerId;
       }
-      if (other.Encrypted != false) {
-        Encrypted = other.Encrypted;
+      if (other.Iv.Length != 0) {
+        Iv = other.Iv;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -408,8 +408,8 @@ namespace Network.Proto {
             PlayerId = input.ReadString();
             break;
           }
-          case 160: {
-            Encrypted = input.ReadBool();
+          case 162: {
+            Iv = input.ReadBytes();
             break;
           }
         }
@@ -451,8 +451,8 @@ namespace Network.Proto {
             PlayerId = input.ReadString();
             break;
           }
-          case 160: {
-            Encrypted = input.ReadBool();
+          case 162: {
+            Iv = input.ReadBytes();
             break;
           }
         }

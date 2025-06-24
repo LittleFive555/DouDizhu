@@ -24,14 +24,14 @@ namespace Network.Proto {
     static HandshakeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9IYW5kc2hha2UucHJvdG8SCERvdURpemh1IiYKEVBIYW5kc2hha2VSZXF1",
-            "ZXN0EhEKCXB1YmxpY0tleRgBIAEoCSInChJQSGFuZHNoYWtlUmVzcG9uc2US",
-            "EQoJcHVibGljS2V5GAEgASgJQiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1OZXR3",
-            "b3JrLlByb3RvYgZwcm90bzM="));
+            "Cg9IYW5kc2hha2UucHJvdG8SCERvdURpemh1IkIKEVBIYW5kc2hha2VSZXF1",
+            "ZXN0EhEKCXB1YmxpY0tleRgBIAEoCRIMCgRzYWx0GAIgASgMEgwKBGluZm8Y",
+            "AyABKAwiJwoSUEhhbmRzaGFrZVJlc3BvbnNlEhEKCXB1YmxpY0tleRgBIAEo",
+            "CUIiWhBuZXR3b3JrL3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PHandshakeRequest), global::Network.Proto.PHandshakeRequest.Parser, new[]{ "PublicKey" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PHandshakeRequest), global::Network.Proto.PHandshakeRequest.Parser, new[]{ "PublicKey", "Salt", "Info" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PHandshakeResponse), global::Network.Proto.PHandshakeResponse.Parser, new[]{ "PublicKey" }, null, null, null, null)
           }));
     }
@@ -75,6 +75,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PHandshakeRequest(PHandshakeRequest other) : this() {
       publicKey_ = other.publicKey_;
+      salt_ = other.salt_;
+      info_ = other.info_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -96,6 +98,30 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "salt" field.</summary>
+    public const int SaltFieldNumber = 2;
+    private pb::ByteString salt_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString Salt {
+      get { return salt_; }
+      set {
+        salt_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 3;
+    private pb::ByteString info_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString Info {
+      get { return info_; }
+      set {
+        info_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -112,6 +138,8 @@ namespace Network.Proto {
         return true;
       }
       if (PublicKey != other.PublicKey) return false;
+      if (Salt != other.Salt) return false;
+      if (Info != other.Info) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -120,6 +148,8 @@ namespace Network.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (PublicKey.Length != 0) hash ^= PublicKey.GetHashCode();
+      if (Salt.Length != 0) hash ^= Salt.GetHashCode();
+      if (Info.Length != 0) hash ^= Info.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -142,6 +172,14 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteString(PublicKey);
       }
+      if (Salt.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(Salt);
+      }
+      if (Info.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(Info);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -156,6 +194,14 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteString(PublicKey);
       }
+      if (Salt.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(Salt);
+      }
+      if (Info.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(Info);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -168,6 +214,12 @@ namespace Network.Proto {
       int size = 0;
       if (PublicKey.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PublicKey);
+      }
+      if (Salt.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Salt);
+      }
+      if (Info.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Info);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -183,6 +235,12 @@ namespace Network.Proto {
       }
       if (other.PublicKey.Length != 0) {
         PublicKey = other.PublicKey;
+      }
+      if (other.Salt.Length != 0) {
+        Salt = other.Salt;
+      }
+      if (other.Info.Length != 0) {
+        Info = other.Info;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -207,6 +265,14 @@ namespace Network.Proto {
             PublicKey = input.ReadString();
             break;
           }
+          case 18: {
+            Salt = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            Info = input.ReadBytes();
+            break;
+          }
         }
       }
     #endif
@@ -228,6 +294,14 @@ namespace Network.Proto {
             break;
           case 10: {
             PublicKey = input.ReadString();
+            break;
+          }
+          case 18: {
+            Salt = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            Info = input.ReadBytes();
             break;
           }
         }

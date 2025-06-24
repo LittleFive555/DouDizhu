@@ -1,4 +1,4 @@
-package errors
+package errordef
 
 type GameError struct {
 	Category     ErrorCategory

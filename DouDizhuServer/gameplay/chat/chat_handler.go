@@ -1,7 +1,7 @@
 package chat
 
 import (
-	"DouDizhuServer/errors"
+	"DouDizhuServer/errordef"
 	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network/message"
@@ -13,7 +13,7 @@ import (
 func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
 	reqMsg, ok := (*req).(*protodef.PChatMsgRequest)
 	if !ok {
-		return nil, errors.NewGameplayError(errors.CodeInvalidRequest)
+		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
 	chatMsg := reqMsg.GetContent()
 	player := player.Manager.GetPlayer(context.PlayerId)
@@ -24,8 +24,9 @@ func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*me
 		Content: chatMsg,
 	}
 	result := &message.HandleResult{
-		Resp:   nil,
-		Notify: notification,
+		Resp:        nil,
+		NofityMsgId: protodef.PMsgId_PMSG_ID_CHAT_MSG,
+		Notify:      notification,
 	}
 	return result, nil
 }

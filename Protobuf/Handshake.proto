@@ -6,6 +6,8 @@ option csharp_namespace = "Network.Proto";
 
 message PHandshakeRequest {
     string publicKey = 1;
+    bytes salt = 2;
+    bytes info = 3;
 }
 
 message PHandshakeResponse {

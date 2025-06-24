@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Collections.Generic;
 using Google.Protobuf;
+using System.Text;
 using Network.Tcp;
 using Network.Proto;
 using Serilog;
@@ -15,6 +16,11 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Agreement;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Paddings;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Math;
 
 namespace Network
 {
@@ -42,7 +48,7 @@ namespace Network
         public byte[] PublicKeyBytes { get; private set; }
         private ECPrivateKeyParameters privateKey;
         private ECDomainParameters domainParams;
-        private byte[] m_SharedSecret;
+        private byte[] m_DerivedSecureKey;
 
         
         private const int SERVER_PORT = 8080;
@@ -98,9 +104,8 @@ namespace Network
                 var tcs = new TaskCompletionSource<PServerMsg>();
                 m_PendingRequests.TryAdd(clientMsg.Header.UniqueId, tcs);
                 
-                // TODO 对消息进行加密
                 await m_MessageReadWriter.WriteTo(m_NetworkStream, clientMsg.ToByteArray());
-                if (IsSecretMessage(msgId))
+                if (IsSensitiveMessage(msgId))
                     Log.Information("消息已发送: [{requestType}]", msgId);
                 else
                     Log.Information("消息已发送: [{requestType}] {request}", msgId, request);
@@ -120,7 +125,7 @@ namespace Network
                 }
                 
                 TResp response = UnpackServerMsg<TResp>(serverPacket);
-                if (IsSecretMessage(msgId))
+                if (IsSensitiveMessage(msgId))
                     Log.Information("收到服务器响应: [{requestType}]", msgId);
                 else
                     Log.Information("收到服务器响应: [{requestType}] {response}", msgId, response);
@@ -210,20 +215,34 @@ namespace Network
             var keyPair = GenerateKeyPair(domainParams);
             privateKey = (ECPrivateKeyParameters)keyPair.Private;
             var publicKey = (ECPublicKeyParameters)keyPair.Public;
-            PublicKeyBytes = publicKey.Q.GetEncoded();
+            PublicKeyBytes = publicKey.Q.GetEncoded(false);
+            Log.Information("客户端公钥: {publicKey}", Convert.ToBase64String(PublicKeyBytes));
+
+            byte[] salt = new byte[16];
+            new SecureRandom().NextBytes(salt);
+            byte[] info = Encoding.UTF8.GetBytes("global encryption key");
 
             // 2. 发送握手请求
             var handshakeRequest = new PHandshakeRequest()
             {
                 PublicKey = Convert.ToBase64String(PublicKeyBytes),
+                Salt = ByteString.CopyFrom(salt),
+                Info = ByteString.CopyFrom(info),
             };
+            Log.Information("客户端公钥: {publicKey}, salt: {salt}, info: {info}", Convert.ToBase64String(PublicKeyBytes), Convert.ToBase64String(salt), Convert.ToBase64String(info));
             var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PMsgId.Handshake, handshakeRequest);
             if (!response.IsSuccess)
                 return;
 
             // 3. 解密服务器响应
             var serverPublicKey = Convert.FromBase64String(response.Data.PublicKey);
-            m_SharedSecret = DeriveSharedSecret(serverPublicKey);
+            Log.Information("服务器公钥: {serverPublicKey}", response.Data.PublicKey);
+            var sharedSecret = DeriveSharedSecret(serverPublicKey);
+            Log.Information("共享密钥: {sharedSecret}", Convert.ToBase64String(sharedSecret));
+
+            // 4. 派生安全密钥
+            m_DerivedSecureKey = DeriveSecureKey(sharedSecret, salt, info, 32);
+            Log.Information("握手成功，密钥为: {sharedSecret}", Convert.ToBase64String(m_DerivedSecureKey));
         }
 
         private void OnResponse(PServerMsg serverMsg)
@@ -265,13 +284,20 @@ namespace Network
                 header.SessionId = m_SessionId;
             if (!string.IsNullOrEmpty(PlayerManager.Instance.ID))
                 header.PlayerId = PlayerManager.Instance.ID;
-            if (m_SharedSecret != null)
-                header.Encrypted = true;
 
+            byte[] payload = request.ToByteArray();
+            // 加密
+            if (m_DerivedSecureKey != null)
+            {
+                (byte[] iv, byte[] ciphertext) = Encrypt(payload, m_DerivedSecureKey);
+                Log.Information("加密后的消息: {iv} {ciphertext}", Convert.ToBase64String(iv), Convert.ToBase64String(ciphertext));
+                header.Iv = ByteString.CopyFrom(iv);
+                payload = ciphertext;
+            }
             PClientMsg clientMsg = new PClientMsg()
             {
                 Header = header,
-                Payload = request.ToByteString(), // TODO 加密
+                Payload = ByteString.CopyFrom(payload),
             };
             
             return clientMsg;
@@ -279,10 +305,12 @@ namespace Network
 
         private TResp UnpackServerMsg<TResp>(PServerMsg serverMsg) where TResp : class, IMessage
         {
+            Log.Information("收到服务器响应: iv {iv} payload {payload}", Convert.ToBase64String(serverMsg.Header.Iv.ToByteArray()), Convert.ToBase64String(serverMsg.Payload.ToByteArray()));
+            byte[] payload = GetPlaintextPayload(serverMsg);
+            Log.Information("解密后的消息: {payload}", Convert.ToBase64String(payload));
             if (serverMsg.MsgType == PServerMsgType.Error)
             {
-                PError error = PError.Parser.ParseFrom(serverMsg.Payload);
-                return error as TResp;
+                return PError.Parser.ParseFrom(payload) as TResp;
             }
             else if (serverMsg.MsgType == PServerMsgType.Response)
             {
@@ -290,19 +318,19 @@ namespace Network
                 if (parser == null)
                     throw new Exception($"未找到响应解析器: {serverMsg.Header.MsgId}");
                 
-                return parser.ParseFrom(serverMsg.Payload) as TResp;
+                return parser.ParseFrom(payload) as TResp;
             }
             else if (serverMsg.MsgType == PServerMsgType.Notification)
             {
                 var parser = MsgBodyParser.GetNotifyParser(serverMsg.Header.MsgId);
                 if (parser == null)
                     throw new Exception($"未找到通知解析器: {serverMsg.Header.MsgId}");
-                return parser.ParseFrom(serverMsg.Payload) as TResp;
+                return parser.ParseFrom(payload) as TResp;
             }
             throw new Exception($"未知的消息类型: {serverMsg.MsgType}");
         }
 
-        private bool IsSecretMessage(PMsgId msgId)
+        private bool IsSensitiveMessage(PMsgId msgId)
         {
             if (msgId == PMsgId.Login
             || msgId == PMsgId.Register
@@ -334,7 +362,80 @@ namespace Network
             agreement.Init(privateKey);
             var sharedSecret = agreement.CalculateAgreement(otherPartyPublicKey);
             
-            return sharedSecret.ToByteArray();
+            return ToFixedLengthBytes(sharedSecret, 32); // 32 字节对齐
+        }
+        
+        byte[] ToFixedLengthBytes(BigInteger value, int length)
+        {
+            byte[] bytes = value.ToByteArrayUnsigned();
+            if (bytes.Length == length) return bytes;
+            
+            byte[] result = new byte[length];
+            Buffer.BlockCopy(
+                src: bytes,
+                srcOffset: Math.Max(0, bytes.Length - length),
+                dst: result,
+                dstOffset: Math.Max(0, length - bytes.Length),
+                count: Math.Min(bytes.Length, length)
+            );
+            return result;
+        }
+
+        private byte[] DeriveSecureKey(byte[] sharedSecret, byte[] salt, byte[] info, int outputLength)
+        {
+            HkdfParameters parameters = new HkdfParameters(sharedSecret, salt, info);
+            HkdfBytesGenerator hkdf = new HkdfBytesGenerator(new Sha256Digest());
+            hkdf.Init(parameters);
+            byte[] output = new byte[outputLength];
+            hkdf.GenerateBytes(output, 0, outputLength);
+            return output;
+        }
+
+        private byte[] GetPlaintextPayload(PServerMsg serverMsg)
+        {
+            if (serverMsg.Header.Iv != null && serverMsg.Header.Iv.Length > 0)
+            {
+                byte[] iv = serverMsg.Header.Iv.ToByteArray();
+                byte[] ciphertext = serverMsg.Payload.ToByteArray();
+                return Decrypt(ciphertext, m_DerivedSecureKey, iv);
+            }
+            return serverMsg.Payload.ToByteArray();
+        }
+
+        private (byte[] iv, byte[] ciphertext) Encrypt(byte[] plaintext, byte[] key)
+        {
+            // 生成随机IV(块大小为16字节)
+            byte[] iv = new byte[16];
+            new SecureRandom().NextBytes(iv);
+
+            // 初始化加密引擎 CBC模式
+            AesEngine engine = new AesEngine();  // 不建议存储引擎实例
+            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(engine), new Pkcs7Padding());
+            cipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
+
+            // 执行加密
+            byte[] output = new byte[cipher.GetOutputSize(plaintext.Length)];
+            int len = cipher.ProcessBytes(plaintext, 0, plaintext.Length, output, 0);
+            cipher.DoFinal(output, len);
+
+            return (iv, output);
+        }
+
+        private byte[] Decrypt(byte[] ciphertext, byte[] key, byte[] iv)
+        {
+            AesEngine engine = new AesEngine();
+            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(engine), new Pkcs7Padding());
+            cipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
+
+            byte[] output = new byte[cipher.GetOutputSize(ciphertext.Length)];
+            int len = cipher.ProcessBytes(ciphertext, 0, ciphertext.Length, output, 0);
+            int finalLen = cipher.DoFinal(output, len);
+            
+            // 创建正确大小的数组，只包含实际的明文数据（去除填充）
+            byte[] result = new byte[len + finalLen];
+            Array.Copy(output, 0, result, 0, len + finalLen);
+            
+            return result;
         }
     }
 }

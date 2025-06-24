@@ -138,7 +138,7 @@ type PMsgHeader struct {
 	SessionId string `protobuf:"bytes,10,opt,name=sessionId,proto3" json:"sessionId,omitempty"`
 	PlayerId  string `protobuf:"bytes,11,opt,name=playerId,proto3" json:"playerId,omitempty"`
 	// 安全字段
-	Encrypted     bool `protobuf:"varint,20,opt,name=encrypted,proto3" json:"encrypted,omitempty"`
+	Iv            []byte `protobuf:"bytes,20,opt,name=iv,proto3" json:"iv,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -208,11 +208,11 @@ func (x *PMsgHeader) GetPlayerId() string {
 	return ""
 }
 
-func (x *PMsgHeader) GetEncrypted() bool {
+func (x *PMsgHeader) GetIv() []byte {
 	if x != nil {
-		return x.Encrypted
+		return x.Iv
 	}
-	return false
+	return nil
 }
 
 type PClientMsg struct {
@@ -367,7 +367,7 @@ var File_GameMsg_proto protoreflect.FileDescriptor
 
 const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rGameMsg.proto\x12\bDouDizhu\"\xc6\x01\n" +
+	"\rGameMsg.proto\x12\bDouDizhu\"\xb8\x01\n" +
 	"\n" +
 	"PMsgHeader\x12\x1a\n" +
 	"\buniqueId\x18\x01 \x01(\x03R\buniqueId\x12\x1c\n" +
@@ -375,8 +375,8 @@ const file_GameMsg_proto_rawDesc = "" +
 	"\x05msgId\x18\x03 \x01(\x0e2\x10.DouDizhu.PMsgIdR\x05msgId\x12\x1c\n" +
 	"\tsessionId\x18\n" +
 	" \x01(\tR\tsessionId\x12\x1a\n" +
-	"\bplayerId\x18\v \x01(\tR\bplayerId\x12\x1c\n" +
-	"\tencrypted\x18\x14 \x01(\bR\tencrypted\"T\n" +
+	"\bplayerId\x18\v \x01(\tR\bplayerId\x12\x0e\n" +
+	"\x02iv\x18\x14 \x01(\fR\x02iv\"T\n" +
 	"\n" +
 	"PClientMsg\x12,\n" +
 	"\x06header\x18\x01 \x01(\v2\x14.DouDizhu.PMsgHeaderR\x06header\x12\x18\n" +

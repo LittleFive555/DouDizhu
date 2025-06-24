@@ -1,4 +1,4 @@
-package errors
+package errordef
 
 type ErrorCategory int
 
