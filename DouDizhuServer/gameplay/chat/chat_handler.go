@@ -5,19 +5,27 @@ import (
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
+	"errors"
+
+	"google.golang.org/protobuf/proto"
 )
 
-func HandleChatMessage(req *protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error) {
-	chatMsg := req.GetChatMsg().GetContent()
-	player := player.Manager.GetPlayer(req.Header.PlayerId)
+func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
+	reqMsg, ok := (*req).(*protodef.PChatMsgRequest)
+	if !ok {
+		return nil, errors.New("invalid request")
+	}
+	chatMsg := reqMsg.GetContent()
+	player := player.Manager.GetPlayer(context.PlayerId)
 	logger.InfoWith("收到聊天消息", "content", chatMsg)
 
-	notification := message.CreateNotificationPacket(req.Header)
-	notification.Content = &protodef.PGameNotificationPacket_ChatMsg{
-		ChatMsg: &protodef.PChatMsgNotification{
-			From:    player.ToProto(),
-			Content: chatMsg,
-		},
+	notification := &protodef.PChatMsgNotification{
+		From:    player.ToProto(),
+		Content: chatMsg,
 	}
-	return message.CreateEmptyRespPacket(req.Header), notification, nil
+	result := &message.HandleResult{
+		Resp:   nil,
+		Notify: notification,
+	}
+	return result, nil
 }

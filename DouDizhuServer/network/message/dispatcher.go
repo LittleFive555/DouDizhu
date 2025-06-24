@@ -2,13 +2,14 @@ package message
 
 import (
 	"DouDizhuServer/network/protodef"
-	"reflect"
+
+	"google.golang.org/protobuf/proto"
 )
 
 type MessageDispatcher struct {
 	messageQueue chan *Message // 消息队列
 	workers      []*Worker     // 工作协程池
-	handlers     map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error)
+	handlers     map[protodef.PMsgId]func(*MessageContext, *proto.Message) (*HandleResult, error)
 	handler      func(message *Message)
 }
 
@@ -16,7 +17,7 @@ type MessageDispatcher struct {
 func NewMessageDispatcher(workerCount int, handler func(message *Message)) *MessageDispatcher {
 	md := &MessageDispatcher{
 		messageQueue: make(chan *Message, 10000), // 带缓冲的队列
-		handlers:     make(map[reflect.Type]func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error)),
+		handlers:     make(map[protodef.PMsgId]func(*MessageContext, *proto.Message) (*HandleResult, error)),
 		handler:      handler,
 	}
 
@@ -31,12 +32,12 @@ func NewMessageDispatcher(workerCount int, handler func(message *Message)) *Mess
 }
 
 // RegisterHandler 注册消息处理器
-func (md *MessageDispatcher) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error)) {
-	md.handlers[msgType] = handler
+func (md *MessageDispatcher) RegisterHandler(msgId protodef.PMsgId, handler func(*MessageContext, *proto.Message) (*HandleResult, error)) {
+	md.handlers[msgId] = handler
 }
 
-func (md *MessageDispatcher) GetHandler(msgType reflect.Type) func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error) {
-	return md.handlers[msgType]
+func (md *MessageDispatcher) GetHandler(msgId protodef.PMsgId) func(*MessageContext, *proto.Message) (*HandleResult, error) {
+	return md.handlers[msgId]
 }
 
 // 接收消息

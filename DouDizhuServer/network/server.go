@@ -9,7 +9,8 @@ import (
 	"DouDizhuServer/network/session"
 	"fmt"
 	"net"
-	"reflect"
+
+	"google.golang.org/protobuf/proto"
 )
 
 var Server *GameServer
@@ -60,8 +61,8 @@ func (s *GameServer) Stop() error {
 	return nil
 }
 
-func (s *GameServer) RegisterHandler(msgType reflect.Type, handler func(*protodef.PGameClientMessage) (*protodef.PGameMsgRespPacket, *protodef.PGameNotificationPacket, error)) {
-	s.dispatcher.RegisterHandler(msgType, handler)
+func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {
+	s.dispatcher.RegisterHandler(msgId, handler)
 }
 
 // handleConnection 处理单个连接
@@ -79,53 +80,60 @@ func (s *GameServer) handleConnection(conn net.Conn) {
 
 // HandleMessage 实现Handler接口
 func (s *GameServer) handleMessage(msg *message.Message) {
-	reqPacket, err := serialize.Deserialize(msg.Data)
+	clientMsg, err := serialize.Deserialize(msg.Data)
 	if err != nil {
 		logger.ErrorWith("解析消息失败", "error", err)
 		return
 	}
 
 	// 查找对应的消息处理器
-	content := reqPacket.GetContent()
+	content := clientMsg.GetPayload()
 	if content == nil {
 		logger.ErrorWith("消息内容为空")
 		return
 	}
-	msgType := reflect.TypeOf(content).Elem()
-
-	if isSecretMessage(reqPacket) {
-		logger.InfoWith("收到消息", "类型", msgType.String(), "sessionId", msg.SessionId)
-	} else {
-		logger.InfoWith("收到消息", "类型", msgType.String(), "sessionId", msg.SessionId, "message", reqPacket)
-	}
-
-	handler := s.dispatcher.GetHandler(msgType)
-	if handler == nil {
-		logger.ErrorWith("未找到消息处理器", "type", msgType.String())
+	msgHeader := clientMsg.GetHeader()
+	msgId := msgHeader.GetMsgId()
+	msgPayload := serialize.GetMessage(msgId)
+	if err := proto.Unmarshal(content, msgPayload); err != nil {
+		logger.ErrorWith("解析消息体失败", "msgId", msgId, "error", err)
 		return
 	}
 
+	if isSecretMessage(msgId) {
+		logger.InfoWith("收到消息", "类型", msgId, "sessionId", msg.SessionId)
+	} else {
+		logger.InfoWith("收到消息", "类型", msgId, "sessionId", msg.SessionId, "message", clientMsg)
+	}
+
+	handler := s.dispatcher.GetHandler(msgId)
+	if handler == nil {
+		logger.ErrorWith("未找到消息处理器", "type", msgId)
+		return
+	}
+
+	context := &message.MessageContext{
+		SessionId: msgHeader.SessionId,
+		PlayerId:  msgHeader.PlayerId,
+	}
 	// 处理消息
-	respPacket, notificationPacket, err := handler(reqPacket)
+	result, err := handler(context, &msgPayload)
+	var respMessage *protodef.PServerMsg = nil
+	var notificationMessage *protodef.PServerMsg = nil
 
 	if gameError := errors.AsGameError(err); gameError != nil {
 		if gameError.Category == errors.CategoryGameplay {
-			logger.ErrorWith("游戏逻辑错误", "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
+			logger.InfoWith("游戏逻辑错误", "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
 		} else {
 			logger.ErrorWith("服务器错误", "errorCategory", gameError.Category, "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
 		}
-		respPacket = message.CreateErrorPacket(reqPacket.Header, gameError)
+		respMessage = message.CreateErrorMessage(msgHeader, gameError)
 	} else {
-		respPacket.Header.MessageId = reqPacket.Header.MessageId
+		respMessage = message.CreateRespMessage(msgHeader, result.Resp)
+		notificationMessage = message.CreateNotificationMessage(msgHeader, result.Notify)
 	}
 
-	// 响应
-	// 包装为 GameServerMessage
-	serverRespMessage := message.CreateServerMessage()
-	serverRespMessage.Content = &protodef.PGameServerMessage_Response{
-		Response: respPacket,
-	}
-	responseData, err := serialize.Serialize(serverRespMessage)
+	responseData, err := serialize.Serialize(respMessage)
 	if err != nil {
 		logger.ErrorWith("序列化响应失败", "error", err)
 		return
@@ -141,16 +149,16 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("发送消息失败", "error", err)
 		return
 	}
-	logger.InfoWith("发送消息成功", "message", serverRespMessage)
+	if isSecretMessage(msgId) {
+		logger.InfoWith("发送消息成功", "msgId", msgId, "sessionId", msg.SessionId)
+	} else {
+		logger.InfoWith("发送消息成功", "msgId", msgId, "sessionId", msg.SessionId, "message", respMessage)
+	}
 
 	// 发送通知
 	// 包装为 GameServerMessage
-	if notificationPacket != nil {
-		serverNotificationMessage := message.CreateServerMessage()
-		serverNotificationMessage.Content = &protodef.PGameServerMessage_Notification{
-			Notification: notificationPacket,
-		}
-		notificationData, err := serialize.Serialize(serverNotificationMessage)
+	if notificationMessage != nil {
+		notificationData, err := serialize.Serialize(notificationMessage)
 		if err != nil {
 			logger.ErrorWith("序列化响应失败", "error", err)
 			return
@@ -164,17 +172,18 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 				continue
 			}
 		}
-		logger.InfoWith("发送通知结束", "message", serverNotificationMessage)
+		if isSecretMessage(msgId) {
+			logger.InfoWith("发送通知结束", "msgId", msgId, "sessionId", msg.SessionId)
+		} else {
+			logger.InfoWith("发送通知结束", "msgId", msgId, "sessionId", msg.SessionId, "message", notificationMessage)
+		}
 	}
 }
 
-func isSecretMessage(msg *protodef.PGameClientMessage) bool {
-	if msg.Content == nil {
-		return false
-	}
-	contentType := reflect.TypeOf(msg.Content)
-	if contentType == reflect.TypeOf(&protodef.PGameClientMessage_RegisterReq{}) ||
-		contentType == reflect.TypeOf(&protodef.PGameClientMessage_LoginReq{}) {
+func isSecretMessage(msgId protodef.PMsgId) bool {
+	if msgId == protodef.PMsgId_PMSG_ID_REGISTER ||
+		msgId == protodef.PMsgId_PMSG_ID_LOGIN ||
+		msgId == protodef.PMsgId_PMSG_ID_HANDSHAKE {
 		return true
 	}
 	return false

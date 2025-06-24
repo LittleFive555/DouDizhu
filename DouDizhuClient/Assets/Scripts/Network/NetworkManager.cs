@@ -31,6 +31,8 @@ namespace Network
         private IMessageReadWriter m_MessageReadWriter;
         private bool m_IsConnected = false;
         public bool IsConnected => m_IsConnected;
+
+        private string m_SessionId;
         private byte[] m_SharedSecret;
 
         
@@ -39,8 +41,8 @@ namespace Network
 
         private const int REQUEST_TIMEOUT = 5;
 
-        private readonly ConcurrentDictionary<long, TaskCompletionSource<PGameMsgRespPacket>> m_PendingRequests = new();
-        private readonly Dictionary<PGameNotificationPacket.ContentOneofCase, Action<IMessage>> m_NotificationHandlers = new();
+        private readonly ConcurrentDictionary<long, TaskCompletionSource<PServerMsg>> m_PendingRequests = new();
+        private readonly Dictionary<PMsgId, Action<IMessage>> m_NotificationHandlers = new();
 
         public NetworkManager()
         {
@@ -68,12 +70,12 @@ namespace Network
             Log.Information("TCP连接已关闭");
         }
 
-        public async Task<NetworkResult<PEmptyResponse>> RequestAsync<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        public async Task<NetworkResult<PEmptyResponse>> RequestAsync<TReq>(PMsgId msgId, TReq request) where TReq : class, IMessage
         {
-            return await RequestAsync<TReq, PEmptyResponse>(requestType, request);
+            return await RequestAsync<TReq, PEmptyResponse>(msgId, request);
         }
 
-        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage where TResp : class, IMessage
+        public async Task<NetworkResult<TResp>> RequestAsync<TReq, TResp>(PMsgId msgId, TReq request) where TReq : class, IMessage where TResp : class, IMessage
         {
             if (!m_IsConnected || m_TcpClient == null || !m_TcpClient.Connected)
             {
@@ -83,32 +85,36 @@ namespace Network
 
             try
             {
-                PGameClientMessage gameClientMessage = PackRequest(requestType, request);
-                var tcs = new TaskCompletionSource<PGameMsgRespPacket>();
-                m_PendingRequests.TryAdd(gameClientMessage.Header.MessageId, tcs);
+                PClientMsg clientMsg = PackClientMsg(msgId, request);
+                var tcs = new TaskCompletionSource<PServerMsg>();
+                m_PendingRequests.TryAdd(clientMsg.Header.UniqueId, tcs);
                 
                 // TODO 对消息进行加密
-                await m_MessageReadWriter.WriteTo(m_NetworkStream, gameClientMessage.ToByteArray());
-                if (IsSecretMessage(requestType))
-                    Log.Information("消息已发送: [{requestType}]", requestType);
+                await m_MessageReadWriter.WriteTo(m_NetworkStream, clientMsg.ToByteArray());
+                if (IsSecretMessage(msgId))
+                    Log.Information("消息已发送: [{requestType}]", msgId);
                 else
-                    Log.Information("消息已发送: [{requestType}] {request}", requestType, request);
+                    Log.Information("消息已发送: [{requestType}] {request}", msgId, request);
 
                 // 设置超时
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
                 timeoutCts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
                 var serverPacket = await tcs.Task;
-                if (serverPacket.ContentCase == PGameMsgRespPacket.ContentOneofCase.Error)
+                if (serverPacket.MsgType == PServerMsgType.Error)
                 {
-                    if (serverPacket.Error.Type == PError.Types.Type.ServerError)
-                        Log.Error("服务器内部错误: {errorCode}: {errorMessage}", serverPacket.Error.ErrorCode, serverPacket.Error.Message);
+                    PError error = UnpackServerMsg<PError>(serverPacket);
+                    if (error.Type == PError.Types.Type.ServerError)
+                        Log.Error("服务器内部错误: {errorCode}: {errorMessage}", error.ErrorCode, error.Message);
                     else
-                        Log.Error("服务器返回游戏逻辑错误: {errorCode}: {errorMessage}", serverPacket.Error.ErrorCode, serverPacket.Error.Message);
-                    return NetworkResult<TResp>.Error(serverPacket.Error.ErrorCode, serverPacket.Error.Message);
+                        Log.Error("服务器返回游戏逻辑错误: {errorCode}: {errorMessage}", error.ErrorCode, error.Message);
+                    return NetworkResult<TResp>.Error(error.ErrorCode, error.Message);
                 }
                 
-                TResp response = UnpackResponse<TResp>(serverPacket);
-                Log.Information("收到服务器响应: {response}", response);
+                TResp response = UnpackServerMsg<TResp>(serverPacket);
+                if (IsSecretMessage(msgId))
+                    Log.Information("收到服务器响应: [{requestType}]", msgId);
+                else
+                    Log.Information("收到服务器响应: [{requestType}] {response}", msgId, response);
                 return NetworkResult<TResp>.Success(response);
             }
             catch (Exception ex)
@@ -118,24 +124,24 @@ namespace Network
             }
         }
 
-        public void RegisterNotificationHandler<TNotification>(PGameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        public void RegisterNotificationHandler<TNotification>(PMsgId msgId, Action<TNotification> handler) where TNotification : IMessage
         {
             var adapter = new NotificationHandlerAdapter<TNotification>(handler);
-            if (m_NotificationHandlers.ContainsKey(notificationType))
-                m_NotificationHandlers[notificationType] += adapter.Handle;
+            if (m_NotificationHandlers.ContainsKey(msgId))
+                m_NotificationHandlers[msgId] += adapter.Handle;
             else
-                m_NotificationHandlers[notificationType] = adapter.Handle;
+                m_NotificationHandlers[msgId] = adapter.Handle;
         }
 
-        public void UnregisterNotificationHandler<TNotification>(PGameNotificationPacket.ContentOneofCase notificationType, Action<TNotification> handler) where TNotification : IMessage
+        public void UnregisterNotificationHandler<TNotification>(PMsgId msgId, Action<TNotification> handler) where TNotification : IMessage
         {
             // 查找对应的适配器
             var adapter = new NotificationHandlerAdapter<TNotification>(handler);
-            if (m_NotificationHandlers.ContainsKey(notificationType))
+            if (m_NotificationHandlers.ContainsKey(msgId))
             {
-                m_NotificationHandlers[notificationType] -= adapter.Handle;
-                if (m_NotificationHandlers[notificationType] == null)
-                    m_NotificationHandlers.Remove(notificationType);
+                m_NotificationHandlers[msgId] -= adapter.Handle;
+                if (m_NotificationHandlers[msgId] == null)
+                    m_NotificationHandlers.Remove(msgId);
             }
         }
 
@@ -170,11 +176,13 @@ namespace Network
                         break;
                     }
 
-                    PGameServerMessage gameServerMessage = PGameServerMessage.Parser.ParseFrom(responseBuffer);
-                    if (gameServerMessage.ContentCase == PGameServerMessage.ContentOneofCase.Notification)
-                        OnNotified(gameServerMessage.Notification);
-                    else if (gameServerMessage.ContentCase == PGameServerMessage.ContentOneofCase.Response)
-                        OnResponse(gameServerMessage.Response);
+                    PServerMsg serverMsg = PServerMsg.Parser.ParseFrom(responseBuffer);
+                    if (serverMsg.MsgType == PServerMsgType.Notification)
+                        OnNotified(serverMsg);
+                    else if (serverMsg.MsgType == PServerMsgType.Response)
+                        OnResponse(serverMsg);
+                    else if (serverMsg.MsgType == PServerMsgType.Error)
+                        OnResponse(serverMsg);
                 }
             }
             catch (Exception ex)
@@ -194,7 +202,7 @@ namespace Network
             {
                 PublicKey = Convert.ToBase64String(clientPublicKey),
             };
-            var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PGameClientMessage.ContentOneofCase.Handshake, handshakeRequest);
+            var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PMsgId.Handshake, handshakeRequest);
             if (!response.IsSuccess)
                 return;
 
@@ -207,75 +215,87 @@ namespace Network
             Log.Information("握手成功，共享密钥为: {sharedSecret}", Convert.ToBase64String(m_SharedSecret));
         }
 
-        private void OnResponse(PGameMsgRespPacket gameMsgRespPacket)
+        private void OnResponse(PServerMsg serverMsg)
         {
-            if (m_PendingRequests.TryGetValue(gameMsgRespPacket.Header.MessageId, out var tcs))
+            if (m_PendingRequests.TryGetValue(serverMsg.Header.UniqueId, out var tcs))
             {
-                tcs.SetResult(gameMsgRespPacket);
-                m_PendingRequests.TryRemove(gameMsgRespPacket.Header.MessageId, out _);
+                tcs.SetResult(serverMsg);
+                m_PendingRequests.TryRemove(serverMsg.Header.UniqueId, out _);
             }
         }
 
-        private void OnNotified(PGameNotificationPacket notification)
+        private void OnNotified(PServerMsg serverMsg)
         {
-            if (m_NotificationHandlers.TryGetValue(notification.ContentCase, out var handler))
+            if (m_NotificationHandlers.TryGetValue(serverMsg.Header.MsgId, out var handler))
             {
                 try
                 {
-                    string propertyName = notification.ContentCase.ToString();
-                    var value = notification.GetType().GetProperty(propertyName).GetValue(notification);
-                    handler(value as IMessage);
+                    IMessage notification = UnpackServerMsg<IMessage>(serverMsg);
+                    handler(notification);
                 }
                 catch (Exception ex)
                 {
                     Log.Error("通知处理程序发生错误: {exception}", ex.Message);
                 }
             }
+            else
+                Log.Error("未找到通知处理程序: {notificationType}", serverMsg.Header.MsgId);
         }
 
-        private PGameClientMessage PackRequest<TReq>(PGameClientMessage.ContentOneofCase requestType, TReq request) where TReq : IMessage
+        private PClientMsg PackClientMsg<TReq>(PMsgId msgId, TReq request) where TReq : class, IMessage
         {
-            PGameClientMessage gameClientMessage = new PGameClientMessage()
+            PMsgHeader header = new PMsgHeader()
             {
-                Header = new PGameMsgHeader()
-                { 
-                    MessageId = GenerateRequestId(),
-                },
+                UniqueId = GenerateRequestId(),
+                Timestamp = DateTime.UtcNow.Millisecond,
+                MsgId = msgId,
             };
+            if (m_SessionId != null)
+                header.SessionId = m_SessionId;
             if (!string.IsNullOrEmpty(PlayerManager.Instance.ID))
-                gameClientMessage.Header.PlayerId = PlayerManager.Instance.ID;
+                header.PlayerId = PlayerManager.Instance.ID;
+            if (m_SharedSecret != null)
+                header.Encrypted = true;
+
+            PClientMsg clientMsg = new PClientMsg()
+            {
+                Header = header,
+                Payload = request.ToByteString(), // TODO 加密
+            };
             
-            string propertyName = requestType.ToString();
-            Type packetType = typeof(PGameClientMessage);
-            var property = packetType.GetProperty(propertyName);
-            if (property == null)
-                throw new Exception($"未找到对应的属性: {propertyName}");
-                
-            property.SetValue(gameClientMessage, request);
-            return gameClientMessage;
+            return clientMsg;
         }
 
-        private TResp UnpackResponse<TResp>(PGameMsgRespPacket response) where TResp : IMessage
+        private TResp UnpackServerMsg<TResp>(PServerMsg serverMsg) where TResp : class, IMessage
         {
-            string propertyName = response.ContentCase.ToString();
-            
-            Type packetType = typeof(PGameMsgRespPacket);
-            var property = packetType.GetProperty(propertyName);
-            if (property == null)
-                throw new Exception($"响应 PGameMsgRespPacket 中未找到对应的属性: {propertyName}");
+            if (serverMsg.MsgType == PServerMsgType.Error)
+            {
+                PError error = PError.Parser.ParseFrom(serverMsg.Payload);
+                return error as TResp;
+            }
+            else if (serverMsg.MsgType == PServerMsgType.Response)
+            {
+                var parser = MsgBodyParser.GetResponseParser(serverMsg.Header.MsgId);
+                if (parser == null)
+                    throw new Exception($"未找到响应解析器: {serverMsg.Header.MsgId}");
                 
-            // 获取属性值并转换为目标类型
-            var value = property.GetValue(response);
-            if (value is TResp typedValue)
-                return typedValue;
-            
-            throw new Exception($"无法从响应中获取类型 {typeof(TResp).Name} 的数据");
+                return parser.ParseFrom(serverMsg.Payload) as TResp;
+            }
+            else if (serverMsg.MsgType == PServerMsgType.Notification)
+            {
+                var parser = MsgBodyParser.GetNotifyParser(serverMsg.Header.MsgId);
+                if (parser == null)
+                    throw new Exception($"未找到通知解析器: {serverMsg.Header.MsgId}");
+                return parser.ParseFrom(serverMsg.Payload) as TResp;
+            }
+            throw new Exception($"未知的消息类型: {serverMsg.MsgType}");
         }
 
-        private bool IsSecretMessage(PGameClientMessage.ContentOneofCase requestType)
+        private bool IsSecretMessage(PMsgId msgId)
         {
-            if (requestType == PGameClientMessage.ContentOneofCase.LoginReq
-            || requestType == PGameClientMessage.ContentOneofCase.RegisterReq) {
+            if (msgId == PMsgId.Login
+            || msgId == PMsgId.Register
+            || msgId == PMsgId.Handshake) {
                 return true;
             }
             return false;

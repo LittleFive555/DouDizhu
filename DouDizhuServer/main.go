@@ -7,7 +7,6 @@ import (
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
 	"DouDizhuServer/network/protodef"
-	"reflect"
 
 	"github.com/joho/godotenv"
 )
@@ -27,9 +26,9 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer()
 
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_ChatMsg{}), chat.HandleChatMessage)
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_RegisterReq{}), player.HandleRegister)
-	network.Server.RegisterHandler(reflect.TypeOf(protodef.PGameClientMessage_LoginReq{}), player.HandleLogin)
+	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, chat.HandleChatMessage)
+	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, player.HandleRegister)
+	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, player.HandleLogin)
 
 	player.Manager = player.NewPlayerManager()
 

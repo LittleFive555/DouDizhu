@@ -21,29 +21,142 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PGameMsgHeader struct {
-	state    protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId string                 `protobuf:"bytes,1,opt,name=playerId,proto3" json:"playerId,omitempty"`
-	// 用于标识请求的唯一id
-	MessageId     int64 `protobuf:"varint,2,opt,name=messageId,proto3" json:"messageId,omitempty"`
+type PServerMsgType int32
+
+const (
+	PServerMsgType_PSERVER_MSG_TYPE_UNKNOWN      PServerMsgType = 0
+	PServerMsgType_PSERVER_MSG_TYPE_RESPONSE     PServerMsgType = 1
+	PServerMsgType_PSERVER_MSG_TYPE_NOTIFICATION PServerMsgType = 2
+	PServerMsgType_PSERVER_MSG_TYPE_ERROR        PServerMsgType = 3
+)
+
+// Enum value maps for PServerMsgType.
+var (
+	PServerMsgType_name = map[int32]string{
+		0: "PSERVER_MSG_TYPE_UNKNOWN",
+		1: "PSERVER_MSG_TYPE_RESPONSE",
+		2: "PSERVER_MSG_TYPE_NOTIFICATION",
+		3: "PSERVER_MSG_TYPE_ERROR",
+	}
+	PServerMsgType_value = map[string]int32{
+		"PSERVER_MSG_TYPE_UNKNOWN":      0,
+		"PSERVER_MSG_TYPE_RESPONSE":     1,
+		"PSERVER_MSG_TYPE_NOTIFICATION": 2,
+		"PSERVER_MSG_TYPE_ERROR":        3,
+	}
+)
+
+func (x PServerMsgType) Enum() *PServerMsgType {
+	p := new(PServerMsgType)
+	*p = x
+	return p
+}
+
+func (x PServerMsgType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PServerMsgType) Descriptor() protoreflect.EnumDescriptor {
+	return file_GameMsg_proto_enumTypes[0].Descriptor()
+}
+
+func (PServerMsgType) Type() protoreflect.EnumType {
+	return &file_GameMsg_proto_enumTypes[0]
+}
+
+func (x PServerMsgType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PServerMsgType.Descriptor instead.
+func (PServerMsgType) EnumDescriptor() ([]byte, []int) {
+	return file_GameMsg_proto_rawDescGZIP(), []int{0}
+}
+
+type PMsgId int32
+
+const (
+	PMsgId_PMSG_ID_UNKNOWN   PMsgId = 0
+	PMsgId_PMSG_ID_LOGIN     PMsgId = 1
+	PMsgId_PMSG_ID_REGISTER  PMsgId = 2
+	PMsgId_PMSG_ID_HANDSHAKE PMsgId = 3
+	PMsgId_PMSG_ID_CHAT_MSG  PMsgId = 4
+)
+
+// Enum value maps for PMsgId.
+var (
+	PMsgId_name = map[int32]string{
+		0: "PMSG_ID_UNKNOWN",
+		1: "PMSG_ID_LOGIN",
+		2: "PMSG_ID_REGISTER",
+		3: "PMSG_ID_HANDSHAKE",
+		4: "PMSG_ID_CHAT_MSG",
+	}
+	PMsgId_value = map[string]int32{
+		"PMSG_ID_UNKNOWN":   0,
+		"PMSG_ID_LOGIN":     1,
+		"PMSG_ID_REGISTER":  2,
+		"PMSG_ID_HANDSHAKE": 3,
+		"PMSG_ID_CHAT_MSG":  4,
+	}
+)
+
+func (x PMsgId) Enum() *PMsgId {
+	p := new(PMsgId)
+	*p = x
+	return p
+}
+
+func (x PMsgId) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PMsgId) Descriptor() protoreflect.EnumDescriptor {
+	return file_GameMsg_proto_enumTypes[1].Descriptor()
+}
+
+func (PMsgId) Type() protoreflect.EnumType {
+	return &file_GameMsg_proto_enumTypes[1]
+}
+
+func (x PMsgId) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PMsgId.Descriptor instead.
+func (PMsgId) EnumDescriptor() ([]byte, []int) {
+	return file_GameMsg_proto_rawDescGZIP(), []int{1}
+}
+
+type PMsgHeader struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 基础字段
+	UniqueId  int64  `protobuf:"varint,1,opt,name=uniqueId,proto3" json:"uniqueId,omitempty"`
+	Timestamp int64  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	MsgId     PMsgId `protobuf:"varint,3,opt,name=msgId,proto3,enum=DouDizhu.PMsgId" json:"msgId,omitempty"`
+	// 会话字段
+	SessionId string `protobuf:"bytes,10,opt,name=sessionId,proto3" json:"sessionId,omitempty"`
+	PlayerId  string `protobuf:"bytes,11,opt,name=playerId,proto3" json:"playerId,omitempty"`
+	// 安全字段
+	Encrypted     bool `protobuf:"varint,20,opt,name=encrypted,proto3" json:"encrypted,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PGameMsgHeader) Reset() {
-	*x = PGameMsgHeader{}
+func (x *PMsgHeader) Reset() {
+	*x = PMsgHeader{}
 	mi := &file_GameMsg_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PGameMsgHeader) String() string {
+func (x *PMsgHeader) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PGameMsgHeader) ProtoMessage() {}
+func (*PMsgHeader) ProtoMessage() {}
 
-func (x *PGameMsgHeader) ProtoReflect() protoreflect.Message {
+func (x *PMsgHeader) ProtoReflect() protoreflect.Message {
 	mi := &file_GameMsg_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,53 +168,75 @@ func (x *PGameMsgHeader) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PGameMsgHeader.ProtoReflect.Descriptor instead.
-func (*PGameMsgHeader) Descriptor() ([]byte, []int) {
+// Deprecated: Use PMsgHeader.ProtoReflect.Descriptor instead.
+func (*PMsgHeader) Descriptor() ([]byte, []int) {
 	return file_GameMsg_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PGameMsgHeader) GetPlayerId() string {
+func (x *PMsgHeader) GetUniqueId() int64 {
+	if x != nil {
+		return x.UniqueId
+	}
+	return 0
+}
+
+func (x *PMsgHeader) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *PMsgHeader) GetMsgId() PMsgId {
+	if x != nil {
+		return x.MsgId
+	}
+	return PMsgId_PMSG_ID_UNKNOWN
+}
+
+func (x *PMsgHeader) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *PMsgHeader) GetPlayerId() string {
 	if x != nil {
 		return x.PlayerId
 	}
 	return ""
 }
 
-func (x *PGameMsgHeader) GetMessageId() int64 {
+func (x *PMsgHeader) GetEncrypted() bool {
 	if x != nil {
-		return x.MessageId
+		return x.Encrypted
 	}
-	return 0
+	return false
 }
 
-type PGameClientMessage struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Header *PGameMsgHeader        `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
-	// Types that are valid to be assigned to Content:
-	//
-	//	*PGameClientMessage_ChatMsg
-	//	*PGameClientMessage_RegisterReq
-	//	*PGameClientMessage_LoginReq
-	//	*PGameClientMessage_Handshake
-	Content       isPGameClientMessage_Content `protobuf_oneof:"content"`
+type PClientMsg struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Header        *PMsgHeader            `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
+	Payload       []byte                 `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PGameClientMessage) Reset() {
-	*x = PGameClientMessage{}
+func (x *PClientMsg) Reset() {
+	*x = PClientMsg{}
 	mi := &file_GameMsg_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PGameClientMessage) String() string {
+func (x *PClientMsg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PGameClientMessage) ProtoMessage() {}
+func (*PClientMsg) ProtoMessage() {}
 
-func (x *PGameClientMessage) ProtoReflect() protoreflect.Message {
+func (x *PClientMsg) ProtoReflect() protoreflect.Message {
 	mi := &file_GameMsg_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -113,114 +248,48 @@ func (x *PGameClientMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PGameClientMessage.ProtoReflect.Descriptor instead.
-func (*PGameClientMessage) Descriptor() ([]byte, []int) {
+// Deprecated: Use PClientMsg.ProtoReflect.Descriptor instead.
+func (*PClientMsg) Descriptor() ([]byte, []int) {
 	return file_GameMsg_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PGameClientMessage) GetHeader() *PGameMsgHeader {
+func (x *PClientMsg) GetHeader() *PMsgHeader {
 	if x != nil {
 		return x.Header
 	}
 	return nil
 }
 
-func (x *PGameClientMessage) GetContent() isPGameClientMessage_Content {
+func (x *PClientMsg) GetPayload() []byte {
 	if x != nil {
-		return x.Content
+		return x.Payload
 	}
 	return nil
 }
 
-func (x *PGameClientMessage) GetChatMsg() *PChatMsgRequest {
-	if x != nil {
-		if x, ok := x.Content.(*PGameClientMessage_ChatMsg); ok {
-			return x.ChatMsg
-		}
-	}
-	return nil
-}
-
-func (x *PGameClientMessage) GetRegisterReq() *PRegisterRequest {
-	if x != nil {
-		if x, ok := x.Content.(*PGameClientMessage_RegisterReq); ok {
-			return x.RegisterReq
-		}
-	}
-	return nil
-}
-
-func (x *PGameClientMessage) GetLoginReq() *PLoginRequest {
-	if x != nil {
-		if x, ok := x.Content.(*PGameClientMessage_LoginReq); ok {
-			return x.LoginReq
-		}
-	}
-	return nil
-}
-
-func (x *PGameClientMessage) GetHandshake() *PHandshakeRequest {
-	if x != nil {
-		if x, ok := x.Content.(*PGameClientMessage_Handshake); ok {
-			return x.Handshake
-		}
-	}
-	return nil
-}
-
-type isPGameClientMessage_Content interface {
-	isPGameClientMessage_Content()
-}
-
-type PGameClientMessage_ChatMsg struct {
-	ChatMsg *PChatMsgRequest `protobuf:"bytes,2,opt,name=chatMsg,proto3,oneof"`
-}
-
-type PGameClientMessage_RegisterReq struct {
-	RegisterReq *PRegisterRequest `protobuf:"bytes,3,opt,name=registerReq,proto3,oneof"`
-}
-
-type PGameClientMessage_LoginReq struct {
-	LoginReq *PLoginRequest `protobuf:"bytes,4,opt,name=loginReq,proto3,oneof"`
-}
-
-type PGameClientMessage_Handshake struct {
-	Handshake *PHandshakeRequest `protobuf:"bytes,5,opt,name=handshake,proto3,oneof"`
-}
-
-func (*PGameClientMessage_ChatMsg) isPGameClientMessage_Content() {}
-
-func (*PGameClientMessage_RegisterReq) isPGameClientMessage_Content() {}
-
-func (*PGameClientMessage_LoginReq) isPGameClientMessage_Content() {}
-
-func (*PGameClientMessage_Handshake) isPGameClientMessage_Content() {}
-
-type PGameServerMessage struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Content:
-	//
-	//	*PGameServerMessage_Response
-	//	*PGameServerMessage_Notification
-	Content       isPGameServerMessage_Content `protobuf_oneof:"content"`
+type PServerMsg struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Header        *PMsgHeader            `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
+	MsgType       PServerMsgType         `protobuf:"varint,2,opt,name=msgType,proto3,enum=DouDizhu.PServerMsgType" json:"msgType,omitempty"`
+	Payload       []byte                 `protobuf:"bytes,3,opt,name=payload,proto3" json:"payload,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PGameServerMessage) Reset() {
-	*x = PGameServerMessage{}
+func (x *PServerMsg) Reset() {
+	*x = PServerMsg{}
 	mi := &file_GameMsg_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PGameServerMessage) String() string {
+func (x *PServerMsg) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PGameServerMessage) ProtoMessage() {}
+func (*PServerMsg) ProtoMessage() {}
 
-func (x *PGameServerMessage) ProtoReflect() protoreflect.Message {
+func (x *PServerMsg) ProtoReflect() protoreflect.Message {
 	mi := &file_GameMsg_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -232,241 +301,32 @@ func (x *PGameServerMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PGameServerMessage.ProtoReflect.Descriptor instead.
-func (*PGameServerMessage) Descriptor() ([]byte, []int) {
+// Deprecated: Use PServerMsg.ProtoReflect.Descriptor instead.
+func (*PServerMsg) Descriptor() ([]byte, []int) {
 	return file_GameMsg_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *PGameServerMessage) GetContent() isPGameServerMessage_Content {
-	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-func (x *PGameServerMessage) GetResponse() *PGameMsgRespPacket {
-	if x != nil {
-		if x, ok := x.Content.(*PGameServerMessage_Response); ok {
-			return x.Response
-		}
-	}
-	return nil
-}
-
-func (x *PGameServerMessage) GetNotification() *PGameNotificationPacket {
-	if x != nil {
-		if x, ok := x.Content.(*PGameServerMessage_Notification); ok {
-			return x.Notification
-		}
-	}
-	return nil
-}
-
-type isPGameServerMessage_Content interface {
-	isPGameServerMessage_Content()
-}
-
-type PGameServerMessage_Response struct {
-	Response *PGameMsgRespPacket `protobuf:"bytes,1,opt,name=response,proto3,oneof"`
-}
-
-type PGameServerMessage_Notification struct {
-	Notification *PGameNotificationPacket `protobuf:"bytes,2,opt,name=notification,proto3,oneof"`
-}
-
-func (*PGameServerMessage_Response) isPGameServerMessage_Content() {}
-
-func (*PGameServerMessage_Notification) isPGameServerMessage_Content() {}
-
-type PGameNotificationPacket struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Content:
-	//
-	//	*PGameNotificationPacket_ChatMsg
-	Content       isPGameNotificationPacket_Content `protobuf_oneof:"content"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PGameNotificationPacket) Reset() {
-	*x = PGameNotificationPacket{}
-	mi := &file_GameMsg_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PGameNotificationPacket) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PGameNotificationPacket) ProtoMessage() {}
-
-func (x *PGameNotificationPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PGameNotificationPacket.ProtoReflect.Descriptor instead.
-func (*PGameNotificationPacket) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *PGameNotificationPacket) GetContent() isPGameNotificationPacket_Content {
-	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-func (x *PGameNotificationPacket) GetChatMsg() *PChatMsgNotification {
-	if x != nil {
-		if x, ok := x.Content.(*PGameNotificationPacket_ChatMsg); ok {
-			return x.ChatMsg
-		}
-	}
-	return nil
-}
-
-type isPGameNotificationPacket_Content interface {
-	isPGameNotificationPacket_Content()
-}
-
-type PGameNotificationPacket_ChatMsg struct {
-	ChatMsg *PChatMsgNotification `protobuf:"bytes,1,opt,name=chatMsg,proto3,oneof"`
-}
-
-func (*PGameNotificationPacket_ChatMsg) isPGameNotificationPacket_Content() {}
-
-type PGameMsgRespPacket struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Header *PGameMsgHeader        `protobuf:"bytes,1,opt,name=header,proto3" json:"header,omitempty"`
-	// Types that are valid to be assigned to Content:
-	//
-	//	*PGameMsgRespPacket_Error
-	//	*PGameMsgRespPacket_EmptyResponse
-	//	*PGameMsgRespPacket_LoginResp
-	//	*PGameMsgRespPacket_Handshake
-	Content       isPGameMsgRespPacket_Content `protobuf_oneof:"content"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PGameMsgRespPacket) Reset() {
-	*x = PGameMsgRespPacket{}
-	mi := &file_GameMsg_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PGameMsgRespPacket) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PGameMsgRespPacket) ProtoMessage() {}
-
-func (x *PGameMsgRespPacket) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PGameMsgRespPacket.ProtoReflect.Descriptor instead.
-func (*PGameMsgRespPacket) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *PGameMsgRespPacket) GetHeader() *PGameMsgHeader {
+func (x *PServerMsg) GetHeader() *PMsgHeader {
 	if x != nil {
 		return x.Header
 	}
 	return nil
 }
 
-func (x *PGameMsgRespPacket) GetContent() isPGameMsgRespPacket_Content {
+func (x *PServerMsg) GetMsgType() PServerMsgType {
 	if x != nil {
-		return x.Content
+		return x.MsgType
+	}
+	return PServerMsgType_PSERVER_MSG_TYPE_UNKNOWN
+}
+
+func (x *PServerMsg) GetPayload() []byte {
+	if x != nil {
+		return x.Payload
 	}
 	return nil
 }
 
-func (x *PGameMsgRespPacket) GetError() *PError {
-	if x != nil {
-		if x, ok := x.Content.(*PGameMsgRespPacket_Error); ok {
-			return x.Error
-		}
-	}
-	return nil
-}
-
-func (x *PGameMsgRespPacket) GetEmptyResponse() *PEmptyResponse {
-	if x != nil {
-		if x, ok := x.Content.(*PGameMsgRespPacket_EmptyResponse); ok {
-			return x.EmptyResponse
-		}
-	}
-	return nil
-}
-
-func (x *PGameMsgRespPacket) GetLoginResp() *PLoginResponse {
-	if x != nil {
-		if x, ok := x.Content.(*PGameMsgRespPacket_LoginResp); ok {
-			return x.LoginResp
-		}
-	}
-	return nil
-}
-
-func (x *PGameMsgRespPacket) GetHandshake() *PHandshakeResponse {
-	if x != nil {
-		if x, ok := x.Content.(*PGameMsgRespPacket_Handshake); ok {
-			return x.Handshake
-		}
-	}
-	return nil
-}
-
-type isPGameMsgRespPacket_Content interface {
-	isPGameMsgRespPacket_Content()
-}
-
-type PGameMsgRespPacket_Error struct {
-	Error *PError `protobuf:"bytes,2,opt,name=error,proto3,oneof"`
-}
-
-type PGameMsgRespPacket_EmptyResponse struct {
-	EmptyResponse *PEmptyResponse `protobuf:"bytes,3,opt,name=emptyResponse,proto3,oneof"`
-}
-
-type PGameMsgRespPacket_LoginResp struct {
-	LoginResp *PLoginResponse `protobuf:"bytes,4,opt,name=loginResp,proto3,oneof"`
-}
-
-type PGameMsgRespPacket_Handshake struct {
-	Handshake *PHandshakeResponse `protobuf:"bytes,5,opt,name=handshake,proto3,oneof"`
-}
-
-func (*PGameMsgRespPacket_Error) isPGameMsgRespPacket_Content() {}
-
-func (*PGameMsgRespPacket_EmptyResponse) isPGameMsgRespPacket_Content() {}
-
-func (*PGameMsgRespPacket_LoginResp) isPGameMsgRespPacket_Content() {}
-
-func (*PGameMsgRespPacket_Handshake) isPGameMsgRespPacket_Content() {}
-
-// 不需要返回值可用这个
 type PEmptyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -475,7 +335,7 @@ type PEmptyResponse struct {
 
 func (x *PEmptyResponse) Reset() {
 	*x = PEmptyResponse{}
-	mi := &file_GameMsg_proto_msgTypes[5]
+	mi := &file_GameMsg_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -487,7 +347,7 @@ func (x *PEmptyResponse) String() string {
 func (*PEmptyResponse) ProtoMessage() {}
 
 func (x *PEmptyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_GameMsg_proto_msgTypes[5]
+	mi := &file_GameMsg_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -500,39 +360,44 @@ func (x *PEmptyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PEmptyResponse.ProtoReflect.Descriptor instead.
 func (*PEmptyResponse) Descriptor() ([]byte, []int) {
-	return file_GameMsg_proto_rawDescGZIP(), []int{5}
+	return file_GameMsg_proto_rawDescGZIP(), []int{3}
 }
 
 var File_GameMsg_proto protoreflect.FileDescriptor
 
 const file_GameMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rGameMsg.proto\x12\bDouDizhu\x1a\vError.proto\x1a\rChatMsg.proto\x1a\vLogin.proto\x1a\x0fHandshake.proto\"J\n" +
-	"\x0ePGameMsgHeader\x12\x1a\n" +
-	"\bplayerId\x18\x01 \x01(\tR\bplayerId\x12\x1c\n" +
-	"\tmessageId\x18\x02 \x01(\x03R\tmessageId\"\xbc\x02\n" +
-	"\x12PGameClientMessage\x120\n" +
-	"\x06header\x18\x01 \x01(\v2\x18.DouDizhu.PGameMsgHeaderR\x06header\x125\n" +
-	"\achatMsg\x18\x02 \x01(\v2\x19.DouDizhu.PChatMsgRequestH\x00R\achatMsg\x12>\n" +
-	"\vregisterReq\x18\x03 \x01(\v2\x1a.DouDizhu.PRegisterRequestH\x00R\vregisterReq\x125\n" +
-	"\bloginReq\x18\x04 \x01(\v2\x17.DouDizhu.PLoginRequestH\x00R\bloginReq\x12;\n" +
-	"\thandshake\x18\x05 \x01(\v2\x1b.DouDizhu.PHandshakeRequestH\x00R\thandshakeB\t\n" +
-	"\acontent\"\xa4\x01\n" +
-	"\x12PGameServerMessage\x12:\n" +
-	"\bresponse\x18\x01 \x01(\v2\x1c.DouDizhu.PGameMsgRespPacketH\x00R\bresponse\x12G\n" +
-	"\fnotification\x18\x02 \x01(\v2!.DouDizhu.PGameNotificationPacketH\x00R\fnotificationB\t\n" +
-	"\acontent\"`\n" +
-	"\x17PGameNotificationPacket\x12:\n" +
-	"\achatMsg\x18\x01 \x01(\v2\x1e.DouDizhu.PChatMsgNotificationH\x00R\achatMsgB\t\n" +
-	"\acontent\"\xb5\x02\n" +
-	"\x12PGameMsgRespPacket\x120\n" +
-	"\x06header\x18\x01 \x01(\v2\x18.DouDizhu.PGameMsgHeaderR\x06header\x12(\n" +
-	"\x05error\x18\x02 \x01(\v2\x10.DouDizhu.PErrorH\x00R\x05error\x12@\n" +
-	"\remptyResponse\x18\x03 \x01(\v2\x18.DouDizhu.PEmptyResponseH\x00R\remptyResponse\x128\n" +
-	"\tloginResp\x18\x04 \x01(\v2\x18.DouDizhu.PLoginResponseH\x00R\tloginResp\x12<\n" +
-	"\thandshake\x18\x05 \x01(\v2\x1c.DouDizhu.PHandshakeResponseH\x00R\thandshakeB\t\n" +
-	"\acontent\"\x10\n" +
-	"\x0ePEmptyResponseB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\rGameMsg.proto\x12\bDouDizhu\"\xc6\x01\n" +
+	"\n" +
+	"PMsgHeader\x12\x1a\n" +
+	"\buniqueId\x18\x01 \x01(\x03R\buniqueId\x12\x1c\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x12&\n" +
+	"\x05msgId\x18\x03 \x01(\x0e2\x10.DouDizhu.PMsgIdR\x05msgId\x12\x1c\n" +
+	"\tsessionId\x18\n" +
+	" \x01(\tR\tsessionId\x12\x1a\n" +
+	"\bplayerId\x18\v \x01(\tR\bplayerId\x12\x1c\n" +
+	"\tencrypted\x18\x14 \x01(\bR\tencrypted\"T\n" +
+	"\n" +
+	"PClientMsg\x12,\n" +
+	"\x06header\x18\x01 \x01(\v2\x14.DouDizhu.PMsgHeaderR\x06header\x12\x18\n" +
+	"\apayload\x18\x02 \x01(\fR\apayload\"\x88\x01\n" +
+	"\n" +
+	"PServerMsg\x12,\n" +
+	"\x06header\x18\x01 \x01(\v2\x14.DouDizhu.PMsgHeaderR\x06header\x122\n" +
+	"\amsgType\x18\x02 \x01(\x0e2\x18.DouDizhu.PServerMsgTypeR\amsgType\x12\x18\n" +
+	"\apayload\x18\x03 \x01(\fR\apayload\"\x10\n" +
+	"\x0ePEmptyResponse*\x8c\x01\n" +
+	"\x0ePServerMsgType\x12\x1c\n" +
+	"\x18PSERVER_MSG_TYPE_UNKNOWN\x10\x00\x12\x1d\n" +
+	"\x19PSERVER_MSG_TYPE_RESPONSE\x10\x01\x12!\n" +
+	"\x1dPSERVER_MSG_TYPE_NOTIFICATION\x10\x02\x12\x1a\n" +
+	"\x16PSERVER_MSG_TYPE_ERROR\x10\x03*s\n" +
+	"\x06PMsgId\x12\x13\n" +
+	"\x0fPMSG_ID_UNKNOWN\x10\x00\x12\x11\n" +
+	"\rPMSG_ID_LOGIN\x10\x01\x12\x14\n" +
+	"\x10PMSG_ID_REGISTER\x10\x02\x12\x15\n" +
+	"\x11PMSG_ID_HANDSHAKE\x10\x03\x12\x14\n" +
+	"\x10PMSG_ID_CHAT_MSG\x10\x04B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_GameMsg_proto_rawDescOnce sync.Once
@@ -546,42 +411,26 @@ func file_GameMsg_proto_rawDescGZIP() []byte {
 	return file_GameMsg_proto_rawDescData
 }
 
-var file_GameMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_GameMsg_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_GameMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_GameMsg_proto_goTypes = []any{
-	(*PGameMsgHeader)(nil),          // 0: DouDizhu.PGameMsgHeader
-	(*PGameClientMessage)(nil),      // 1: DouDizhu.PGameClientMessage
-	(*PGameServerMessage)(nil),      // 2: DouDizhu.PGameServerMessage
-	(*PGameNotificationPacket)(nil), // 3: DouDizhu.PGameNotificationPacket
-	(*PGameMsgRespPacket)(nil),      // 4: DouDizhu.PGameMsgRespPacket
-	(*PEmptyResponse)(nil),          // 5: DouDizhu.PEmptyResponse
-	(*PChatMsgRequest)(nil),         // 6: DouDizhu.PChatMsgRequest
-	(*PRegisterRequest)(nil),        // 7: DouDizhu.PRegisterRequest
-	(*PLoginRequest)(nil),           // 8: DouDizhu.PLoginRequest
-	(*PHandshakeRequest)(nil),       // 9: DouDizhu.PHandshakeRequest
-	(*PChatMsgNotification)(nil),    // 10: DouDizhu.PChatMsgNotification
-	(*PError)(nil),                  // 11: DouDizhu.PError
-	(*PLoginResponse)(nil),          // 12: DouDizhu.PLoginResponse
-	(*PHandshakeResponse)(nil),      // 13: DouDizhu.PHandshakeResponse
+	(PServerMsgType)(0),    // 0: DouDizhu.PServerMsgType
+	(PMsgId)(0),            // 1: DouDizhu.PMsgId
+	(*PMsgHeader)(nil),     // 2: DouDizhu.PMsgHeader
+	(*PClientMsg)(nil),     // 3: DouDizhu.PClientMsg
+	(*PServerMsg)(nil),     // 4: DouDizhu.PServerMsg
+	(*PEmptyResponse)(nil), // 5: DouDizhu.PEmptyResponse
 }
 var file_GameMsg_proto_depIdxs = []int32{
-	0,  // 0: DouDizhu.PGameClientMessage.header:type_name -> DouDizhu.PGameMsgHeader
-	6,  // 1: DouDizhu.PGameClientMessage.chatMsg:type_name -> DouDizhu.PChatMsgRequest
-	7,  // 2: DouDizhu.PGameClientMessage.registerReq:type_name -> DouDizhu.PRegisterRequest
-	8,  // 3: DouDizhu.PGameClientMessage.loginReq:type_name -> DouDizhu.PLoginRequest
-	9,  // 4: DouDizhu.PGameClientMessage.handshake:type_name -> DouDizhu.PHandshakeRequest
-	4,  // 5: DouDizhu.PGameServerMessage.response:type_name -> DouDizhu.PGameMsgRespPacket
-	3,  // 6: DouDizhu.PGameServerMessage.notification:type_name -> DouDizhu.PGameNotificationPacket
-	10, // 7: DouDizhu.PGameNotificationPacket.chatMsg:type_name -> DouDizhu.PChatMsgNotification
-	0,  // 8: DouDizhu.PGameMsgRespPacket.header:type_name -> DouDizhu.PGameMsgHeader
-	11, // 9: DouDizhu.PGameMsgRespPacket.error:type_name -> DouDizhu.PError
-	5,  // 10: DouDizhu.PGameMsgRespPacket.emptyResponse:type_name -> DouDizhu.PEmptyResponse
-	12, // 11: DouDizhu.PGameMsgRespPacket.loginResp:type_name -> DouDizhu.PLoginResponse
-	13, // 12: DouDizhu.PGameMsgRespPacket.handshake:type_name -> DouDizhu.PHandshakeResponse
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	1, // 0: DouDizhu.PMsgHeader.msgId:type_name -> DouDizhu.PMsgId
+	2, // 1: DouDizhu.PClientMsg.header:type_name -> DouDizhu.PMsgHeader
+	2, // 2: DouDizhu.PServerMsg.header:type_name -> DouDizhu.PMsgHeader
+	0, // 3: DouDizhu.PServerMsg.msgType:type_name -> DouDizhu.PServerMsgType
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_GameMsg_proto_init() }
@@ -589,41 +438,19 @@ func file_GameMsg_proto_init() {
 	if File_GameMsg_proto != nil {
 		return
 	}
-	file_Error_proto_init()
-	file_ChatMsg_proto_init()
-	file_Login_proto_init()
-	file_Handshake_proto_init()
-	file_GameMsg_proto_msgTypes[1].OneofWrappers = []any{
-		(*PGameClientMessage_ChatMsg)(nil),
-		(*PGameClientMessage_RegisterReq)(nil),
-		(*PGameClientMessage_LoginReq)(nil),
-		(*PGameClientMessage_Handshake)(nil),
-	}
-	file_GameMsg_proto_msgTypes[2].OneofWrappers = []any{
-		(*PGameServerMessage_Response)(nil),
-		(*PGameServerMessage_Notification)(nil),
-	}
-	file_GameMsg_proto_msgTypes[3].OneofWrappers = []any{
-		(*PGameNotificationPacket_ChatMsg)(nil),
-	}
-	file_GameMsg_proto_msgTypes[4].OneofWrappers = []any{
-		(*PGameMsgRespPacket_Error)(nil),
-		(*PGameMsgRespPacket_EmptyResponse)(nil),
-		(*PGameMsgRespPacket_LoginResp)(nil),
-		(*PGameMsgRespPacket_Handshake)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_GameMsg_proto_rawDesc), len(file_GameMsg_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   6,
+			NumEnums:      2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_GameMsg_proto_goTypes,
 		DependencyIndexes: file_GameMsg_proto_depIdxs,
+		EnumInfos:         file_GameMsg_proto_enumTypes,
 		MessageInfos:      file_GameMsg_proto_msgTypes,
 	}.Build()
 	File_GameMsg_proto = out.File

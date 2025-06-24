@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 using Network.Proto;
-using Serilog;
-using UnityEngine;
 
 namespace Gameplay.Player
 {
@@ -24,31 +22,25 @@ namespace Gameplay.Player
 
         public async Task<bool> Register(string account, string password)
         {
-            var response = await Network.NetworkManager.Instance.RequestAsync(PGameClientMessage.ContentOneofCase.RegisterReq, new PRegisterRequest()
+            var response = await Network.NetworkManager.Instance.RequestAsync(PMsgId.Register, new PRegisterRequest()
             {
                 Account = account,
                 Password = password
             });
             if (!response.IsSuccess)
-            {
-                Log.Error("注册失败，错误码：{errorCode}", response.ErrorCode);
                 return false;
-            }
             return true;
         }
         
         public async Task<bool> Login(string account, string password)
         {
-            var response = await Network.NetworkManager.Instance.RequestAsync<PLoginRequest, PLoginResponse>(PGameClientMessage.ContentOneofCase.LoginReq, new PLoginRequest()
+            var response = await Network.NetworkManager.Instance.RequestAsync<PLoginRequest, PLoginResponse>(PMsgId.Login, new PLoginRequest()
             {
                 Account = account,
                 Password = password
             });
             if (!response.IsSuccess)
-            {
-                Log.Error("登录失败，错误码：{errorCode}", response.ErrorCode);
                 return false;
-            }
 
             ID = response.Data.PlayerId;
             return true;

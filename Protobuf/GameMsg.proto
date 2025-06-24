@@ -4,51 +4,46 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
-import "Error.proto";
-import "ChatMsg.proto";
-import "Login.proto";
-import "Handshake.proto";
-
-message PGameMsgHeader {
-	string playerId = 1;
-	// 用于标识请求的唯一id
-	int64 messageId = 2;
+enum PServerMsgType {
+	PSERVER_MSG_TYPE_UNKNOWN = 0;
+	PSERVER_MSG_TYPE_RESPONSE = 1;
+	PSERVER_MSG_TYPE_NOTIFICATION = 2;
+	PSERVER_MSG_TYPE_ERROR = 3;
 }
 
-message PGameClientMessage {
-	PGameMsgHeader header = 1;
-	oneof content {
-		PChatMsgRequest chatMsg = 2;
-		PRegisterRequest registerReq = 3;
-		PLoginRequest loginReq = 4;
-		PHandshakeRequest handshake = 5;
-	}
+enum PMsgId {
+	PMSG_ID_UNKNOWN = 0;
+	PMSG_ID_LOGIN = 1;
+	PMSG_ID_REGISTER = 2;
+	PMSG_ID_HANDSHAKE = 3;
+	PMSG_ID_CHAT_MSG = 4;
 }
 
-message PGameServerMessage {
-	oneof content {
-		PGameMsgRespPacket response = 1;
-		PGameNotificationPacket notification = 2;
-	}
+message PMsgHeader {
+	// 基础字段
+	int64 uniqueId = 1;
+	int64 timestamp = 2;
+	PMsgId msgId = 3;
+
+	// 会话字段
+	string sessionId = 10;
+	string playerId = 11;
+
+	// 安全字段
+	bool encrypted = 20;
 }
 
-message PGameNotificationPacket {
-	oneof content {
-		PChatMsgNotification chatMsg = 1;
-	}
+message PClientMsg {
+	PMsgHeader header = 1;
+	bytes payload = 2;
 }
 
-message PGameMsgRespPacket {
-	PGameMsgHeader header = 1;
-	oneof content {
-		PError error = 2;
-		PEmptyResponse emptyResponse = 3;
-		PLoginResponse loginResp = 4;
-		PHandshakeResponse handshake = 5;
-	}
+message PServerMsg {
+	PMsgHeader header = 1;
+	PServerMsgType msgType = 2;
+	bytes payload = 3;
 }
 
-// 不需要返回值可用这个
 message PEmptyResponse {
-	
+
 }
