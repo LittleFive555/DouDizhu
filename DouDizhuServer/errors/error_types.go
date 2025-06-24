@@ -16,6 +16,8 @@ type ErrorCode string
 
 const (
 	CodeUnknown ErrorCode = "Unknown"
+	// 通用错误
+	CodeInvalidRequest ErrorCode = "INVALID_REQUEST"
 	// Database
 	CodeDBReadError  ErrorCode = "DB_READ_ERROR"
 	CodeDBWriteError ErrorCode = "DB_WRITE_ERROR"

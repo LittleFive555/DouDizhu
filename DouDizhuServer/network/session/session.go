@@ -19,10 +19,11 @@ const (
 )
 
 type PlayerSession struct {
-	Id    string
-	Conn  net.Conn
-	IP    string
-	State PlayerState
+	Id        string
+	Conn      net.Conn
+	IP        string
+	State     PlayerState
+	SharedKey []byte
 
 	PlayerId string
 }

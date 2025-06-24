@@ -1,6 +1,7 @@
 package session
 
 import (
+	"DouDizhuServer/logger"
 	"fmt"
 	"net"
 	"sync"
@@ -41,6 +42,7 @@ func (s *SessionManager) Authenticate(sessionId, playerId string) error {
 
 	session, exists := s.playerSessions[sessionId]
 	if !exists {
+		logger.ErrorWith("sessionId不存在", "sessionId", sessionId)
 		return fmt.Errorf("sessionId不存在")
 	}
 
@@ -56,6 +58,7 @@ func (s *SessionManager) GetSession(sessionId string) (*PlayerSession, error) {
 
 	session, exists := s.playerSessions[sessionId]
 	if !exists {
+		logger.ErrorWith("sessionId不存在", "sessionId", sessionId)
 		return nil, fmt.Errorf("sessionId不存在")
 	}
 
@@ -80,6 +83,7 @@ func (s *SessionManager) CloseSession(sessionId string) error {
 
 	session, exists := s.playerSessions[sessionId]
 	if !exists {
+		logger.ErrorWith("sessionId不存在", "sessionId", sessionId)
 		return fmt.Errorf("sessionId不存在")
 	}
 

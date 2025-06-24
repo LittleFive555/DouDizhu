@@ -9,7 +9,12 @@ using Network.Tcp;
 using Network.Proto;
 using Serilog;
 using Gameplay.Player;
-using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Agreement;
 
 namespace Network
 {
@@ -33,6 +38,10 @@ namespace Network
         public bool IsConnected => m_IsConnected;
 
         private string m_SessionId;
+        
+        public byte[] PublicKeyBytes { get; private set; }
+        private ECPrivateKeyParameters privateKey;
+        private ECDomainParameters domainParams;
         private byte[] m_SharedSecret;
 
         
@@ -119,7 +128,7 @@ namespace Network
             }
             catch (Exception ex)
             {
-                Log.Error("发送消息时发生错误: {exception}", ex.Message);
+                Log.Error(ex, "发送消息时发生错误");
                 return NetworkResult<TResp>.Error(null, ex.Message);
             }
         }
@@ -158,7 +167,7 @@ namespace Network
             }
             catch (SocketException ex)
             {
-                Log.Error("TCP连接失败: {exception}", ex.Message);
+                Log.Error(ex, "TCP连接失败");
                 m_IsConnected = false;
             }
         }
@@ -187,20 +196,26 @@ namespace Network
             }
             catch (Exception ex)
             {
-                Log.Error("接收消息时发生错误: {exception}", ex.Message);
+                Log.Error(ex, "接收消息时发生错误");
             }
         }
 
         public async Task Handshake()
         {
             // 1. 生成客户端临时密钥对
-            using var ecdh = ECDiffieHellman.Create(ECCurve.NamedCurves.nistP256);
-            var clientPublicKey = ecdh.ExportSubjectPublicKeyInfo();
+            var ecParams = SecNamedCurves.GetByName("secp256r1");
+            domainParams = new ECDomainParameters(
+                ecParams.Curve, ecParams.G, ecParams.N, ecParams.H);
+            
+            var keyPair = GenerateKeyPair(domainParams);
+            privateKey = (ECPrivateKeyParameters)keyPair.Private;
+            var publicKey = (ECPublicKeyParameters)keyPair.Public;
+            PublicKeyBytes = publicKey.Q.GetEncoded();
 
             // 2. 发送握手请求
             var handshakeRequest = new PHandshakeRequest()
             {
-                PublicKey = Convert.ToBase64String(clientPublicKey),
+                PublicKey = Convert.ToBase64String(PublicKeyBytes),
             };
             var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PMsgId.Handshake, handshakeRequest);
             if (!response.IsSuccess)
@@ -208,11 +223,7 @@ namespace Network
 
             // 3. 解密服务器响应
             var serverPublicKey = Convert.FromBase64String(response.Data.PublicKey);
-            using var serverEcdh = ECDiffieHellman.Create();
-            serverEcdh.ImportSubjectPublicKeyInfo(serverPublicKey, out _);
-            m_SharedSecret = ecdh.DeriveKeyMaterial(serverEcdh.PublicKey);
-
-            Log.Information("握手成功，共享密钥为: {sharedSecret}", Convert.ToBase64String(m_SharedSecret));
+            m_SharedSecret = DeriveSharedSecret(serverPublicKey);
         }
 
         private void OnResponse(PServerMsg serverMsg)
@@ -235,7 +246,7 @@ namespace Network
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("通知处理程序发生错误: {exception}", ex.Message);
+                    Log.Error(ex, "通知处理程序发生错误");
                 }
             }
             else
@@ -302,5 +313,28 @@ namespace Network
         }
 
         private static long GenerateRequestId() => DateTimeOffset.UtcNow.Ticks;
+
+        private static AsymmetricCipherKeyPair GenerateKeyPair(ECDomainParameters domainParams)
+        {
+            var generator = new ECKeyPairGenerator();
+            var keyGenParams = new ECKeyGenerationParameters(domainParams, new SecureRandom());
+            generator.Init(keyGenParams);
+            return generator.GenerateKeyPair();
+        }
+
+        private byte[] DeriveSharedSecret(byte[] otherPartyPublicKeyBytes)
+        {
+            // 导入对方公钥
+            var curve = domainParams.Curve;
+            var otherPartyPoint = curve.DecodePoint(otherPartyPublicKeyBytes);
+            var otherPartyPublicKey = new ECPublicKeyParameters(otherPartyPoint, domainParams);
+            
+            // 计算共享密钥
+            var agreement = new ECDHBasicAgreement();
+            agreement.Init(privateKey);
+            var sharedSecret = agreement.CalculateAgreement(otherPartyPublicKey);
+            
+            return sharedSecret.ToByteArray();
+        }
     }
 }

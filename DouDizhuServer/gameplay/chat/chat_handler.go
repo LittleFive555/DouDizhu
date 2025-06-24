@@ -1,11 +1,11 @@
 package chat
 
 import (
+	"DouDizhuServer/errors"
 	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
-	"errors"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,7 +13,7 @@ import (
 func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
 	reqMsg, ok := (*req).(*protodef.PChatMsgRequest)
 	if !ok {
-		return nil, errors.New("invalid request")
+		return nil, errors.NewGameplayError(errors.CodeInvalidRequest)
 	}
 	chatMsg := reqMsg.GetContent()
 	player := player.Manager.GetPlayer(context.PlayerId)

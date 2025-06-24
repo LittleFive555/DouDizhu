@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,7 +32,15 @@ namespace Gameplay
 
             await NetworkManager.Instance.ConnectAsync(serverHost);
 
-            // await NetworkManager.Instance.Handshake();
+            try
+            {
+                await NetworkManager.Instance.Handshake();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "握手失败");
+                return;
+            }
 
             Log.Information("Start Loading Main Scene");
             SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single).completed += (AsyncOperation obj) =>
@@ -63,7 +72,7 @@ namespace Gameplay
         {
             GameObject mainBehaviour = new GameObject("MainBehaviour");
             mainBehaviour.AddComponent<MainBehaviour>();
-            Object.DontDestroyOnLoad(mainBehaviour);
+            GameObject.DontDestroyOnLoad(mainBehaviour);
         }
     }
 }

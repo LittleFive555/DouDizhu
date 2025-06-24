@@ -26,6 +26,7 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer()
 
+	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, network.HandleHandshake)
 	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, chat.HandleChatMessage)
 	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, player.HandleRegister)
 	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, player.HandleLogin)

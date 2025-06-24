@@ -7,6 +7,9 @@ import (
 	"DouDizhuServer/network/protodef"
 	"DouDizhuServer/network/serialize"
 	"DouDizhuServer/network/session"
+	"crypto/ecdh"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"net"
 
@@ -65,6 +68,37 @@ func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*messag
 	s.dispatcher.RegisterHandler(msgId, handler)
 }
 
+func HandleHandshake(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
+	reqMsg, ok := (*req).(*protodef.PHandshakeRequest)
+	if !ok {
+		return nil, errors.NewGameplayError(errors.CodeInvalidRequest)
+	}
+
+	clientPublicKey, err := stringToPublicKey(reqMsg.GetPublicKey())
+	session, err := Server.sessionMgr.GetSession(context.SessionId)
+	if err != nil {
+		return nil, err
+	}
+	serverPrivateKey, err := ecdh.P256().GenerateKey(rand.Reader)
+	if err != nil {
+		return nil, err
+	}
+	serverSharedKey, err := serverPrivateKey.ECDH(clientPublicKey)
+	if err != nil {
+		return nil, err
+	}
+	session.SharedKey = serverSharedKey
+
+	serverPublicKey := serverPrivateKey.PublicKey()
+	serverPublicKeyStr := publicKeyToString(serverPublicKey)
+
+	return &message.HandleResult{
+		Resp: &protodef.PHandshakeResponse{
+			PublicKey: serverPublicKeyStr,
+		},
+	}, nil
+}
+
 // handleConnection 处理单个连接
 func (s *GameServer) handleConnection(conn net.Conn) {
 	session, err := s.sessionMgr.CreatePlayerSession(conn)
@@ -93,6 +127,10 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		return
 	}
 	msgHeader := clientMsg.GetHeader()
+	sessionId := msgHeader.SessionId
+	if sessionId == "" {
+		sessionId = msg.SessionId
+	}
 	msgId := msgHeader.GetMsgId()
 	msgPayload := serialize.GetMessage(msgId)
 	if err := proto.Unmarshal(content, msgPayload); err != nil {
@@ -113,7 +151,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	}
 
 	context := &message.MessageContext{
-		SessionId: msgHeader.SessionId,
+		SessionId: sessionId,
 		PlayerId:  msgHeader.PlayerId,
 	}
 	// 处理消息
@@ -187,4 +225,20 @@ func isSecretMessage(msgId protodef.PMsgId) bool {
 		return true
 	}
 	return false
+}
+
+func stringToPublicKey(str string) (*ecdh.PublicKey, error) {
+	publicKeyBytes, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return nil, err
+	}
+	publicKey, err := ecdh.P256().NewPublicKey(publicKeyBytes)
+	if err != nil {
+		return nil, err
+	}
+	return publicKey, nil
+}
+
+func publicKeyToString(publicKey *ecdh.PublicKey) string {
+	return base64.StdEncoding.EncodeToString(publicKey.Bytes())
 }
