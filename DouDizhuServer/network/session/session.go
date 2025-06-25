@@ -65,7 +65,6 @@ func (s *PlayerSession) SendMessage(data []byte) error {
 }
 
 func (s *PlayerSession) GenerateSecureKey(clientPublicKeyStr string, salt []byte, info []byte) (string, error) {
-	logger.InfoWith("客户端公钥", "clientPublicKeyStr", clientPublicKeyStr, "salt", salt, "info", info)
 	serverPrivateKey, err := ecdh.P256().GenerateKey(rand.Reader)
 	if err != nil {
 		return "", err
@@ -78,14 +77,11 @@ func (s *PlayerSession) GenerateSecureKey(clientPublicKeyStr string, salt []byte
 	if err != nil {
 		return "", err
 	}
-	logger.InfoWith("生成共享密钥", "serverSharedKey", serverSharedKey)
 
 	serverPublicKey := serverPrivateKey.PublicKey()
 	serverPublicKeyStr := publicKeyToString(serverPublicKey)
-	logger.InfoWith("服务端公钥", "serverPublicKeyStr", serverPublicKeyStr)
 
 	secureKey := deriveSecureKey(serverSharedKey, salt, info)
-	logger.InfoWith("生成密钥", "secureKey", secureKey)
 	s.secureKey = secureKey
 	return serverPublicKeyStr, nil
 }

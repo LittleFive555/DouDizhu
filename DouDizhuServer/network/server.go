@@ -7,7 +7,6 @@ import (
 	"DouDizhuServer/network/protodef"
 	"DouDizhuServer/network/serialize"
 	"DouDizhuServer/network/session"
-	"encoding/base64"
 	"fmt"
 	"net"
 	"time"
@@ -124,13 +123,11 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	msgId := msgHeader.GetMsgId()
 	var reqPayloadBytes []byte
 	if enableEncryption {
-		logger.InfoWith("解密消息", "payload", base64.StdEncoding.EncodeToString(clientMsg.GetPayload()), "iv", msgHeader.Iv)
 		reqPayloadBytes, err = session.DecryptPayload(clientMsg.GetPayload(), msgHeader.Iv)
 		if err != nil {
 			logger.ErrorWith("解密消息失败", "error", err)
 			return
 		}
-		logger.InfoWith("解密消息成功", "payload", base64.StdEncoding.EncodeToString(reqPayloadBytes))
 	} else {
 		reqPayloadBytes = clientMsg.GetPayload()
 	}
@@ -187,9 +184,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	}
 	if enableEncryption {
 		var iv []byte
-		logger.InfoWith("加密响应前", "payload", base64.StdEncoding.EncodeToString(respPayloadBytes))
 		respPayloadBytes, iv, err = session.EncryptPayload(respPayloadBytes)
-		logger.InfoWith("加密响应后", "payload", base64.StdEncoding.EncodeToString(respPayloadBytes), "iv", iv)
 		respMessage.Header.Iv = iv
 	}
 	if err != nil {

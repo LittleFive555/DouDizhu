@@ -216,7 +216,6 @@ namespace Network
             privateKey = (ECPrivateKeyParameters)keyPair.Private;
             var publicKey = (ECPublicKeyParameters)keyPair.Public;
             PublicKeyBytes = publicKey.Q.GetEncoded(false);
-            Log.Information("客户端公钥: {publicKey}", Convert.ToBase64String(PublicKeyBytes));
 
             byte[] salt = new byte[16];
             new SecureRandom().NextBytes(salt);
@@ -229,20 +228,16 @@ namespace Network
                 Salt = ByteString.CopyFrom(salt),
                 Info = ByteString.CopyFrom(info),
             };
-            Log.Information("客户端公钥: {publicKey}, salt: {salt}, info: {info}", Convert.ToBase64String(PublicKeyBytes), Convert.ToBase64String(salt), Convert.ToBase64String(info));
             var response = await RequestAsync<PHandshakeRequest, PHandshakeResponse>(PMsgId.Handshake, handshakeRequest);
             if (!response.IsSuccess)
                 return;
 
             // 3. 解密服务器响应
             var serverPublicKey = Convert.FromBase64String(response.Data.PublicKey);
-            Log.Information("服务器公钥: {serverPublicKey}", response.Data.PublicKey);
             var sharedSecret = DeriveSharedSecret(serverPublicKey);
-            Log.Information("共享密钥: {sharedSecret}", Convert.ToBase64String(sharedSecret));
 
             // 4. 派生安全密钥
             m_DerivedSecureKey = DeriveSecureKey(sharedSecret, salt, info, 32);
-            Log.Information("握手成功，密钥为: {sharedSecret}", Convert.ToBase64String(m_DerivedSecureKey));
         }
 
         private void OnResponse(PServerMsg serverMsg)
@@ -290,7 +285,6 @@ namespace Network
             if (m_DerivedSecureKey != null)
             {
                 (byte[] iv, byte[] ciphertext) = Encrypt(payload, m_DerivedSecureKey);
-                Log.Information("加密后的消息: {iv} {ciphertext}", Convert.ToBase64String(iv), Convert.ToBase64String(ciphertext));
                 header.Iv = ByteString.CopyFrom(iv);
                 payload = ciphertext;
             }
@@ -305,9 +299,7 @@ namespace Network
 
         private TResp UnpackServerMsg<TResp>(PServerMsg serverMsg) where TResp : class, IMessage
         {
-            Log.Information("收到服务器响应: iv {iv} payload {payload}", Convert.ToBase64String(serverMsg.Header.Iv.ToByteArray()), Convert.ToBase64String(serverMsg.Payload.ToByteArray()));
             byte[] payload = GetPlaintextPayload(serverMsg);
-            Log.Information("解密后的消息: {payload}", Convert.ToBase64String(payload));
             if (serverMsg.MsgType == PServerMsgType.Error)
             {
                 return PError.Parser.ParseFrom(payload) as TResp;
