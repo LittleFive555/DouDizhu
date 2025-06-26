@@ -99,18 +99,29 @@ namespace Network
                 return NetworkResult<TResp>.Error(null, "TCP连接未建立，无法发送消息");
             }
 
+            PClientMsg clientMsg;
             try
             {
-                PClientMsg clientMsg = PackClientMsg(msgId, request);
-                var tcs = new TaskCompletionSource<PServerMsg>();
-                m_PendingRequests.TryAdd(clientMsg.Header.UniqueId, tcs);
+                clientMsg = PackClientMsg(msgId, request);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "打包消息时发生错误");
+                return NetworkResult<TResp>.Error(null, ex.Message);
+            }
 
-                Send(new MessageDataToSend(msgId, clientMsg.ToByteArray(), request.ToString()));
+            var tcs = new TaskCompletionSource<PServerMsg>();
+            m_PendingRequests.TryAdd(clientMsg.Header.UniqueId, tcs);
 
-                // 设置超时
-                using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
-                timeoutCts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
-                var serverPacket = await tcs.Task;
+            SendMessage(new MessageDataToSend(msgId, clientMsg.ToByteArray(), request.ToString()));
+
+            // 设置超时
+            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
+            timeoutCts.Token.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+            var serverPacket = await tcs.Task;
+
+            try
+            {
                 if (serverPacket.MsgType == PServerMsgType.Error)
                 {
                     PError error = UnpackServerMsg<PError>(serverPacket);
@@ -126,11 +137,12 @@ namespace Network
                     Log.Information("收到服务器响应: [{requestType}]", msgId);
                 else
                     Log.Information("收到服务器响应: [{requestType}] {response}", msgId, response);
+
                 return NetworkResult<TResp>.Success(response);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "发送消息时发生错误");
+                Log.Error(ex, "解析服务器响应时发生错误");
                 return NetworkResult<TResp>.Error(null, ex.Message);
             }
         }
@@ -174,7 +186,7 @@ namespace Network
             }
         }
 
-        private void Send(MessageDataToSend messageDataToSend)
+        private void SendMessage(MessageDataToSend messageDataToSend)
         {
             if (m_MessageDataToSend.Count > 0)
             {
@@ -183,63 +195,70 @@ namespace Network
             else
             {
                 m_MessageDataToSend.Enqueue(messageDataToSend);
-                _ = CheckSendAsync();
+                _ = SendMessageFromQueueAsync();
             }
         }
 
-        private async Task CheckSendAsync()
+        private async Task SendMessageFromQueueAsync()
         {
             while (m_MessageDataToSend.Count > 0)
             {
-                if (m_IsConnected)
+                if (!m_IsConnected) // TODO: 等待连接成功后重试
                 {
-                    m_MessageDataToSend.TryDequeue(out var toSend);
-                    
+                    Log.Error("连接已断开");
+                    break;
+                }
+
+                if (m_MessageDataToSend.TryDequeue(out var toSend))
+                {
                     try
                     {
                         await m_MessageReadWriter.WriteTo(m_NetworkStream, toSend.MessageBytes);
-                        if (IsSensitiveMessage(toSend.MsgId))
-                            Log.Information("消息已发送: [{requestType}]", toSend.MsgId);
-                        else
-                            Log.Information("消息已发送: [{requestType}] {request}", toSend.MsgId, toSend.PayloadString);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(ex, "发送消息时发生错误");
+                        continue;
                     }
-                }
-                else
-                {
-                    // TODO: 等待连接成功后重试
+
+                    if (IsSensitiveMessage(toSend.MsgId))
+                        Log.Information("消息已发送: [{requestType}]", toSend.MsgId);
+                    else
+                        Log.Information("消息已发送: [{requestType}] {request}", toSend.MsgId, toSend.PayloadString);
                 }
             }
         }
 
         private async Task ReceiveLoopAsync()
         {
-            try
+            while (m_IsConnected)
             {
-                while (m_IsConnected)
+                byte[] responseBuffer;
+                try
                 {
-                    byte[] responseBuffer = await m_MessageReadWriter.ReadFrom(m_NetworkStream);
-                    if (responseBuffer == null || responseBuffer.Length == 0)
-                    {
-                        Log.Information("服务器正常断开");
-                        break;
-                    }
-
-                    PServerMsg serverMsg = PServerMsg.Parser.ParseFrom(responseBuffer);
-                    if (serverMsg.MsgType == PServerMsgType.Notification)
-                        OnNotified(serverMsg);
-                    else if (serverMsg.MsgType == PServerMsgType.Response)
-                        OnResponse(serverMsg);
-                    else if (serverMsg.MsgType == PServerMsgType.Error)
-                        OnResponse(serverMsg);
+                    responseBuffer = await m_MessageReadWriter.ReadFrom(m_NetworkStream);
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "接收消息时发生错误");
+                catch (Exception ex)
+                {
+                    m_IsConnected = false;
+                    Log.Error(ex, "接收消息时发生错误");
+                    break;
+                }
+
+                if (responseBuffer == null || responseBuffer.Length == 0)
+                {
+                    m_IsConnected = false;
+                    Log.Information("服务器正常断开");
+                    break;
+                }
+
+                PServerMsg serverMsg = PServerMsg.Parser.ParseFrom(responseBuffer);
+                if (serverMsg.MsgType == PServerMsgType.Notification)
+                    OnNotified(serverMsg);
+                else if (serverMsg.MsgType == PServerMsgType.Response)
+                    OnResponse(serverMsg);
+                else if (serverMsg.MsgType == PServerMsgType.Error)
+                    OnResponse(serverMsg);
             }
         }
 
