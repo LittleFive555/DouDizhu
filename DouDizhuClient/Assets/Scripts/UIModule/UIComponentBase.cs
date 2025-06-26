@@ -4,12 +4,12 @@ namespace UIModule
 {
     public abstract class UIComponentBase<TArgs> : UIComponentBase where TArgs : struct
     {
-        public virtual void OnShowBegin(TArgs? args)
+        public virtual void OnShowBegin(TArgs args)
         {
             base.OnShowBegin(args);
         }
 
-        public virtual void OnShowFinish(TArgs? args)
+        public virtual void OnShowFinish(TArgs args)
         {
             base.OnShowFinish(args);
         }
@@ -29,12 +29,12 @@ namespace UIModule
             m_IsInitialized = true;
         }
 
-        public virtual void OnShowBegin(object? args)
+        public virtual void OnShowBegin(object args)
         {
 
         }
 
-        public virtual void OnShowFinish(object? args)
+        public virtual void OnShowFinish(object args)
         {
 
         }

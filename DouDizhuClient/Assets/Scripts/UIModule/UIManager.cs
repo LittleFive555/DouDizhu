@@ -68,7 +68,7 @@ namespace UIModule
             ShowUIImpl(componentType, componentType.FullName, null);
         }
 
-        public void ShowUI(Type componentType, object? args)
+        public void ShowUI(Type componentType, object args)
         {
             ShowUIImpl(componentType, componentType.FullName, args);
         }
@@ -78,12 +78,12 @@ namespace UIModule
             ShowUIImpl(componentType, identifier, null);
         }
 
-        public void ShowUI(Type componentType, string identifier, object? args)
+        public void ShowUI(Type componentType, string identifier, object args)
         {
             ShowUIImpl(componentType, identifier, args);
         }
 
-        private void ShowUIImpl(Type componentType, string identifier, object? args)
+        private void ShowUIImpl(Type componentType, string identifier, object args)
         {
             var componentAttribute = componentType.GetCustomAttribute(typeof(UIComponentAttribute)) as UIComponentAttribute;
             if (componentAttribute == null)
