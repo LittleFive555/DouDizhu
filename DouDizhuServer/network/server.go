@@ -104,58 +104,21 @@ func (s *GameServer) handleConnection(conn net.Conn) {
 
 // HandleMessage 实现Handler接口
 func (s *GameServer) handleMessage(msg *message.Message) {
-	// TODO 这里产生的error，需要返回给客户端
+	sessionId := msg.SessionId
 	clientMsg, err := serialize.Deserialize(msg.Data)
-	if err != nil {
+	if err != nil { // 这里反序列化只能够丢弃处理，因为没法给客户端返回正确的消息头，或者可以用通知？
 		logger.ErrorWith("解析消息失败", "error", err)
 		return
 	}
 
-	session, err := s.sessionMgr.GetSession(msg.SessionId)
-	if err != nil {
+	session, err := s.sessionMgr.GetSession(sessionId)
+	if err != nil { // 这里获取不到session也无法处理，因为无法发送消息
 		logger.ErrorWith("获取会话失败", "error", err)
 		return
 	}
 
-	// 消息体解密并反序列化
-	enableEncryption := session.IsSecureKeyValid()
-	msgHeader := clientMsg.GetHeader()
-	msgId := msgHeader.GetMsgId()
-	var reqPayloadBytes []byte
-	if enableEncryption {
-		reqPayloadBytes, err = session.DecryptPayload(clientMsg.GetPayload(), msgHeader.Iv)
-		if err != nil {
-			logger.ErrorWith("解密消息失败", "error", err)
-			return
-		}
-	} else {
-		reqPayloadBytes = clientMsg.GetPayload()
-	}
-	reqPayload, err := serialize.DeserializePayload(msgId, reqPayloadBytes)
-	if err != nil {
-		logger.ErrorWith("反序列化消息失败", "error", err)
-		return
-	}
-
-	if isSensitiveMessage(msgId) {
-		logger.InfoWith("收到消息", "类型", msgId, "sessionId", msg.SessionId)
-	} else {
-		logger.InfoWith("收到消息", "类型", msgId, "sessionId", msg.SessionId, "payload", reqPayload)
-	}
-
-	// 处理消息
-	handler := s.dispatcher.GetHandler(msgId)
-	if handler == nil {
-		logger.ErrorWith("未找到消息处理器", "type", msgId)
-		return
-	}
-	context := &message.MessageContext{
-		SessionId: msg.SessionId,
-		PlayerId:  msgHeader.PlayerId,
-	}
-	result, err := handler(context, &reqPayload)
-
-	respMessage := createResponseMsg(msgHeader)
+	result, enableEncryption, err := s.handleRequest(session, clientMsg)
+	respMessage := createResponseMsg(clientMsg.GetHeader())
 	var respPayload proto.Message
 	var notifyPayload proto.Message
 
@@ -202,6 +165,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		logger.ErrorWith("发送消息失败", "error", err)
 		return
 	}
+	msgId := respMessage.Header.MsgId
 	if isSensitiveMessage(msgId) {
 		logger.InfoWith("发送消息成功", "msgId", msgId, "sessionId", msg.SessionId)
 	} else {
@@ -243,6 +207,48 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 			logger.InfoWith("发送通知结束", "msgId", msgId, "sessionId", msg.SessionId, "payload", notifyPayload)
 		}
 	}
+}
+
+func (s *GameServer) handleRequest(session *session.PlayerSession, clientMsg *protodef.PClientMsg) (result *message.HandleResult, enableEncryption bool, err error) {
+	sessionId := session.Id
+	// 消息体解密并反序列化
+	enableEncryption = session.IsSecureKeyValid()
+	msgHeader := clientMsg.GetHeader()
+	msgId := msgHeader.GetMsgId()
+	var reqPayloadBytes []byte
+	if enableEncryption {
+		reqPayloadBytes, err = session.DecryptPayload(clientMsg.GetPayload(), msgHeader.Iv)
+		if err != nil {
+			logger.ErrorWith("解密消息失败", "error", err)
+			return nil, enableEncryption, err
+		}
+	} else {
+		reqPayloadBytes = clientMsg.GetPayload()
+	}
+	reqPayload, err := serialize.DeserializePayload(msgId, reqPayloadBytes)
+	if err != nil {
+		logger.ErrorWith("反序列化消息失败", "error", err)
+		return nil, enableEncryption, err
+	}
+
+	if isSensitiveMessage(msgId) {
+		logger.InfoWith("收到消息", "类型", msgId, "sessionId", sessionId)
+	} else {
+		logger.InfoWith("收到消息", "类型", msgId, "sessionId", sessionId, "payload", reqPayload)
+	}
+
+	// 处理消息
+	handler := s.dispatcher.GetHandler(msgId)
+	if handler == nil {
+		logger.ErrorWith("未找到消息处理器", "type", msgId)
+		return nil, enableEncryption, errordef.NewGameplayError(errordef.CodeInvalidRequest)
+	}
+	context := &message.MessageContext{
+		SessionId: sessionId,
+		PlayerId:  msgHeader.PlayerId,
+	}
+	result, err = handler(context, &reqPayload)
+	return result, enableEncryption, err
 }
 
 func isSensitiveMessage(msgId protodef.PMsgId) bool {
