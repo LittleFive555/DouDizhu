@@ -50,6 +50,7 @@ namespace Network
         private ECDomainParameters domainParams;
         private byte[] m_DerivedSecureKey;
 
+        private readonly ConcurrentQueue<MessageDataToSend> m_MessageDataToSend = new();
         
         private const int SERVER_PORT = 8080;
 
@@ -103,12 +104,8 @@ namespace Network
                 PClientMsg clientMsg = PackClientMsg(msgId, request);
                 var tcs = new TaskCompletionSource<PServerMsg>();
                 m_PendingRequests.TryAdd(clientMsg.Header.UniqueId, tcs);
-                
-                await m_MessageReadWriter.WriteTo(m_NetworkStream, clientMsg.ToByteArray());
-                if (IsSensitiveMessage(msgId))
-                    Log.Information("消息已发送: [{requestType}]", msgId);
-                else
-                    Log.Information("消息已发送: [{requestType}] {request}", msgId, request);
+
+                Send(new MessageDataToSend(msgId, clientMsg.ToByteArray(), request.ToString()));
 
                 // 设置超时
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(REQUEST_TIMEOUT));
@@ -174,6 +171,47 @@ namespace Network
             {
                 Log.Error(ex, "TCP连接失败");
                 m_IsConnected = false;
+            }
+        }
+
+        private void Send(MessageDataToSend messageDataToSend)
+        {
+            if (m_MessageDataToSend.Count > 0)
+            {
+                m_MessageDataToSend.Enqueue(messageDataToSend);
+            }
+            else
+            {
+                m_MessageDataToSend.Enqueue(messageDataToSend);
+                _ = CheckSendAsync();
+            }
+        }
+
+        private async Task CheckSendAsync()
+        {
+            while (m_MessageDataToSend.Count > 0)
+            {
+                if (m_IsConnected)
+                {
+                    m_MessageDataToSend.TryDequeue(out var toSend);
+                    
+                    try
+                    {
+                        await m_MessageReadWriter.WriteTo(m_NetworkStream, toSend.MessageBytes);
+                        if (IsSensitiveMessage(toSend.MsgId))
+                            Log.Information("消息已发送: [{requestType}]", toSend.MsgId);
+                        else
+                            Log.Information("消息已发送: [{requestType}] {request}", toSend.MsgId, toSend.PayloadString);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "发送消息时发生错误");
+                    }
+                }
+                else
+                {
+                    // TODO: 等待连接成功后重试
+                }
             }
         }
 
@@ -428,6 +466,20 @@ namespace Network
             Array.Copy(output, 0, result, 0, len + finalLen);
             
             return result;
+        }
+
+        private struct MessageDataToSend
+        {
+            public PMsgId MsgId;
+            public byte[] MessageBytes;
+            public string PayloadString;
+
+            public MessageDataToSend(PMsgId msgId, byte[] messageBytes, string payloadString)
+            {
+                MsgId = msgId;
+                MessageBytes = messageBytes;
+                PayloadString = payloadString;
+            }
         }
     }
 }
