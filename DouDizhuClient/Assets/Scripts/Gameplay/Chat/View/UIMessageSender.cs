@@ -1,10 +1,9 @@
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using Network;
 using Network.Proto;
 using UIModule;
-using System.Threading.Tasks;
 using Serilog;
 
 namespace Gameplay.Chat.View
@@ -15,8 +14,6 @@ namespace Gameplay.Chat.View
         [SerializeField]
         private TMP_InputField messageInput;
         [SerializeField]
-        private Button sendButton;
-        [SerializeField]
         private TMP_InputField IDInput;
         [SerializeField]
         private TMP_InputField NameInput;
@@ -24,17 +21,9 @@ namespace Gameplay.Chat.View
         public static string ID;
         public static string Name;
 
-        void Start()
+        private void Start()
         {
-            // 设置按钮点击事件
-            sendButton.onClick.AddListener(SendMessage);
-
             NetworkManager.Instance.RegisterNotificationHandler<PChatMsgNotification>(PMsgId.ChatMsg, OnReceivedChatMsg);
-        }
-
-        void SendMessage()
-        {
-            SendMessageImpl(messageInput.text);
         }
 
         private async Task SendMessageImpl(string message)
@@ -55,6 +44,12 @@ namespace Gameplay.Chat.View
         private void OnReceivedChatMsg(PChatMsgNotification notification)
         {
             Log.Information("收到聊天消息 {playerName}: {content}", notification.From.Nickname, notification.Content);
+        }
+
+        [OnClick("Button")]
+        private async void SendMessage()
+        {
+            await SendMessageImpl(messageInput.text);
         }
     }
 }

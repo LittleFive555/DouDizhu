@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Gameplay.Player;
-using TMPro;
-using UIModule;
 using UnityEngine;
+using TMPro;
+using Gameplay.Player;
+using UIModule;
 
 namespace Gameplay.Login.View
 {
@@ -14,11 +14,6 @@ namespace Gameplay.Login.View
         [SerializeField]
         private TMP_InputField m_PasswordInput;
 
-        public void OnClickConfirm()
-        {
-            OnClickConfirmAsync();
-        }
-
         public async Task OnClickConfirmAsync()
         {
             string account = m_AccountInput.text;
@@ -26,6 +21,12 @@ namespace Gameplay.Login.View
             bool result = await PlayerManager.Instance.Register(account, password);
             if (result)
                 Hide();
+        }
+
+        [OnClick("Button")]
+        private async void OnClickConfirm()
+        {
+            await OnClickConfirmAsync();
         }
     }
 }

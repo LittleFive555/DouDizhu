@@ -966,19 +966,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5113328045219768435}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2567480561713919309}
-        m_TargetAssemblyTypeName: Gameplay.Login.View.UILogin, Assembly-CSharp
-        m_MethodName: OnClickLogin
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &4222118010891761026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,19 +1475,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2535977856385139832}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2567480561713919309}
-        m_TargetAssemblyTypeName: Gameplay.Login.View.UILogin, Assembly-CSharp
-        m_MethodName: OnClickRegister
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &6280507091027247720
 GameObject:
   m_ObjectHideFlags: 0

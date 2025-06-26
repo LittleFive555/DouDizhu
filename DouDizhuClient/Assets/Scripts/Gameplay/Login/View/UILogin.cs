@@ -1,8 +1,8 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using UIModule;
 using Gameplay.Player;
-using System.Threading.Tasks;
 using Gameplay.Chat.View;
 
 namespace Gameplay.Login.View
@@ -15,17 +15,7 @@ namespace Gameplay.Login.View
         [SerializeField]
         private TMP_InputField m_PasswordInput;
 
-        public void OnClickRegister()
-        {
-            UIManager.Instance.ShowUI<UIRegister>();
-        }
-
-        public void OnClickLogin()
-        {
-            OnClickLoginAsync();
-        }
-
-        public async Task OnClickLoginAsync()
+        private async Task OnClickLoginAsync()
         {
             string account = m_AccountInput.text;
             string password = m_PasswordInput.text;
@@ -35,6 +25,18 @@ namespace Gameplay.Login.View
                 Hide();
                 UIManager.Instance.ShowUI<UIMessageSender>();
             }
+        }
+
+        [OnClick("Panel/RegisterButton")]
+        private void OnClickRegister()
+        {
+            UIManager.Instance.ShowUI<UIRegister>();
+        }
+
+        [OnClick("Panel/LoginButton")]
+        private async void OnClickLogin()
+        {
+            await OnClickLoginAsync();
         }
     }
 }

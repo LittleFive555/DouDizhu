@@ -15,7 +15,7 @@ namespace UIModule
         }
     }
     
-    public abstract class UIComponentBase : MonoBehaviour
+    public abstract class UIComponentBase : UIWidget
     {
         private bool m_IsInitialized = false;
         public string Identifier { get; private set; }
