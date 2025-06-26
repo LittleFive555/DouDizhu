@@ -10,17 +10,8 @@ using Network.Tcp;
 using Network.Proto;
 using Serilog;
 using Gameplay.Player;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Crypto.Generators;
-using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Crypto.Agreement;
-using Org.BouncyCastle.Crypto.Digests;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Paddings;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Math;
+using Network.Encryption;
 
 namespace Network
 {
@@ -44,11 +35,7 @@ namespace Network
         public bool IsConnected => m_IsConnected;
 
         private string m_SessionId;
-        
-        public byte[] PublicKeyBytes { get; private set; }
-        private ECPrivateKeyParameters privateKey;
-        private ECDomainParameters domainParams;
-        private byte[] m_DerivedSecureKey;
+        private Encryptor m_Encryptor;
 
         private readonly ConcurrentQueue<MessageDataToSend> m_MessageDataToSend = new();
         
@@ -63,6 +50,7 @@ namespace Network
         public NetworkManager()
         {
             m_MessageReadWriter = new LengthPrefixReadWriter();
+            m_Encryptor = new Encryptor();
         }
 
         public async Task ConnectAsync(string serverHost)
@@ -264,24 +252,14 @@ namespace Network
 
         public async Task Handshake()
         {
-            // 1. 生成客户端临时密钥对
-            var ecParams = SecNamedCurves.GetByName("secp256r1");
-            domainParams = new ECDomainParameters(
-                ecParams.Curve, ecParams.G, ecParams.N, ecParams.H);
-            
-            var keyPair = GenerateKeyPair(domainParams);
-            privateKey = (ECPrivateKeyParameters)keyPair.Private;
-            var publicKey = (ECPublicKeyParameters)keyPair.Public;
-            PublicKeyBytes = publicKey.Q.GetEncoded(false);
-
+            var publicKeyBytes = m_Encryptor.GeneratePublicKey();
             byte[] salt = new byte[16];
             new SecureRandom().NextBytes(salt);
             byte[] info = Encoding.UTF8.GetBytes("global encryption key");
 
-            // 2. 发送握手请求
             var handshakeRequest = new PHandshakeRequest()
             {
-                PublicKey = Convert.ToBase64String(PublicKeyBytes),
+                PublicKey = Convert.ToBase64String(publicKeyBytes),
                 Salt = ByteString.CopyFrom(salt),
                 Info = ByteString.CopyFrom(info),
             };
@@ -289,12 +267,10 @@ namespace Network
             if (!response.IsSuccess)
                 return;
 
-            // 3. 解密服务器响应
             var serverPublicKey = Convert.FromBase64String(response.Data.PublicKey);
-            var sharedSecret = DeriveSharedSecret(serverPublicKey);
-
-            // 4. 派生安全密钥
-            m_DerivedSecureKey = DeriveSecureKey(sharedSecret, salt, info, 32);
+            m_Encryptor.DeriveSecureKey(serverPublicKey, salt, info);
+            // TODO 是不是可以验证一下加密器是否正确？
+            Log.Information("握手成功");
         }
 
         private void OnResponse(PServerMsg serverMsg)
@@ -339,9 +315,9 @@ namespace Network
 
             byte[] payload = request.ToByteArray();
             // 加密
-            if (m_DerivedSecureKey != null)
+            if (m_Encryptor.IsGenerated)
             {
-                (byte[] iv, byte[] ciphertext) = Encrypt(payload, m_DerivedSecureKey);
+                (byte[] iv, byte[] ciphertext) = m_Encryptor.Encrypt(payload);
                 header.Iv = ByteString.CopyFrom(iv);
                 payload = ciphertext;
             }
@@ -391,100 +367,15 @@ namespace Network
 
         private static long GenerateRequestId() => DateTimeOffset.UtcNow.Ticks;
 
-        private static AsymmetricCipherKeyPair GenerateKeyPair(ECDomainParameters domainParams)
-        {
-            var generator = new ECKeyPairGenerator();
-            var keyGenParams = new ECKeyGenerationParameters(domainParams, new SecureRandom());
-            generator.Init(keyGenParams);
-            return generator.GenerateKeyPair();
-        }
-
-        private byte[] DeriveSharedSecret(byte[] otherPartyPublicKeyBytes)
-        {
-            // 导入对方公钥
-            var curve = domainParams.Curve;
-            var otherPartyPoint = curve.DecodePoint(otherPartyPublicKeyBytes);
-            var otherPartyPublicKey = new ECPublicKeyParameters(otherPartyPoint, domainParams);
-            
-            // 计算共享密钥
-            var agreement = new ECDHBasicAgreement();
-            agreement.Init(privateKey);
-            var sharedSecret = agreement.CalculateAgreement(otherPartyPublicKey);
-            
-            return ToFixedLengthBytes(sharedSecret, 32); // 32 字节对齐
-        }
-        
-        byte[] ToFixedLengthBytes(BigInteger value, int length)
-        {
-            byte[] bytes = value.ToByteArrayUnsigned();
-            if (bytes.Length == length) return bytes;
-            
-            byte[] result = new byte[length];
-            Buffer.BlockCopy(
-                src: bytes,
-                srcOffset: Math.Max(0, bytes.Length - length),
-                dst: result,
-                dstOffset: Math.Max(0, length - bytes.Length),
-                count: Math.Min(bytes.Length, length)
-            );
-            return result;
-        }
-
-        private byte[] DeriveSecureKey(byte[] sharedSecret, byte[] salt, byte[] info, int outputLength)
-        {
-            HkdfParameters parameters = new HkdfParameters(sharedSecret, salt, info);
-            HkdfBytesGenerator hkdf = new HkdfBytesGenerator(new Sha256Digest());
-            hkdf.Init(parameters);
-            byte[] output = new byte[outputLength];
-            hkdf.GenerateBytes(output, 0, outputLength);
-            return output;
-        }
-
         private byte[] GetPlaintextPayload(PServerMsg serverMsg)
         {
             if (serverMsg.Header.Iv != null && serverMsg.Header.Iv.Length > 0)
             {
                 byte[] iv = serverMsg.Header.Iv.ToByteArray();
                 byte[] ciphertext = serverMsg.Payload.ToByteArray();
-                return Decrypt(ciphertext, m_DerivedSecureKey, iv);
+                return m_Encryptor.Decrypt(ciphertext, iv);
             }
             return serverMsg.Payload.ToByteArray();
-        }
-
-        private (byte[] iv, byte[] ciphertext) Encrypt(byte[] plaintext, byte[] key)
-        {
-            // 生成随机IV(块大小为16字节)
-            byte[] iv = new byte[16];
-            new SecureRandom().NextBytes(iv);
-
-            // 初始化加密引擎 CBC模式
-            AesEngine engine = new AesEngine();  // 不建议存储引擎实例
-            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(engine), new Pkcs7Padding());
-            cipher.Init(true, new ParametersWithIV(new KeyParameter(key), iv));
-
-            // 执行加密
-            byte[] output = new byte[cipher.GetOutputSize(plaintext.Length)];
-            int len = cipher.ProcessBytes(plaintext, 0, plaintext.Length, output, 0);
-            cipher.DoFinal(output, len);
-
-            return (iv, output);
-        }
-
-        private byte[] Decrypt(byte[] ciphertext, byte[] key, byte[] iv)
-        {
-            AesEngine engine = new AesEngine();
-            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CbcBlockCipher(engine), new Pkcs7Padding());
-            cipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
-
-            byte[] output = new byte[cipher.GetOutputSize(ciphertext.Length)];
-            int len = cipher.ProcessBytes(ciphertext, 0, ciphertext.Length, output, 0);
-            int finalLen = cipher.DoFinal(output, len);
-            
-            // 创建正确大小的数组，只包含实际的明文数据（去除填充）
-            byte[] result = new byte[len + finalLen];
-            Array.Copy(output, 0, result, 0, len + finalLen);
-            
-            return result;
         }
 
         private struct MessageDataToSend
