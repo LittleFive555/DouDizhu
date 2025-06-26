@@ -8,9 +8,9 @@ namespace Gameplay
         [SerializeField]
         private string m_ServerHost;
 
-        void Awake()
+        private async void Awake()
         {
-            GameManager.Instance.Launch(m_ServerHost);
+            await GameManager.Instance.Launch(m_ServerHost);
         }
     }
 }
