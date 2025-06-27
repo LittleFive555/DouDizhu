@@ -24,18 +24,32 @@ namespace Network.Proto {
     static PlayerReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxQbGF5ZXIucHJvdG8SCERvdURpemh1Ii0KB1BQbGF5ZXISEAoIcGxheWVy",
-            "SWQYASABKAkSEAoIbmlja25hbWUYAiABKAlCIloQbmV0d29yay9wcm90b2Rl",
-            "ZqoCDU5ldHdvcmsuUHJvdG9iBnByb3RvMw=="));
+            "CgxQbGF5ZXIucHJvdG8SCERvdURpemh1Il4KB1BQbGF5ZXISCgoCaWQYASAB",
+            "KAkSEAoIbmlja25hbWUYAiABKAkSDgoGcm9vbUlkGAMgASgNEiUKBXN0YXRl",
+            "GAQgASgOMhYuRG91RGl6aHUuUFBsYXllclN0YXRlKnUKDFBQbGF5ZXJTdGF0",
+            "ZRIWChJQUExBWUVSX1NUQVRFX05PTkUQABIXChNQUExBWUVSX1NUQVRFX0xP",
+            "QkJZEAESGQoVUFBMQVlFUl9TVEFURV9JTl9ST09NEAISGQoVUFBMQVlFUl9T",
+            "VEFURV9JTl9HQU1FEANCIloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsu",
+            "UHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PPlayer), global::Network.Proto.PPlayer.Parser, new[]{ "PlayerId", "Nickname" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PPlayerState), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PPlayer), global::Network.Proto.PPlayer.Parser, new[]{ "Id", "Nickname", "RoomId", "State" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
+  #region Enums
+  public enum PPlayerState {
+    [pbr::OriginalName("PPLAYER_STATE_NONE")] None = 0,
+    [pbr::OriginalName("PPLAYER_STATE_LOBBY")] Lobby = 1,
+    [pbr::OriginalName("PPLAYER_STATE_IN_ROOM")] InRoom = 2,
+    [pbr::OriginalName("PPLAYER_STATE_IN_GAME")] InGame = 3,
+  }
+
+  #endregion
+
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PPlayer : pb::IMessage<PPlayer>
@@ -72,8 +86,10 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PPlayer(PPlayer other) : this() {
-      playerId_ = other.playerId_;
+      id_ = other.id_;
       nickname_ = other.nickname_;
+      roomId_ = other.roomId_;
+      state_ = other.state_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -83,15 +99,15 @@ namespace Network.Proto {
       return new PPlayer(this);
     }
 
-    /// <summary>Field number for the "playerId" field.</summary>
-    public const int PlayerIdFieldNumber = 1;
-    private string playerId_ = "";
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string PlayerId {
-      get { return playerId_; }
+    public string Id {
+      get { return id_; }
       set {
-        playerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -104,6 +120,30 @@ namespace Network.Proto {
       get { return nickname_; }
       set {
         nickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "roomId" field.</summary>
+    public const int RoomIdFieldNumber = 3;
+    private uint roomId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RoomId {
+      get { return roomId_; }
+      set {
+        roomId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "state" field.</summary>
+    public const int StateFieldNumber = 4;
+    private global::Network.Proto.PPlayerState state_ = global::Network.Proto.PPlayerState.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PPlayerState State {
+      get { return state_; }
+      set {
+        state_ = value;
       }
     }
 
@@ -122,8 +162,10 @@ namespace Network.Proto {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (PlayerId != other.PlayerId) return false;
+      if (Id != other.Id) return false;
       if (Nickname != other.Nickname) return false;
+      if (RoomId != other.RoomId) return false;
+      if (State != other.State) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -131,8 +173,10 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Nickname.Length != 0) hash ^= Nickname.GetHashCode();
+      if (RoomId != 0) hash ^= RoomId.GetHashCode();
+      if (State != global::Network.Proto.PPlayerState.None) hash ^= State.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -151,13 +195,21 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (PlayerId.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(PlayerId);
+        output.WriteString(Id);
       }
       if (Nickname.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(Nickname);
+      }
+      if (RoomId != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(RoomId);
+      }
+      if (State != global::Network.Proto.PPlayerState.None) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) State);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -169,13 +221,21 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (PlayerId.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(PlayerId);
+        output.WriteString(Id);
       }
       if (Nickname.Length != 0) {
         output.WriteRawTag(18);
         output.WriteString(Nickname);
+      }
+      if (RoomId != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(RoomId);
+      }
+      if (State != global::Network.Proto.PPlayerState.None) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) State);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -187,11 +247,17 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (PlayerId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
       if (Nickname.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Nickname);
+      }
+      if (RoomId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RoomId);
+      }
+      if (State != global::Network.Proto.PPlayerState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) State);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -205,11 +271,17 @@ namespace Network.Proto {
       if (other == null) {
         return;
       }
-      if (other.PlayerId.Length != 0) {
-        PlayerId = other.PlayerId;
+      if (other.Id.Length != 0) {
+        Id = other.Id;
       }
       if (other.Nickname.Length != 0) {
         Nickname = other.Nickname;
+      }
+      if (other.RoomId != 0) {
+        RoomId = other.RoomId;
+      }
+      if (other.State != global::Network.Proto.PPlayerState.None) {
+        State = other.State;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -231,11 +303,19 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            PlayerId = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {
             Nickname = input.ReadString();
+            break;
+          }
+          case 24: {
+            RoomId = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            State = (global::Network.Proto.PPlayerState) input.ReadEnum();
             break;
           }
         }
@@ -258,11 +338,19 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            PlayerId = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {
             Nickname = input.ReadString();
+            break;
+          }
+          case 24: {
+            RoomId = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            State = (global::Network.Proto.PPlayerState) input.ReadEnum();
             break;
           }
         }

@@ -61,7 +61,7 @@ func (m *PlayerManager) Register(accountStr string, password string) error {
 	return nil
 }
 
-func (m *PlayerManager) Login(accountStr string, password string) (*Player, error) {
+func (m *PlayerManager) Login(accountStr string, password string, sessionId string) (*Player, error) {
 	// 判断账号是否存在
 	account, err := database.GetAccount(accountStr)
 	if err != nil {
@@ -80,7 +80,7 @@ func (m *PlayerManager) Login(accountStr string, password string) (*Player, erro
 		return nil, errordef.NewGameplayError(errordef.CodePasswordWrong)
 	}
 
-	player := NewPlayer(account.PlayerId, "NewPlayer")
+	player := NewPlayer(account.PlayerId, "NewPlayer", sessionId)
 	m.players[account.PlayerId] = player
 	return player, nil
 }

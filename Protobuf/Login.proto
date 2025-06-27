@@ -4,6 +4,8 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
+import "Player.proto";
+
 message PRegisterRequest {
     string account = 1;
     string password = 2;
@@ -17,5 +19,5 @@ message PLoginRequest {
 }
 
 message PLoginResponse {
-    string playerId = 1;
+    PPlayer info = 1;
 }

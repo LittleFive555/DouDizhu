@@ -21,10 +21,64 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PPlayerState int32
+
+const (
+	PPlayerState_PPLAYER_STATE_NONE    PPlayerState = 0
+	PPlayerState_PPLAYER_STATE_LOBBY   PPlayerState = 1
+	PPlayerState_PPLAYER_STATE_IN_ROOM PPlayerState = 2
+	PPlayerState_PPLAYER_STATE_IN_GAME PPlayerState = 3
+)
+
+// Enum value maps for PPlayerState.
+var (
+	PPlayerState_name = map[int32]string{
+		0: "PPLAYER_STATE_NONE",
+		1: "PPLAYER_STATE_LOBBY",
+		2: "PPLAYER_STATE_IN_ROOM",
+		3: "PPLAYER_STATE_IN_GAME",
+	}
+	PPlayerState_value = map[string]int32{
+		"PPLAYER_STATE_NONE":    0,
+		"PPLAYER_STATE_LOBBY":   1,
+		"PPLAYER_STATE_IN_ROOM": 2,
+		"PPLAYER_STATE_IN_GAME": 3,
+	}
+)
+
+func (x PPlayerState) Enum() *PPlayerState {
+	p := new(PPlayerState)
+	*p = x
+	return p
+}
+
+func (x PPlayerState) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PPlayerState) Descriptor() protoreflect.EnumDescriptor {
+	return file_Player_proto_enumTypes[0].Descriptor()
+}
+
+func (PPlayerState) Type() protoreflect.EnumType {
+	return &file_Player_proto_enumTypes[0]
+}
+
+func (x PPlayerState) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PPlayerState.Descriptor instead.
+func (PPlayerState) EnumDescriptor() ([]byte, []int) {
+	return file_Player_proto_rawDescGZIP(), []int{0}
+}
+
 type PPlayer struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      string                 `protobuf:"bytes,1,opt,name=playerId,proto3" json:"playerId,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
+	RoomId        uint32                 `protobuf:"varint,3,opt,name=roomId,proto3" json:"roomId,omitempty"`
+	State         PPlayerState           `protobuf:"varint,4,opt,name=state,proto3,enum=DouDizhu.PPlayerState" json:"state,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -59,9 +113,9 @@ func (*PPlayer) Descriptor() ([]byte, []int) {
 	return file_Player_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PPlayer) GetPlayerId() string {
+func (x *PPlayer) GetId() string {
 	if x != nil {
-		return x.PlayerId
+		return x.Id
 	}
 	return ""
 }
@@ -73,14 +127,35 @@ func (x *PPlayer) GetNickname() string {
 	return ""
 }
 
+func (x *PPlayer) GetRoomId() uint32 {
+	if x != nil {
+		return x.RoomId
+	}
+	return 0
+}
+
+func (x *PPlayer) GetState() PPlayerState {
+	if x != nil {
+		return x.State
+	}
+	return PPlayerState_PPLAYER_STATE_NONE
+}
+
 var File_Player_proto protoreflect.FileDescriptor
 
 const file_Player_proto_rawDesc = "" +
 	"\n" +
-	"\fPlayer.proto\x12\bDouDizhu\"A\n" +
-	"\aPPlayer\x12\x1a\n" +
-	"\bplayerId\x18\x01 \x01(\tR\bplayerId\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnicknameB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\fPlayer.proto\x12\bDouDizhu\"{\n" +
+	"\aPPlayer\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\bnickname\x18\x02 \x01(\tR\bnickname\x12\x16\n" +
+	"\x06roomId\x18\x03 \x01(\rR\x06roomId\x12,\n" +
+	"\x05state\x18\x04 \x01(\x0e2\x16.DouDizhu.PPlayerStateR\x05state*u\n" +
+	"\fPPlayerState\x12\x16\n" +
+	"\x12PPLAYER_STATE_NONE\x10\x00\x12\x17\n" +
+	"\x13PPLAYER_STATE_LOBBY\x10\x01\x12\x19\n" +
+	"\x15PPLAYER_STATE_IN_ROOM\x10\x02\x12\x19\n" +
+	"\x15PPLAYER_STATE_IN_GAME\x10\x03B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Player_proto_rawDescOnce sync.Once
@@ -94,16 +169,19 @@ func file_Player_proto_rawDescGZIP() []byte {
 	return file_Player_proto_rawDescData
 }
 
+var file_Player_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_Player_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_Player_proto_goTypes = []any{
-	(*PPlayer)(nil), // 0: DouDizhu.PPlayer
+	(PPlayerState)(0), // 0: DouDizhu.PPlayerState
+	(*PPlayer)(nil),   // 1: DouDizhu.PPlayer
 }
 var file_Player_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: DouDizhu.PPlayer.state:type_name -> DouDizhu.PPlayerState
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_Player_proto_init() }
@@ -116,13 +194,14 @@ func file_Player_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_Player_proto_rawDesc), len(file_Player_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_Player_proto_goTypes,
 		DependencyIndexes: file_Player_proto_depIdxs,
+		EnumInfos:         file_Player_proto_enumTypes,
 		MessageInfos:      file_Player_proto_msgTypes,
 	}.Build()
 	File_Player_proto = out.File

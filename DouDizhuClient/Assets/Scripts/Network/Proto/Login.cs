@@ -24,17 +24,18 @@ namespace Network.Proto {
     static LoginReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgtMb2dpbi5wcm90bxIIRG91RGl6aHUiNQoQUFJlZ2lzdGVyUmVxdWVzdBIP",
-            "CgdhY2NvdW50GAEgASgJEhAKCHBhc3N3b3JkGAIgASgJIjIKDVBMb2dpblJl",
-            "cXVlc3QSDwoHYWNjb3VudBgBIAEoCRIQCghwYXNzd29yZBgCIAEoCSIiCg5Q",
-            "TG9naW5SZXNwb25zZRIQCghwbGF5ZXJJZBgBIAEoCUIiWhBuZXR3b3JrL3By",
-            "b3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
+            "CgtMb2dpbi5wcm90bxIIRG91RGl6aHUaDFBsYXllci5wcm90byI1ChBQUmVn",
+            "aXN0ZXJSZXF1ZXN0Eg8KB2FjY291bnQYASABKAkSEAoIcGFzc3dvcmQYAiAB",
+            "KAkiMgoNUExvZ2luUmVxdWVzdBIPCgdhY2NvdW50GAEgASgJEhAKCHBhc3N3",
+            "b3JkGAIgASgJIjEKDlBMb2dpblJlc3BvbnNlEh8KBGluZm8YASABKAsyES5E",
+            "b3VEaXpodS5QUGxheWVyQiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1OZXR3b3Jr",
+            "LlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { global::Network.Proto.PlayerReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRegisterRequest), global::Network.Proto.PRegisterRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginRequest), global::Network.Proto.PLoginRequest.Parser, new[]{ "Account", "Password" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginResponse), global::Network.Proto.PLoginResponse.Parser, new[]{ "PlayerId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLoginResponse), global::Network.Proto.PLoginResponse.Parser, new[]{ "Info" }, null, null, null, null)
           }));
     }
     #endregion
@@ -546,7 +547,7 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PLoginResponse(PLoginResponse other) : this() {
-      playerId_ = other.playerId_;
+      info_ = other.info_ != null ? other.info_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -556,15 +557,15 @@ namespace Network.Proto {
       return new PLoginResponse(this);
     }
 
-    /// <summary>Field number for the "playerId" field.</summary>
-    public const int PlayerIdFieldNumber = 1;
-    private string playerId_ = "";
+    /// <summary>Field number for the "info" field.</summary>
+    public const int InfoFieldNumber = 1;
+    private global::Network.Proto.PPlayer info_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string PlayerId {
-      get { return playerId_; }
+    public global::Network.Proto.PPlayer Info {
+      get { return info_; }
       set {
-        playerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        info_ = value;
       }
     }
 
@@ -583,7 +584,7 @@ namespace Network.Proto {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (PlayerId != other.PlayerId) return false;
+      if (!object.Equals(Info, other.Info)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -591,7 +592,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (PlayerId.Length != 0) hash ^= PlayerId.GetHashCode();
+      if (info_ != null) hash ^= Info.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -610,9 +611,9 @@ namespace Network.Proto {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (PlayerId.Length != 0) {
+      if (info_ != null) {
         output.WriteRawTag(10);
-        output.WriteString(PlayerId);
+        output.WriteMessage(Info);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -624,9 +625,9 @@ namespace Network.Proto {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (PlayerId.Length != 0) {
+      if (info_ != null) {
         output.WriteRawTag(10);
-        output.WriteString(PlayerId);
+        output.WriteMessage(Info);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -638,8 +639,8 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (PlayerId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerId);
+      if (info_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Info);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -653,8 +654,11 @@ namespace Network.Proto {
       if (other == null) {
         return;
       }
-      if (other.PlayerId.Length != 0) {
-        PlayerId = other.PlayerId;
+      if (other.info_ != null) {
+        if (info_ == null) {
+          Info = new global::Network.Proto.PPlayer();
+        }
+        Info.MergeFrom(other.Info);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -676,7 +680,10 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            PlayerId = input.ReadString();
+            if (info_ == null) {
+              Info = new global::Network.Proto.PPlayer();
+            }
+            input.ReadMessage(Info);
             break;
           }
         }
@@ -699,7 +706,10 @@ namespace Network.Proto {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            PlayerId = input.ReadString();
+            if (info_ == null) {
+              Info = new global::Network.Proto.PPlayer();
+            }
+            input.ReadMessage(Info);
             break;
           }
         }

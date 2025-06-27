@@ -1,0 +1,66 @@
+syntax = "proto3";
+package DouDizhu;
+
+option go_package = "network/protodef";
+option csharp_namespace = "Network.Proto";
+
+import "Player.proto";
+
+enum PRoomState {
+    PROOM_STATE_UNKNOWN = 0;
+    PROOM_STATE_WAITING = 1;
+    PROOM_STATE_PLAYING = 2;
+}
+
+message PRoom {
+    uint32 id = 1;
+    string name = 2;
+    PPlayer owner = 3;
+    repeated PPlayer players = 4;
+    uint32 maxPlayerCount = 5;
+    PRoomState state = 6;
+}
+
+message PCreateRoomRequest {
+    string roomName = 1;
+}
+
+message PCreateRoomResponse {
+    PRoom room = 1;
+}
+
+message PEnterRoomRequest {
+    uint32 roomId = 1;
+}
+
+message PEnterRoomResponse {
+    PRoom room = 1;
+}
+
+message PLeaveRoomRequest { // 空响应
+    
+}
+
+message PGetRoomListRequest {
+
+}
+
+message PGetRoomListResponse {
+    repeated PRoom rooms = 1;
+}
+
+message PSyncRoomInfoRequest {
+    uint32 roomId = 1;
+}
+
+message PSyncRoomInfoResponse {
+    PRoom room = 1;
+}
+
+message PRoomDisbandedNotification {
+    
+}
+
+message PRoomChangedNotification {
+    PRoom room = 1;
+}

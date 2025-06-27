@@ -8,15 +8,10 @@ using Serilog;
 
 namespace Gameplay.Chat.View
 {
-    [UIComponent(OpenLayer = EnumUILayer.View, ResPath = "Assets/Res/Gameplay/UI/Chat/UIChat.prefab")]
-    public class UIMessageSender : UIComponentBase
+    public class UIChatBox : UIWidget
     {
         [SerializeField]
         private TMP_InputField messageInput;
-        [SerializeField]
-        private TMP_InputField IDInput;
-        [SerializeField]
-        private TMP_InputField NameInput;
 
         public static string ID;
         public static string Name;
@@ -30,9 +25,6 @@ namespace Gameplay.Chat.View
         {
             if (string.IsNullOrEmpty(message))
                 return;
-            
-            ID = IDInput.text;
-            Name = NameInput.text;
 
             var response = await NetworkManager.Instance.RequestAsync(PMsgId.ChatMsg, new PChatMsgRequest() { Content = message });
             if (response.IsSuccess)
@@ -46,7 +38,7 @@ namespace Gameplay.Chat.View
             Log.Information("收到聊天消息 {playerName}: {content}", notification.From.Nickname, notification.Content);
         }
 
-        [OnClick("Button")]
+        [OnClick("BtnSend")]
         private async void SendMessage()
         {
             await SendMessageImpl(messageInput.text);

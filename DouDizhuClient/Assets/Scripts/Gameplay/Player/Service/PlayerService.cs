@@ -1,26 +1,13 @@
 using System.Threading.Tasks;
+using Gameplay.Player.Model;
 using Network.Proto;
 
-namespace Gameplay.Player
+namespace Gameplay.Player.Service
 {
-    public class PlayerManager
+    public class PlayerService
     {
-        public bool IsLogin => !string.IsNullOrEmpty(ID);
-        public string ID { get; private set; }
-        public string Name { get; private set; }
 
-        private static PlayerManager s_Instance;
-        public static PlayerManager Instance
-        {
-            get
-            {
-                if (s_Instance == null)
-                    s_Instance = new PlayerManager();
-                return s_Instance;
-            }
-        }
-
-        public async Task<bool> Register(string account, string password)
+        public static async Task<bool> Register(string account, string password)
         {
             var response = await Network.NetworkManager.Instance.RequestAsync(PMsgId.Register, new PRegisterRequest()
             {
@@ -32,7 +19,7 @@ namespace Gameplay.Player
             return true;
         }
         
-        public async Task<bool> Login(string account, string password)
+        public static async Task<bool> Login(string account, string password)
         {
             var response = await Network.NetworkManager.Instance.RequestAsync<PLoginRequest, PLoginResponse>(PMsgId.Login, new PLoginRequest()
             {
@@ -42,7 +29,7 @@ namespace Gameplay.Player
             if (!response.IsSuccess)
                 return false;
 
-            ID = response.Data.PlayerId;
+            PlayerManager.Instance.SetPlayerInfo(response.Data.Info);
             return true;
         }
     }

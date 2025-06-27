@@ -4,7 +4,16 @@ package DouDizhu;
 option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
+enum PPlayerState {
+    PPLAYER_STATE_NONE = 0;
+    PPLAYER_STATE_LOBBY = 1;
+    PPLAYER_STATE_IN_ROOM = 2;
+    PPLAYER_STATE_IN_GAME = 3;
+}
+
 message PPlayer {
-    string playerId = 1;
+    string id = 1;
     string nickname = 2;
+    uint32 roomId = 3;
+    PPlayerState state = 4;
 }

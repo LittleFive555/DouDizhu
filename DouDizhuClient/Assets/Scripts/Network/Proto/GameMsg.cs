@@ -35,10 +35,14 @@ namespace Network.Proto {
             "AQoOUFNlcnZlck1zZ1R5cGUSHAoYUFNFUlZFUl9NU0dfVFlQRV9VTktOT1dO",
             "EAASHQoZUFNFUlZFUl9NU0dfVFlQRV9SRVNQT05TRRABEiEKHVBTRVJWRVJf",
             "TVNHX1RZUEVfTk9USUZJQ0FUSU9OEAISGgoWUFNFUlZFUl9NU0dfVFlQRV9F",
-            "UlJPUhADKnMKBlBNc2dJZBITCg9QTVNHX0lEX1VOS05PV04QABIRCg1QTVNH",
-            "X0lEX0xPR0lOEAESFAoQUE1TR19JRF9SRUdJU1RFUhACEhUKEVBNU0dfSURf",
-            "SEFORFNIQUtFEAMSFAoQUE1TR19JRF9DSEFUX01TRxAEQiJaEG5ldHdvcmsv",
-            "cHJvdG9kZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90bzM="));
+            "UlJPUhADKo0CCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAASEQoNUE1T",
+            "R19JRF9MT0dJThABEhQKEFBNU0dfSURfUkVHSVNURVIQAhIVChFQTVNHX0lE",
+            "X0hBTkRTSEFLRRADEhcKE1BNU0dfSURfQ1JFQVRFX1JPT00QChIZChVQTVNH",
+            "X0lEX0dFVF9ST09NX0xJU1QQCxIWChJQTVNHX0lEX0VOVEVSX1JPT00QDBIW",
+            "ChJQTVNHX0lEX0xFQVZFX1JPT00QDRIYChRQTVNHX0lEX1JPT01fQ0hBTkdF",
+            "RBAOEhoKFlBNU0dfSURfUk9PTV9ESVNCQU5ERUQQDxIUChBQTVNHX0lEX0NI",
+            "QVRfTVNHEB5CIloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJvdG9i",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PServerMsgType), typeof(global::Network.Proto.PMsgId), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -64,7 +68,19 @@ namespace Network.Proto {
     [pbr::OriginalName("PMSG_ID_LOGIN")] Login = 1,
     [pbr::OriginalName("PMSG_ID_REGISTER")] Register = 2,
     [pbr::OriginalName("PMSG_ID_HANDSHAKE")] Handshake = 3,
-    [pbr::OriginalName("PMSG_ID_CHAT_MSG")] ChatMsg = 4,
+    /// <summary>
+    /// 房间相关
+    /// </summary>
+    [pbr::OriginalName("PMSG_ID_CREATE_ROOM")] CreateRoom = 10,
+    [pbr::OriginalName("PMSG_ID_GET_ROOM_LIST")] GetRoomList = 11,
+    [pbr::OriginalName("PMSG_ID_ENTER_ROOM")] EnterRoom = 12,
+    [pbr::OriginalName("PMSG_ID_LEAVE_ROOM")] LeaveRoom = 13,
+    [pbr::OriginalName("PMSG_ID_ROOM_CHANGED")] RoomChanged = 14,
+    [pbr::OriginalName("PMSG_ID_ROOM_DISBANDED")] RoomDisbanded = 15,
+    /// <summary>
+    /// 聊天相关
+    /// </summary>
+    [pbr::OriginalName("PMSG_ID_CHAT_MSG")] ChatMsg = 30,
   }
 
   #endregion

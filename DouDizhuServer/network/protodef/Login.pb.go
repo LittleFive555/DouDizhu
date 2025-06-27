@@ -127,7 +127,7 @@ func (x *PLoginRequest) GetPassword() string {
 
 type PLoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PlayerId      string                 `protobuf:"bytes,1,opt,name=playerId,proto3" json:"playerId,omitempty"`
+	Info          *PPlayer               `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -162,26 +162,26 @@ func (*PLoginResponse) Descriptor() ([]byte, []int) {
 	return file_Login_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *PLoginResponse) GetPlayerId() string {
+func (x *PLoginResponse) GetInfo() *PPlayer {
 	if x != nil {
-		return x.PlayerId
+		return x.Info
 	}
-	return ""
+	return nil
 }
 
 var File_Login_proto protoreflect.FileDescriptor
 
 const file_Login_proto_rawDesc = "" +
 	"\n" +
-	"\vLogin.proto\x12\bDouDizhu\"H\n" +
+	"\vLogin.proto\x12\bDouDizhu\x1a\fPlayer.proto\"H\n" +
 	"\x10PRegisterRequest\x12\x18\n" +
 	"\aaccount\x18\x01 \x01(\tR\aaccount\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"E\n" +
 	"\rPLoginRequest\x12\x18\n" +
 	"\aaccount\x18\x01 \x01(\tR\aaccount\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\",\n" +
-	"\x0ePLoginResponse\x12\x1a\n" +
-	"\bplayerId\x18\x01 \x01(\tR\bplayerIdB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"7\n" +
+	"\x0ePLoginResponse\x12%\n" +
+	"\x04info\x18\x01 \x01(\v2\x11.DouDizhu.PPlayerR\x04infoB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Login_proto_rawDescOnce sync.Once
@@ -200,13 +200,15 @@ var file_Login_proto_goTypes = []any{
 	(*PRegisterRequest)(nil), // 0: DouDizhu.PRegisterRequest
 	(*PLoginRequest)(nil),    // 1: DouDizhu.PLoginRequest
 	(*PLoginResponse)(nil),   // 2: DouDizhu.PLoginResponse
+	(*PPlayer)(nil),          // 3: DouDizhu.PPlayer
 }
 var file_Login_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	3, // 0: DouDizhu.PLoginResponse.info:type_name -> DouDizhu.PPlayer
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_Login_proto_init() }
@@ -214,6 +216,7 @@ func file_Login_proto_init() {
 	if File_Login_proto != nil {
 		return
 	}
+	file_Player_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

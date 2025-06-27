@@ -2,11 +2,10 @@ package main
 
 import (
 	"DouDizhuServer/database"
-	"DouDizhuServer/gameplay/chat"
 	"DouDizhuServer/gameplay/player"
+	"DouDizhuServer/gameplay/room"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network"
-	"DouDizhuServer/network/protodef"
 
 	"github.com/joho/godotenv"
 )
@@ -26,12 +25,11 @@ func main() {
 	// 创建并启动TCP服务器
 	network.Server = network.NewGameServer()
 
-	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, network.HandleHandshake)
-	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, chat.HandleChatMessage)
-	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, player.HandleRegister)
-	network.Server.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, player.HandleLogin)
+	// 注册消息处理函数
+	network.Server.RegisterHandlers()
 
 	player.Manager = player.NewPlayerManager()
+	room.Manager = room.NewRoomManager()
 
 	if err := network.Server.Start(":8080"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)

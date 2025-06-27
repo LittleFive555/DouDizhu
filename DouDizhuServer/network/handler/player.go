@@ -1,9 +1,11 @@
-package player
+package handler
 
 import (
 	"DouDizhuServer/errordef"
+	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/network/translator"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -15,7 +17,7 @@ func HandleRegister(context *message.MessageContext, req *proto.Message) (*messa
 	}
 	account := reqMsg.GetAccount()
 	password := reqMsg.GetPassword()
-	err := Manager.Register(account, password)
+	err := player.Manager.Register(account, password)
 	if err != nil {
 		return nil, err
 	}
@@ -30,14 +32,14 @@ func HandleLogin(context *message.MessageContext, req *proto.Message) (*message.
 	account := reqMsg.GetAccount()
 	password := reqMsg.GetPassword()
 
-	player, err := Manager.Login(account, password)
+	player, err := player.Manager.Login(account, password, context.SessionId)
 	if err != nil {
 		return nil, err
 	}
 
 	result := &message.HandleResult{
 		Resp: &protodef.PLoginResponse{
-			PlayerId: player.PlayerId,
+			Info: translator.PlayerToProto(player),
 		},
 	}
 	return result, nil

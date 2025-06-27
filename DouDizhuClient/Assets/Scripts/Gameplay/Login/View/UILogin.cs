@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 using UIModule;
-using Gameplay.Player;
-using Gameplay.Chat.View;
+using Gameplay.Room.View;
+using Gameplay.Player.Service;
 
 namespace Gameplay.Login.View
 {
@@ -19,11 +19,11 @@ namespace Gameplay.Login.View
         {
             string account = m_AccountInput.text;
             string password = m_PasswordInput.text;
-            bool result = await PlayerManager.Instance.Login(account, password);
+            bool result = await PlayerService.Login(account, password);
             if (result)
             {
                 Hide();
-                UIManager.Instance.ShowUI<UIMessageSender>();
+                UIManager.Instance.ShowUI<UIRoomList>();
             }
         }
 

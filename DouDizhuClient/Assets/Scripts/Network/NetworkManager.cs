@@ -9,7 +9,7 @@ using System.Text;
 using Network.Tcp;
 using Network.Proto;
 using Serilog;
-using Gameplay.Player;
+using Gameplay.Player.Model;
 using Org.BouncyCastle.Security;
 using Network.Encryption;
 
@@ -310,7 +310,7 @@ namespace Network
             };
             if (m_SessionId != null)
                 header.SessionId = m_SessionId;
-            if (!string.IsNullOrEmpty(PlayerManager.Instance.ID))
+            if (PlayerManager.Instance.IsLogin)
                 header.PlayerId = PlayerManager.Instance.ID;
 
             byte[] payload = request.ToByteArray();

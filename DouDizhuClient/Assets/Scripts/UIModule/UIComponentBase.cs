@@ -6,12 +6,24 @@ namespace UIModule
     {
         public virtual void OnShowBegin(TArgs args)
         {
+
+        }
+
+        public sealed override void OnShowBegin(object args)
+        {
             base.OnShowBegin(args);
+            OnShowBegin((TArgs)args);
         }
 
         public virtual void OnShowFinish(TArgs args)
         {
+
+        }
+
+        public sealed override void OnShowFinish(object args)
+        {
             base.OnShowFinish(args);
+            OnShowFinish((TArgs)args);
         }
     }
     

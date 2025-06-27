@@ -2,7 +2,9 @@ package network
 
 import (
 	"DouDizhuServer/errordef"
+	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
+	"DouDizhuServer/network/handler"
 	"DouDizhuServer/network/message"
 	"DouDizhuServer/network/protodef"
 	"DouDizhuServer/network/serialize"
@@ -60,6 +62,17 @@ func (s *GameServer) Stop() error {
 		return s.listener.Close()
 	}
 	return nil
+}
+
+func (s *GameServer) RegisterHandlers() {
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, HandleHandshake)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, handler.HandleRegister)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, handler.HandleLogin)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CREATE_ROOM, handler.HandleCreateRoom)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_GET_ROOM_LIST, handler.HandleGetRoomList)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_ENTER_ROOM, handler.HandleEnterRoom)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LEAVE_ROOM, handler.HandleLeaveRoom)
 }
 
 func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {
@@ -174,14 +187,24 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 
 	// 发送通知
 	// 包装为 GameServerMessage
-	if gameError == nil && notifyPayload != nil {
+	if gameError == nil && notifyPayload != nil && result.NotifyGroup != nil {
 		notifyPayloadBytes, err := serialize.SerializePayload(notifyPayload)
 		if err != nil {
 			logger.ErrorWith("序列化通知失败", "error", err)
 			return
 		}
-		allSessions := s.sessionMgr.GetAllSessions()
-		for _, session := range allSessions {
+		playerIds := result.NotifyGroup.GetTargetPlayerIds()
+		for _, playerId := range playerIds {
+			player := player.Manager.GetPlayer(playerId)
+			if player == nil {
+				logger.ErrorWith("玩家不存在或不在线", "playerId", playerId)
+				continue
+			}
+			session, err := s.sessionMgr.GetSession(player.GetSessionId())
+			if err != nil {
+				logger.ErrorWith("获取会话失败", "error", err)
+				continue
+			}
 			notificationPayloadBytes, iv, err := session.EncryptPayload(notifyPayloadBytes)
 			if err != nil {
 				logger.ErrorWith("加密通知失败", "error", err)

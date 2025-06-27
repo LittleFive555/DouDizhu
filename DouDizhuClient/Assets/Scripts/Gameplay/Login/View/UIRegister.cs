@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using TMPro;
-using Gameplay.Player;
 using UIModule;
+using Gameplay.Player.Service;
 
 namespace Gameplay.Login.View
 {
@@ -18,7 +18,7 @@ namespace Gameplay.Login.View
         {
             string account = m_AccountInput.text;
             string password = m_PasswordInput.text;
-            bool result = await PlayerManager.Instance.Register(account, password);
+            bool result = await PlayerService.Register(account, password);
             if (result)
                 Hide();
         }

@@ -37,4 +37,14 @@ const (
 	// Login
 	CodeAccountNotExists ErrorCode = "ACCOUNT_NOT_EXISTS"
 	CodePasswordWrong    ErrorCode = "PASSWORD_WRONG"
+
+	// Player
+	CodePlayerOffline    ErrorCode = "PLAYER_OFFLINE"
+	CodePlayerNotInLobby ErrorCode = "PLAYER_NOT_IN_LOBBY"
+	CodePlayerNotInRoom  ErrorCode = "PLAYER_NOT_IN_ROOM"
+	CodePlayerInRoom     ErrorCode = "PLAYER_IN_ROOM"
+
+	// Room
+	CodeRoomNotExists ErrorCode = "ROOM_NOT_EXISTS"
+	CodeRoomFull      ErrorCode = "ROOM_FULL"
 )
