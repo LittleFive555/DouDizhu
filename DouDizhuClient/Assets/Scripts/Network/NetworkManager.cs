@@ -241,6 +241,8 @@ namespace Network
                 }
 
                 PServerMsg serverMsg = PServerMsg.Parser.ParseFrom(responseBuffer);
+
+                // TODO 验证消息头中的信息
                 if (serverMsg.MsgType == PServerMsgType.Notification)
                     OnNotified(serverMsg);
                 else if (serverMsg.MsgType == PServerMsgType.Response)
