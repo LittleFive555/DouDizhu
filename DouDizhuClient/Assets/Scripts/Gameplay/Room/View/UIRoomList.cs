@@ -4,6 +4,7 @@ using Gameplay.Room.Service;
 using Network.Proto;
 using UIModule;
 using Gameplay.Player.Model;
+using Gameplay.Chat.View;
 
 namespace Gameplay.Room.View
 {
@@ -15,6 +16,9 @@ namespace Gameplay.Room.View
 
         [SerializeField]
         private Transform m_RoomItemParent;
+
+        [SerializeField]
+        private UIChatBox m_ChatBox;
 
         private Dictionary<uint, PRoom> m_RoomsInfo = new Dictionary<uint, PRoom>();
         private Dictionary<uint, UIRoomListItem> m_RoomItems = new Dictionary<uint, UIRoomListItem>();
@@ -33,6 +37,8 @@ namespace Gameplay.Room.View
             base.OnShowBegin(args);
 
             RefreshRoomList();
+
+            m_ChatBox.InitChannelSet(new List<PChatChannel>() { PChatChannel.All }, PChatChannel.All);
         }
 
         [OnClick("BtnCreateRoom")]
