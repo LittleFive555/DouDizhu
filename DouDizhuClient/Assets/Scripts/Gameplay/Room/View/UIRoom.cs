@@ -5,6 +5,7 @@ using Network;
 using Network.Proto;
 using TMPro;
 using UIModule;
+using Gameplay.Chat.View;
 
 namespace Gameplay.Room.View
 {
@@ -20,13 +21,18 @@ namespace Gameplay.Room.View
         private TextMeshProUGUI m_TextRoomName;
 
         [SerializeField]
+        private UIChatBox m_ChatBox;
+
+        [SerializeField]
         private List<UIRoomPlayerSlot> m_PlayerSlots = new List<UIRoomPlayerSlot>();
+
+        private static readonly IReadOnlyList<PChatChannel> CHANNEL_SET = new List<PChatChannel>() { PChatChannel.Room, PChatChannel.All };
 
         public override void OnShowBegin(Args args)
         {
             SetRoomName(args.Room.Name);
             RefreshPlayers(args.Room.Players);
-
+            m_ChatBox.InitChannelSet(CHANNEL_SET, PChatChannel.Room);
             NetworkManager.Instance.RegisterNotificationHandler<PRoomChangedNotification>(PMsgId.RoomChanged, OnReceivedRoomChanged);
             NetworkManager.Instance.RegisterNotificationHandler<PRoomDisbandedNotification>(PMsgId.RoomDisbanded, OnReceivedRoomDisbanded);
         }
