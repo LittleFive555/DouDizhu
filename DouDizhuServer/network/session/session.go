@@ -16,23 +16,11 @@ import (
 	"golang.org/x/crypto/hkdf"
 )
 
-type PlayerState int
-
-const (
-	PlayerState_Connecting PlayerState = iota
-	PlayerState_Lobby
-	PlayerState_InGame
-	PlayerState_Disconnected
-)
-
 type PlayerSession struct {
 	Id        string
 	Conn      net.Conn
 	IP        string
-	State     PlayerState
 	secureKey []byte
-
-	PlayerId string
 }
 
 func (s *PlayerSession) StartReading(handler func(message *message.Message)) {

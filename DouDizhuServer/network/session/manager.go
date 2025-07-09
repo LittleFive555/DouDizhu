@@ -25,31 +25,13 @@ func (s *SessionManager) CreatePlayerSession(conn net.Conn) (*PlayerSession, err
 	sessionId := "ps-" + uuid.New().String()
 	ip := conn.RemoteAddr().String()
 	session := &PlayerSession{
-		Id:       sessionId,
-		Conn:     conn,
-		IP:       ip,
-		State:    PlayerState_Connecting,
-		PlayerId: "",
+		Id:   sessionId,
+		Conn: conn,
+		IP:   ip,
 	}
 
 	s.playerSessions[sessionId] = session
 	return session, nil
-}
-
-func (s *SessionManager) Authenticate(sessionId, playerId string) error {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-
-	session, exists := s.playerSessions[sessionId]
-	if !exists {
-		logger.ErrorWith("sessionId不存在", "sessionId", sessionId)
-		return fmt.Errorf("sessionId不存在")
-	}
-
-	session.PlayerId = playerId
-	session.State = PlayerState_Lobby
-
-	return nil
 }
 
 func (s *SessionManager) GetSession(sessionId string) (*PlayerSession, error) {

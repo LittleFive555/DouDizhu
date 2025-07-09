@@ -7,10 +7,10 @@ func NewAllPlayerNotificationGroup() *AllPlayerNotificationGroup {
 	return &AllPlayerNotificationGroup{}
 }
 
-func (g *AllPlayerNotificationGroup) GetTargetPlayerIds() []string {
-	playerIds := make([]string, 0)
+func (g *AllPlayerNotificationGroup) GetTargetSessionIds() []string {
+	sessionIds := make([]string, 0)
 	for _, player := range Manager.players {
-		playerIds = append(playerIds, player.GetPlayerId())
+		sessionIds = append(sessionIds, player.GetSessionId())
 	}
-	return playerIds
+	return sessionIds
 }

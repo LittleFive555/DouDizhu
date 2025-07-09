@@ -2,7 +2,6 @@ package network
 
 import (
 	"DouDizhuServer/errordef"
-	"DouDizhuServer/gameplay/player"
 	"DouDizhuServer/logger"
 	"DouDizhuServer/network/handler"
 	"DouDizhuServer/network/message"
@@ -193,24 +192,19 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 			logger.ErrorWith("序列化通知失败", "error", err)
 			return
 		}
-		playerIds := result.NotifyGroup.GetTargetPlayerIds()
-		for _, playerId := range playerIds {
-			player := player.Manager.GetPlayer(playerId)
-			if player == nil {
-				logger.ErrorWith("玩家不存在或不在线", "playerId", playerId)
-				continue
-			}
-			session, err := s.sessionMgr.GetSession(player.GetSessionId())
+		targetSessionIds := result.NotifyGroup.GetTargetSessionIds()
+		for _, targetSessionId := range targetSessionIds {
+			targetSession, err := s.sessionMgr.GetSession(targetSessionId)
 			if err != nil {
 				logger.ErrorWith("获取会话失败", "error", err)
 				continue
 			}
-			notificationPayloadBytes, iv, err := session.EncryptPayload(notifyPayloadBytes)
+			notificationPayloadBytes, iv, err := targetSession.EncryptPayload(notifyPayloadBytes)
 			if err != nil {
 				logger.ErrorWith("加密通知失败", "error", err)
 				continue
 			}
-			notificationMessage := createNotificationMsg(session, result.NofityMsgId)
+			notificationMessage := createNotificationMsg(targetSession, result.NofityMsgId)
 			notificationMessage.Payload = notificationPayloadBytes
 			notificationMessage.Header.Iv = iv
 			notificationData, err := serialize.Serialize(notificationMessage)
@@ -218,7 +212,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 				logger.ErrorWith("序列化响应失败", "error", err)
 				continue
 			}
-			err = session.SendMessage(notificationData)
+			err = targetSession.SendMessage(notificationData)
 			if err != nil {
 				logger.ErrorWith("发送消息失败", "error", err)
 				continue
@@ -304,7 +298,6 @@ func createNotificationMsg(session *session.PlayerSession, msgId protodef.PMsgId
 			Timestamp: time.Now().UnixMilli(),
 
 			SessionId: session.Id,
-			PlayerId:  session.PlayerId,
 		},
 		MsgType: protodef.PServerMsgType_PSERVER_MSG_TYPE_NOTIFICATION,
 	}
