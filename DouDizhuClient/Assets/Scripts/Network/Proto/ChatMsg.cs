@@ -24,21 +24,34 @@ namespace Network.Proto {
     static ChatMsgReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg1DaGF0TXNnLnByb3RvEghEb3VEaXpodRoMUGxheWVyLnByb3RvIiIKD1BD",
-            "aGF0TXNnUmVxdWVzdBIPCgdjb250ZW50GAEgASgJIkgKFFBDaGF0TXNnTm90",
-            "aWZpY2F0aW9uEh8KBGZyb20YASABKAsyES5Eb3VEaXpodS5QUGxheWVyEg8K",
-            "B2NvbnRlbnQYAiABKAlCIloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsu",
-            "UHJvdG9iBnByb3RvMw=="));
+            "Cg1DaGF0TXNnLnByb3RvEghEb3VEaXpodRoMUGxheWVyLnByb3RvIksKD1BD",
+            "aGF0TXNnUmVxdWVzdBIPCgdjb250ZW50GAEgASgJEicKB2NoYW5uZWwYAiAB",
+            "KA4yFi5Eb3VEaXpodS5QQ2hhdENoYW5uZWwicQoUUENoYXRNc2dOb3RpZmlj",
+            "YXRpb24SHwoEZnJvbRgBIAEoCzIRLkRvdURpemh1LlBQbGF5ZXISDwoHY29u",
+            "dGVudBgCIAEoCRInCgdjaGFubmVsGAMgASgOMhYuRG91RGl6aHUuUENoYXRD",
+            "aGFubmVsKlUKDFBDaGF0Q2hhbm5lbBIWChJQQ0hBVF9DSEFOTkVMX05PTkUQ",
+            "ABIVChFQQ0hBVF9DSEFOTkVMX0FMTBABEhYKElBDSEFUX0NIQU5ORUxfUk9P",
+            "TRACQiJaEG5ldHdvcmsvcHJvdG9kZWaqAg1OZXR3b3JrLlByb3RvYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Network.Proto.PlayerReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PChatMsgRequest), global::Network.Proto.PChatMsgRequest.Parser, new[]{ "Content" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PChatMsgNotification), global::Network.Proto.PChatMsgNotification.Parser, new[]{ "From", "Content" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PChatChannel), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PChatMsgRequest), global::Network.Proto.PChatMsgRequest.Parser, new[]{ "Content", "Channel" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PChatMsgNotification), global::Network.Proto.PChatMsgNotification.Parser, new[]{ "From", "Content", "Channel" }, null, null, null, null)
           }));
     }
     #endregion
 
   }
+  #region Enums
+  public enum PChatChannel {
+    [pbr::OriginalName("PCHAT_CHANNEL_NONE")] None = 0,
+    [pbr::OriginalName("PCHAT_CHANNEL_ALL")] All = 1,
+    [pbr::OriginalName("PCHAT_CHANNEL_ROOM")] Room = 2,
+  }
+
+  #endregion
+
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PChatMsgRequest : pb::IMessage<PChatMsgRequest>
@@ -76,6 +89,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PChatMsgRequest(PChatMsgRequest other) : this() {
       content_ = other.content_;
+      channel_ = other.channel_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -97,6 +111,18 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "channel" field.</summary>
+    public const int ChannelFieldNumber = 2;
+    private global::Network.Proto.PChatChannel channel_ = global::Network.Proto.PChatChannel.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PChatChannel Channel {
+      get { return channel_; }
+      set {
+        channel_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -113,6 +139,7 @@ namespace Network.Proto {
         return true;
       }
       if (Content != other.Content) return false;
+      if (Channel != other.Channel) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -121,6 +148,7 @@ namespace Network.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (Channel != global::Network.Proto.PChatChannel.None) hash ^= Channel.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -143,6 +171,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteString(Content);
       }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -157,6 +189,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteString(Content);
       }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -169,6 +205,9 @@ namespace Network.Proto {
       int size = 0;
       if (Content.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Channel);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -184,6 +223,9 @@ namespace Network.Proto {
       }
       if (other.Content.Length != 0) {
         Content = other.Content;
+      }
+      if (other.Channel != global::Network.Proto.PChatChannel.None) {
+        Channel = other.Channel;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -208,6 +250,10 @@ namespace Network.Proto {
             Content = input.ReadString();
             break;
           }
+          case 16: {
+            Channel = (global::Network.Proto.PChatChannel) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -229,6 +275,10 @@ namespace Network.Proto {
             break;
           case 10: {
             Content = input.ReadString();
+            break;
+          }
+          case 16: {
+            Channel = (global::Network.Proto.PChatChannel) input.ReadEnum();
             break;
           }
         }
@@ -275,6 +325,7 @@ namespace Network.Proto {
     public PChatMsgNotification(PChatMsgNotification other) : this() {
       from_ = other.from_ != null ? other.from_.Clone() : null;
       content_ = other.content_;
+      channel_ = other.channel_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -308,6 +359,18 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "channel" field.</summary>
+    public const int ChannelFieldNumber = 3;
+    private global::Network.Proto.PChatChannel channel_ = global::Network.Proto.PChatChannel.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PChatChannel Channel {
+      get { return channel_; }
+      set {
+        channel_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -325,6 +388,7 @@ namespace Network.Proto {
       }
       if (!object.Equals(From, other.From)) return false;
       if (Content != other.Content) return false;
+      if (Channel != other.Channel) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -334,6 +398,7 @@ namespace Network.Proto {
       int hash = 1;
       if (from_ != null) hash ^= From.GetHashCode();
       if (Content.Length != 0) hash ^= Content.GetHashCode();
+      if (Channel != global::Network.Proto.PChatChannel.None) hash ^= Channel.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -360,6 +425,10 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteString(Content);
       }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -378,6 +447,10 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteString(Content);
       }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -393,6 +466,9 @@ namespace Network.Proto {
       }
       if (Content.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Content);
+      }
+      if (Channel != global::Network.Proto.PChatChannel.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Channel);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -414,6 +490,9 @@ namespace Network.Proto {
       }
       if (other.Content.Length != 0) {
         Content = other.Content;
+      }
+      if (other.Channel != global::Network.Proto.PChatChannel.None) {
+        Channel = other.Channel;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -445,6 +524,10 @@ namespace Network.Proto {
             Content = input.ReadString();
             break;
           }
+          case 24: {
+            Channel = (global::Network.Proto.PChatChannel) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -473,6 +556,10 @@ namespace Network.Proto {
           }
           case 18: {
             Content = input.ReadString();
+            break;
+          }
+          case 24: {
+            Channel = (global::Network.Proto.PChatChannel) input.ReadEnum();
             break;
           }
         }

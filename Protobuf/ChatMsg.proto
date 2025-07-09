@@ -6,11 +6,19 @@ option csharp_namespace = "Network.Proto";
 
 import "Player.proto";
 
+enum PChatChannel {
+	PCHAT_CHANNEL_NONE = 0;
+	PCHAT_CHANNEL_ALL = 1;
+	PCHAT_CHANNEL_ROOM = 2;
+}
+
 message PChatMsgRequest {
 	string content = 1;
+	PChatChannel channel = 2;
 }
 
 message PChatMsgNotification {
 	PPlayer from = 1;
 	string content = 2;
+	PChatChannel channel = 3;
 }

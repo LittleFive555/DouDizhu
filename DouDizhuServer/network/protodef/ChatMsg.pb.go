@@ -21,9 +21,59 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PChatChannel int32
+
+const (
+	PChatChannel_PCHAT_CHANNEL_NONE PChatChannel = 0
+	PChatChannel_PCHAT_CHANNEL_ALL  PChatChannel = 1
+	PChatChannel_PCHAT_CHANNEL_ROOM PChatChannel = 2
+)
+
+// Enum value maps for PChatChannel.
+var (
+	PChatChannel_name = map[int32]string{
+		0: "PCHAT_CHANNEL_NONE",
+		1: "PCHAT_CHANNEL_ALL",
+		2: "PCHAT_CHANNEL_ROOM",
+	}
+	PChatChannel_value = map[string]int32{
+		"PCHAT_CHANNEL_NONE": 0,
+		"PCHAT_CHANNEL_ALL":  1,
+		"PCHAT_CHANNEL_ROOM": 2,
+	}
+)
+
+func (x PChatChannel) Enum() *PChatChannel {
+	p := new(PChatChannel)
+	*p = x
+	return p
+}
+
+func (x PChatChannel) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PChatChannel) Descriptor() protoreflect.EnumDescriptor {
+	return file_ChatMsg_proto_enumTypes[0].Descriptor()
+}
+
+func (PChatChannel) Type() protoreflect.EnumType {
+	return &file_ChatMsg_proto_enumTypes[0]
+}
+
+func (x PChatChannel) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PChatChannel.Descriptor instead.
+func (PChatChannel) EnumDescriptor() ([]byte, []int) {
+	return file_ChatMsg_proto_rawDescGZIP(), []int{0}
+}
+
 type PChatMsgRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	Channel       PChatChannel           `protobuf:"varint,2,opt,name=channel,proto3,enum=DouDizhu.PChatChannel" json:"channel,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -65,10 +115,18 @@ func (x *PChatMsgRequest) GetContent() string {
 	return ""
 }
 
+func (x *PChatMsgRequest) GetChannel() PChatChannel {
+	if x != nil {
+		return x.Channel
+	}
+	return PChatChannel_PCHAT_CHANNEL_NONE
+}
+
 type PChatMsgNotification struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *PPlayer               `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Channel       PChatChannel           `protobuf:"varint,3,opt,name=channel,proto3,enum=DouDizhu.PChatChannel" json:"channel,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -117,16 +175,29 @@ func (x *PChatMsgNotification) GetContent() string {
 	return ""
 }
 
+func (x *PChatMsgNotification) GetChannel() PChatChannel {
+	if x != nil {
+		return x.Channel
+	}
+	return PChatChannel_PCHAT_CHANNEL_NONE
+}
+
 var File_ChatMsg_proto protoreflect.FileDescriptor
 
 const file_ChatMsg_proto_rawDesc = "" +
 	"\n" +
-	"\rChatMsg.proto\x12\bDouDizhu\x1a\fPlayer.proto\"+\n" +
+	"\rChatMsg.proto\x12\bDouDizhu\x1a\fPlayer.proto\"]\n" +
 	"\x0fPChatMsgRequest\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\"W\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent\x120\n" +
+	"\achannel\x18\x02 \x01(\x0e2\x16.DouDizhu.PChatChannelR\achannel\"\x89\x01\n" +
 	"\x14PChatMsgNotification\x12%\n" +
 	"\x04from\x18\x01 \x01(\v2\x11.DouDizhu.PPlayerR\x04from\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontentB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\acontent\x18\x02 \x01(\tR\acontent\x120\n" +
+	"\achannel\x18\x03 \x01(\x0e2\x16.DouDizhu.PChatChannelR\achannel*U\n" +
+	"\fPChatChannel\x12\x16\n" +
+	"\x12PCHAT_CHANNEL_NONE\x10\x00\x12\x15\n" +
+	"\x11PCHAT_CHANNEL_ALL\x10\x01\x12\x16\n" +
+	"\x12PCHAT_CHANNEL_ROOM\x10\x02B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_ChatMsg_proto_rawDescOnce sync.Once
@@ -140,19 +211,23 @@ func file_ChatMsg_proto_rawDescGZIP() []byte {
 	return file_ChatMsg_proto_rawDescData
 }
 
+var file_ChatMsg_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_ChatMsg_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_ChatMsg_proto_goTypes = []any{
-	(*PChatMsgRequest)(nil),      // 0: DouDizhu.PChatMsgRequest
-	(*PChatMsgNotification)(nil), // 1: DouDizhu.PChatMsgNotification
-	(*PPlayer)(nil),              // 2: DouDizhu.PPlayer
+	(PChatChannel)(0),            // 0: DouDizhu.PChatChannel
+	(*PChatMsgRequest)(nil),      // 1: DouDizhu.PChatMsgRequest
+	(*PChatMsgNotification)(nil), // 2: DouDizhu.PChatMsgNotification
+	(*PPlayer)(nil),              // 3: DouDizhu.PPlayer
 }
 var file_ChatMsg_proto_depIdxs = []int32{
-	2, // 0: DouDizhu.PChatMsgNotification.from:type_name -> DouDizhu.PPlayer
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 0: DouDizhu.PChatMsgRequest.channel:type_name -> DouDizhu.PChatChannel
+	3, // 1: DouDizhu.PChatMsgNotification.from:type_name -> DouDizhu.PPlayer
+	0, // 2: DouDizhu.PChatMsgNotification.channel:type_name -> DouDizhu.PChatChannel
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_ChatMsg_proto_init() }
@@ -166,13 +241,14 @@ func file_ChatMsg_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ChatMsg_proto_rawDesc), len(file_ChatMsg_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_ChatMsg_proto_goTypes,
 		DependencyIndexes: file_ChatMsg_proto_depIdxs,
+		EnumInfos:         file_ChatMsg_proto_enumTypes,
 		MessageInfos:      file_ChatMsg_proto_msgTypes,
 	}.Build()
 	File_ChatMsg_proto = out.File
