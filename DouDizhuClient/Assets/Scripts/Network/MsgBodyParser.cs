@@ -24,7 +24,12 @@ namespace Network
 
         private static Dictionary<PMsgId, MessageParser> m_NotifyParsers = new()
         {
+            // 聊天相关
             { PMsgId.ChatMsg, PChatMsgNotification.Parser },
+
+            // 房间相关
+            { PMsgId.RoomChanged, PRoomChangedNotification.Parser },
+            { PMsgId.RoomDisbanded, PRoomDisbandedNotification.Parser },
         };
         
         public static MessageParser GetResponseParser(PMsgId msgId)

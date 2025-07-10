@@ -30,7 +30,7 @@ namespace Gameplay.Room.Service
             return null;
         }
 
-        public static async Task<bool> EnterRoom(uint roomId)
+        public static async Task<PRoom> EnterRoom(uint roomId)
         {
             var response = await NetworkManager.Instance.RequestAsync<PEnterRoomRequest, PEnterRoomResponse>(PMsgId.EnterRoom, new PEnterRoomRequest()
             {
@@ -38,9 +38,9 @@ namespace Gameplay.Room.Service
             });
             if (response.IsSuccess)
             {
-                return true;
+                return response.Data.Room;
             }
-            return false;
+            return null;
         }
 
         public static async Task<bool> LeaveRoom()

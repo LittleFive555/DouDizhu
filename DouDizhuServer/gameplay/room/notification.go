@@ -3,17 +3,11 @@ package room
 import "DouDizhuServer/gameplay/player"
 
 type RoomNotificationGroup struct {
-	roomId uint32
+	sessionIds []string
 }
 
 func NewRoomNotificationGroup(roomId uint32) *RoomNotificationGroup {
-	return &RoomNotificationGroup{
-		roomId: roomId,
-	}
-}
-
-func (g *RoomNotificationGroup) GetTargetSessionIds() []string {
-	room, err := Manager.GetRoom(g.roomId)
+	room, err := Manager.GetRoom(roomId)
 	if err != nil {
 		return nil
 	}
@@ -22,5 +16,29 @@ func (g *RoomNotificationGroup) GetTargetSessionIds() []string {
 	for _, playerId := range playerIds {
 		sessionIds = append(sessionIds, player.Manager.GetPlayer(playerId).GetSessionId())
 	}
-	return sessionIds
+
+	return &RoomNotificationGroup{
+		sessionIds: sessionIds,
+	}
+}
+
+func NewRoomNotificationGroupExcept(roomId uint32, exceptPlayerId string) *RoomNotificationGroup {
+	room, err := Manager.GetRoom(roomId)
+	if err != nil {
+		return nil
+	}
+	playerIds := room.GetPlayers()
+	sessionIds := make([]string, 0)
+	for _, playerId := range playerIds {
+		if playerId != exceptPlayerId {
+			sessionIds = append(sessionIds, player.Manager.GetPlayer(playerId).GetSessionId())
+		}
+	}
+	return &RoomNotificationGroup{
+		sessionIds: sessionIds,
+	}
+}
+
+func (g *RoomNotificationGroup) GetTargetSessionIds() []string {
+	return g.sessionIds
 }

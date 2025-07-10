@@ -39,7 +39,7 @@ func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*me
 
 	result := &message.HandleResult{
 		Resp:        nil,
-		NofityMsgId: protodef.PMsgId_PMSG_ID_CHAT_MSG,
+		NotifyMsgId: protodef.PMsgId_PMSG_ID_CHAT_MSG,
 		NotifyGroup: notificationGroup,
 		Notify:      notification,
 	}

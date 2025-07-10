@@ -204,7 +204,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 				logger.ErrorWith("加密通知失败", "error", err)
 				continue
 			}
-			notificationMessage := createNotificationMsg(targetSession, result.NofityMsgId)
+			notificationMessage := createNotificationMsg(targetSession, result.NotifyMsgId)
 			notificationMessage.Payload = notificationPayloadBytes
 			notificationMessage.Header.Iv = iv
 			notificationData, err := serialize.Serialize(notificationMessage)

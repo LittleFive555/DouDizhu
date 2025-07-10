@@ -42,6 +42,11 @@ namespace Gameplay.Chat.View
             NetworkManager.Instance.RegisterNotificationHandler<PChatMsgNotification>(PMsgId.ChatMsg, OnReceivedChatMsg);
         }
 
+        private void OnDestroy()
+        {
+            NetworkManager.Instance.UnregisterNotificationHandler<PChatMsgNotification>(PMsgId.ChatMsg, OnReceivedChatMsg);
+        }
+
         public void InitChannelSet(IReadOnlyList<PChatChannel> channels, PChatChannel defaultChannel)
         {
             m_ChannelSet = new List<PChatChannel>(channels);

@@ -79,12 +79,13 @@ func HandleEnterRoom(context *message.MessageContext, req *proto.Message) (*mess
 		Resp: &protodef.PEnterRoomResponse{
 			Room: translator.RoomToProto(targetRoom, player.Manager),
 		},
+		NotifyMsgId: protodef.PMsgId_PMSG_ID_ROOM_CHANGED,
 		Notify: &protodef.PRoomChangedNotification{
 			Room: &protodef.PRoom{
 				Players: translator.RoomPlayersToProto(targetRoom, player.Manager),
 			},
 		},
-		NotifyGroup: room.NewRoomNotificationGroup(targetRoom.GetId()),
+		NotifyGroup: room.NewRoomNotificationGroupExcept(targetRoom.GetId(), requestingPlayer.GetPlayerId()),
 	}, nil
 }
 
@@ -105,28 +106,32 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 	if err != nil {
 		return nil, err
 	}
-	err = currentRoom.RemovePlayer(playerId)
-	if err != nil {
-		return nil, err
-	}
-	currentPlayer.LeaveRoom()
 
-	var notify proto.Message
-	if currentRoom.IsOwnedBy(playerId) {
-		// 如果房间是房主，则直接解散整个房间
+	notifyGroup := room.NewRoomNotificationGroupExcept(currentRoom.GetId(), playerId)
+	if currentRoom.IsOwnedBy(playerId) { // 如果房间是房主，则直接解散整个房间
+		players := currentRoom.GetPlayers()
+		for _, playerId := range players {
+			player.Manager.GetPlayer(playerId).LeaveRoom()
+		}
 		room.Manager.RemoveRoom(currentRoom.GetId())
 
-		notify = &protodef.PRoomDisbandedNotification{}
+		return &message.HandleResult{
+			Notify:      &protodef.PRoomDisbandedNotification{},
+			NotifyMsgId: protodef.PMsgId_PMSG_ID_ROOM_DISBANDED,
+			NotifyGroup: notifyGroup,
+		}, nil
 	} else {
+		currentRoom.RemovePlayer(playerId)
+		currentPlayer.LeaveRoom()
 		// 如果房间不是房主，则给房间其他人发通知
-		notify = &protodef.PRoomChangedNotification{
-			Room: &protodef.PRoom{
-				Players: translator.RoomPlayersToProto(currentRoom, player.Manager),
+		return &message.HandleResult{
+			Notify: &protodef.PRoomChangedNotification{
+				Room: &protodef.PRoom{
+					Players: translator.RoomPlayersToProto(currentRoom, player.Manager),
+				},
 			},
-		}
+			NotifyMsgId: protodef.PMsgId_PMSG_ID_ROOM_CHANGED,
+			NotifyGroup: notifyGroup,
+		}, nil
 	}
-	return &message.HandleResult{
-		Notify:      notify,
-		NotifyGroup: room.NewRoomNotificationGroup(currentRoom.GetId()),
-	}, nil
 }

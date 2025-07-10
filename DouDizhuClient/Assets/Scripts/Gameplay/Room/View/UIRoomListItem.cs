@@ -31,7 +31,11 @@ namespace Gameplay.Room.View
         [OnClick("BtnEnter")]
         private async void EnterRoom()
         {
-            await RoomService.EnterRoom(m_RoomInfo.Id);
+            var result = await RoomService.EnterRoom(m_RoomInfo.Id);
+            if (result != null)
+            {
+                UIManager.Instance.ShowUI<UIRoom, UIRoom.Args>(new UIRoom.Args() { Room = result });
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ type INotificationGroup interface {
 
 type HandleResult struct {
 	Resp        proto.Message
-	NofityMsgId protodef.PMsgId
+	NotifyMsgId protodef.PMsgId
 	NotifyGroup INotificationGroup
 	Notify      proto.Message
 }

@@ -299,7 +299,7 @@ namespace Network
                 }
             }
             else
-                Log.Error("未找到通知处理程序: {notificationType}", serverMsg.Header.MsgId);
+                Log.Warning("未找到通知处理程序: {notificationType}", serverMsg.Header.MsgId);
         }
 
         private PClientMsg PackClientMsg<TReq>(PMsgId msgId, TReq request) where TReq : class, IMessage
