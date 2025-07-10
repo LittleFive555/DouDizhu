@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc78f9c2a720c8140a1ef92d97863f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ServerHost: 192.168.50.65
+  m_ServerHost: 127.0.0.1
+  m_UseAB: 0
 --- !u!4 &2087727937
 Transform:
   m_ObjectHideFlags: 0
