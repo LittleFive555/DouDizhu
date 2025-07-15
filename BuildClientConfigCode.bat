@@ -1,0 +1,1 @@
+.\ConfigDataBuilder\ConfigToolByExcel csharp --excel .\Configs --code-out .\DouDizhuClient\Assets\Scripts\ConfigDefine --code-namespace ConfigDefine

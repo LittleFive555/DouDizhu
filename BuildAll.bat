@@ -1,0 +1,1 @@
+.\BuildClientConfigCode && echo BuildClientConfigCode Succeed! && .\BuildClientConfigFile && echo BuildClientConfigFile Succeed! && .\BuildServerConfigCode && echo BuildServerConfigCode Succeed! && .\BuildServerConfigFile && echo BuildServerConfigFile Succeed!

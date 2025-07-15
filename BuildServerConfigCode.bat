@@ -1,0 +1,1 @@
+.\ConfigDataBuilder\ConfigToolByExcel go --excel .\Configs --code-out F:\DouDizhu\DouDizhuServer\datadef --code-package datadef

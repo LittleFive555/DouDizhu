@@ -1,0 +1,1 @@
+.\ConfigDataBuilder\ConfigToolByExcel json --excel .\Configs --json-out .\DouDizhuClient\Assets\StreamingAssets\Configs
