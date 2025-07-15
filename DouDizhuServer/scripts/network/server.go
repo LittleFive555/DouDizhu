@@ -1,13 +1,13 @@
 package network
 
 import (
-	"DouDizhuServer/errordef"
-	"DouDizhuServer/logger"
-	"DouDizhuServer/network/handler"
-	"DouDizhuServer/network/message"
-	"DouDizhuServer/network/protodef"
-	"DouDizhuServer/network/serialize"
-	"DouDizhuServer/network/session"
+	"DouDizhuServer/scripts/errordef"
+	"DouDizhuServer/scripts/logger"
+	"DouDizhuServer/scripts/network/handler"
+	"DouDizhuServer/scripts/network/message"
+	"DouDizhuServer/scripts/network/protodef"
+	"DouDizhuServer/scripts/network/serialize"
+	"DouDizhuServer/scripts/network/session"
 	"fmt"
 	"net"
 	"time"

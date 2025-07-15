@@ -1,7 +1,7 @@
 package serialize
 
 import (
-	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/scripts/network/protodef"
 
 	"google.golang.org/protobuf/proto"
 )

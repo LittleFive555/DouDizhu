@@ -1,9 +1,9 @@
 package session
 
 import (
-	"DouDizhuServer/cypher"
-	"DouDizhuServer/logger"
-	"DouDizhuServer/network/message"
+	"DouDizhuServer/scripts/cypher"
+	"DouDizhuServer/scripts/logger"
+	"DouDizhuServer/scripts/network/message"
 	"crypto/ecdh"
 	"crypto/rand"
 	"crypto/sha256"

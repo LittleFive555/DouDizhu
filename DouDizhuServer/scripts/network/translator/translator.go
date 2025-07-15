@@ -1,9 +1,9 @@
 package translator
 
 import (
-	"DouDizhuServer/gameplay/player"
-	"DouDizhuServer/gameplay/room"
-	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/scripts/gameplay/player"
+	"DouDizhuServer/scripts/gameplay/room"
+	"DouDizhuServer/scripts/network/protodef"
 )
 
 func PlayerToProto(p *player.Player) *protodef.PPlayer {

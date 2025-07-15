@@ -1,6 +1,6 @@
 package room
 
-import "DouDizhuServer/gameplay/player"
+import "DouDizhuServer/scripts/gameplay/player"
 
 type RoomNotificationGroup struct {
 	sessionIds []string

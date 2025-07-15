@@ -1,8 +1,8 @@
 package message
 
 import (
-	"DouDizhuServer/errordef"
-	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/scripts/errordef"
+	"DouDizhuServer/scripts/network/protodef"
 )
 
 func CreateErrorPayload(gameError *errordef.GameError) *protodef.PError {

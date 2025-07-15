@@ -1,8 +1,8 @@
 package room
 
 import (
-	"DouDizhuServer/errordef"
-	"DouDizhuServer/network/protodef"
+	"DouDizhuServer/scripts/errordef"
+	"DouDizhuServer/scripts/network/protodef"
 	"sync"
 )
 

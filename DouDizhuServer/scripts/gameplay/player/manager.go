@@ -1,8 +1,8 @@
 package player
 
 import (
-	"DouDizhuServer/database"
-	"DouDizhuServer/errordef"
+	"DouDizhuServer/scripts/database"
+	"DouDizhuServer/scripts/errordef"
 	"encoding/base64"
 
 	"github.com/google/uuid"

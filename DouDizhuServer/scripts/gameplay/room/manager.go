@@ -1,7 +1,7 @@
 package room
 
 import (
-	"DouDizhuServer/errordef"
+	"DouDizhuServer/scripts/errordef"
 	"sync"
 
 	"github.com/google/uuid"

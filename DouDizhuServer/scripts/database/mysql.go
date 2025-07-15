@@ -1,7 +1,7 @@
 package database
 
 import (
-	"DouDizhuServer/logger"
+	"DouDizhuServer/scripts/logger"
 	"database/sql"
 	"os"
 

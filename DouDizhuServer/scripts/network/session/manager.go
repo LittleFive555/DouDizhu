@@ -1,7 +1,7 @@
 package session
 
 import (
-	"DouDizhuServer/logger"
+	"DouDizhuServer/scripts/logger"
 	"fmt"
 	"net"
 	"sync"

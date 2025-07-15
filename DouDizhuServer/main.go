@@ -1,11 +1,11 @@
 package main
 
 import (
-	"DouDizhuServer/database"
-	"DouDizhuServer/gameplay/player"
-	"DouDizhuServer/gameplay/room"
-	"DouDizhuServer/logger"
-	"DouDizhuServer/network"
+	"DouDizhuServer/scripts/database"
+	"DouDizhuServer/scripts/gameplay/player"
+	"DouDizhuServer/scripts/gameplay/room"
+	"DouDizhuServer/scripts/logger"
+	"DouDizhuServer/scripts/network"
 
 	"github.com/joho/godotenv"
 )

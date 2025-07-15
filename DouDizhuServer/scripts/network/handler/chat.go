@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"DouDizhuServer/errordef"
-	"DouDizhuServer/gameplay/player"
-	"DouDizhuServer/gameplay/room"
-	"DouDizhuServer/logger"
-	"DouDizhuServer/network/message"
-	"DouDizhuServer/network/protodef"
-	"DouDizhuServer/network/translator"
+	"DouDizhuServer/scripts/errordef"
+	"DouDizhuServer/scripts/gameplay/player"
+	"DouDizhuServer/scripts/gameplay/room"
+	"DouDizhuServer/scripts/logger"
+	"DouDizhuServer/scripts/network/message"
+	"DouDizhuServer/scripts/network/protodef"
+	"DouDizhuServer/scripts/network/translator"
 
 	"google.golang.org/protobuf/proto"
 )

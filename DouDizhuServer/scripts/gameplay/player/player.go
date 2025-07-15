@@ -1,6 +1,6 @@
 package player
 
-import "DouDizhuServer/network/protodef"
+import "DouDizhuServer/scripts/network/protodef"
 
 type Player struct {
 	playerId string
