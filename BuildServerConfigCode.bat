@@ -1,1 +1,1 @@
-.\ConfigDataBuilder\ConfigToolByExcel go --excel .\Configs --code-out F:\DouDizhu\DouDizhuServer\datadef --code-package datadef
+.\ConfigDataBuilder\ConfigToolByExcel go --excel .\Configs --code-out F:\DouDizhu\DouDizhuServer\scripts\data\define --code-package define
