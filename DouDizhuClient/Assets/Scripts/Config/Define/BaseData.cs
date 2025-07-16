@@ -1,11 +1,8 @@
-using System;
-
 namespace Config.Define
 {
-    [Serializable]
-    public class BaseData<TIndex>
+    
+    public class DBaseData<TIndex>
     {
         public TIndex ID;
     }
-    
 }

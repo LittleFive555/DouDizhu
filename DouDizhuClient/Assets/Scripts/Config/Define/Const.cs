@@ -3,7 +3,7 @@ using System;
 namespace Config.Define
 {
     [Serializable]
-    public class DConst : BaseData<string>
+    public class DConst : DBaseData<string>
     {
         public string Value;
     }

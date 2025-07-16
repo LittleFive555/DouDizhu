@@ -23,8 +23,8 @@ namespace Config
         private const string ConfigClassNamespace = "Config.Define";
         private const string ConfigDataPath = "Configs";
 
-        private Dictionary<Type, Dictionary<int, BaseData<int>>> m_ConfigDictInt = new Dictionary<Type, Dictionary<int, BaseData<int>>>();
-        private Dictionary<Type, Dictionary<string, BaseData<string>>> m_ConfigDictString = new Dictionary<Type, Dictionary<string, BaseData<string>>>();
+        private Dictionary<Type, Dictionary<int, DBaseData<int>>> m_ConfigDictInt = new Dictionary<Type, Dictionary<int, DBaseData<int>>>();
+        private Dictionary<Type, Dictionary<string, DBaseData<string>>> m_ConfigDictString = new Dictionary<Type, Dictionary<string, DBaseData<string>>>();
 
         public void LoadConfigs()
         {
@@ -32,9 +32,9 @@ namespace Config
             Type[] types = assembly.GetTypes();
             foreach (var type in types)
             {
-                if (type.IsSubclassOf(typeof(BaseData<int>)))
+                if (type.IsSubclassOf(typeof(DBaseData<int>)))
                     m_ConfigDictInt.Add(type, LoadConfig<int>(type));
-                else if (type.IsSubclassOf(typeof(BaseData<string>)))
+                else if (type.IsSubclassOf(typeof(DBaseData<string>)))
                     m_ConfigDictString.Add(type, LoadConfig<string>(type));
             }
         }
@@ -48,7 +48,7 @@ namespace Config
             return (TValue)Convert.ChangeType(config.Value, typeof(TValue));
         }
 
-        public T GetConfig<T>(int id) where T : BaseData<int>
+        public T GetConfig<T>(int id) where T : DBaseData<int>
         {
             if (m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt) && dictInt.TryGetValue(id, out var config))
                 return (T)config;
@@ -56,7 +56,7 @@ namespace Config
             return null;
         }
 
-        public T GetConfig<T>(string id) where T : BaseData<string>
+        public T GetConfig<T>(string id) where T : DBaseData<string>
         {
             if (string.IsNullOrEmpty(id))
                 return null;
@@ -79,16 +79,16 @@ namespace Config
             return readData;
         }
 
-        private Dictionary<TIndex, BaseData<TIndex>> LoadConfig<TIndex>(Type type)
+        private Dictionary<TIndex, DBaseData<TIndex>> LoadConfig<TIndex>(Type type)
         {
-            Dictionary<TIndex, BaseData<TIndex>> dict = new Dictionary<TIndex, BaseData<TIndex>>();
+            Dictionary<TIndex, DBaseData<TIndex>> dict = new Dictionary<TIndex, DBaseData<TIndex>>();
             string typeName = type.Name;
             string fileName = typeName.Substring(1);
             string json = ReadRawText(fileName);
             var listType = Type.GetType($"{ConfigClassNamespace}.{typeName}List");
             var obj = JsonUtility.FromJson(json, listType);
             var field = listType.GetField("Content");
-            BaseData<TIndex>[] list = (BaseData<TIndex>[])field.GetValue(obj);
+            DBaseData<TIndex>[] list = (DBaseData<TIndex>[])field.GetValue(obj);
             foreach (var item in list)
             {
                 dict.Add(item.ID, item);
