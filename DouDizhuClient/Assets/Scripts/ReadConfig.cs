@@ -11,8 +11,8 @@ public class ReadConfig : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var config = ConfigsManager.Instance.GetConfig<DConst>("AccountMinLength");
-        Debug.Log(config.Value + " " + config.Type);
+        var value = ConfigsManager.Instance.GetConst<int>("AccountMinLength");
+        Debug.Log(value);
     }
 
     // Update is called once per frame

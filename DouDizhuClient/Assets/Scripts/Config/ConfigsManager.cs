@@ -56,6 +56,15 @@ namespace Config
             return dict;
         }
 
+        public TValue GetConst<TValue>(string id)
+        {
+            var config = GetConfig<DConst>(id);
+            if (config == null)
+                return default;
+
+            return (TValue)Convert.ChangeType(config.Value, typeof(TValue));
+        }
+
         public T GetConfig<T>(int id) where T : BaseData<int>
         {
             if (m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt) && dictInt.TryGetValue(id, out var config))
