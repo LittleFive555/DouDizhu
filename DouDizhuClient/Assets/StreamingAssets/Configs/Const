@@ -2,23 +2,19 @@
   "Content": [
     {
       "ID": "AccountMinLength",
-      "Value": "8",
-      "Type": "int"
+      "Value": "8"
     },
     {
       "ID": "AccountMaxLength",
-      "Value": "26",
-      "Type": "int"
+      "Value": "26"
     },
     {
       "ID": "PasswordMinLength",
-      "Value": "8",
-      "Type": "int"
+      "Value": "8"
     },
     {
       "ID": "PasswordMaxLength",
-      "Value": "26",
-      "Type": "int"
+      "Value": "26"
     }
   ]
 }

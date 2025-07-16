@@ -6,7 +6,6 @@ namespace Config.Define
     public class DConst : BaseData<string>
     {
         public string Value;
-        public string Type;
     }
     
     public class DConstList
