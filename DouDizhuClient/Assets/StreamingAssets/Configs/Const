@@ -1,0 +1,24 @@
+{
+  "Content": [
+    {
+      "ID": "AccountMinLength",
+      "Value": "8",
+      "Type": "int"
+    },
+    {
+      "ID": "AccountMaxLength",
+      "Value": "26",
+      "Type": "int"
+    },
+    {
+      "ID": "PasswordMinLength",
+      "Value": "8",
+      "Type": "int"
+    },
+    {
+      "ID": "PasswordMaxLength",
+      "Value": "26",
+      "Type": "int"
+    }
+  ]
+}
