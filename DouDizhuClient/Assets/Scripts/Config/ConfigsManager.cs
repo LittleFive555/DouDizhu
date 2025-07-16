@@ -20,7 +20,7 @@ namespace Config
             }
         }
 
-        private const string ConfigClassNamespace = "ConfigDefine";
+        private const string ConfigClassNamespace = "Config.Define";
         private const string ConfigDataPath = "Configs";
 
         private Dictionary<Type, Dictionary<int, BaseData<int>>> m_ConfigDictInt = new Dictionary<Type, Dictionary<int, BaseData<int>>>();
