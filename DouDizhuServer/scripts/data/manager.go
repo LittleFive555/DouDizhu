@@ -21,14 +21,14 @@ func GetConfigStrKey[T define.DBaseData[string]](index string) T {
 	filePath := fmt.Sprintf("F:\\DouDizhu\\DouDizhuServer\\datas\\%s", typeName)
 	jsonData, err := os.ReadFile(filePath)
 	if err != nil {
-		panic(err)
+		panic(err) // TODO 不许panic
 	}
 	typeaaa := reflect.TypeOf((*T)(nil)).Elem()
 	listType := define.GetListType(typeaaa)
 	listInstance := reflect.New(listType).Interface()
 	err = json.Unmarshal(jsonData, listInstance)
 	if err != nil {
-		panic(err)
+		panic(err) // TODO 不许panic
 	}
 	content := reflect.ValueOf(listInstance).Elem().FieldByName("Content")
 	for _, item := range content.Interface().([]T) {
