@@ -39,23 +39,6 @@ namespace Config
             }
         }
 
-        private Dictionary<TIndex, BaseData<TIndex>> LoadConfig<TIndex>(Type type)
-        {
-            Dictionary<TIndex, BaseData<TIndex>> dict = new Dictionary<TIndex, BaseData<TIndex>>();
-            string typeName = type.Name;
-            string fileName = typeName.Substring(1);
-            string json = ReadRawText(fileName);
-            var listType = Type.GetType($"{ConfigClassNamespace}.{typeName}List");
-            var obj = JsonUtility.FromJson(json, listType);
-            var field = listType.GetField("Content");
-            BaseData<TIndex>[] list = (BaseData<TIndex>[])field.GetValue(obj);
-            foreach (var item in list)
-            {
-                dict.Add(item.ID, item);
-            }
-            return dict;
-        }
-
         public TValue GetConst<TValue>(string id)
         {
             var config = GetConfig<DConst>(id);
@@ -94,6 +77,23 @@ namespace Config
                 sr.Close();
             }
             return readData;
+        }
+
+        private Dictionary<TIndex, BaseData<TIndex>> LoadConfig<TIndex>(Type type)
+        {
+            Dictionary<TIndex, BaseData<TIndex>> dict = new Dictionary<TIndex, BaseData<TIndex>>();
+            string typeName = type.Name;
+            string fileName = typeName.Substring(1);
+            string json = ReadRawText(fileName);
+            var listType = Type.GetType($"{ConfigClassNamespace}.{typeName}List");
+            var obj = JsonUtility.FromJson(json, listType);
+            var field = listType.GetField("Content");
+            BaseData<TIndex>[] list = (BaseData<TIndex>[])field.GetValue(obj);
+            foreach (var item in list)
+            {
+                dict.Add(item.ID, item);
+            }
+            return dict;
         }
     }
 }
