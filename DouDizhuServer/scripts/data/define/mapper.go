@@ -6,6 +6,7 @@ var itemToList = make(map[reflect.Type]reflect.Type)
 
 func InitMapper() {
     registerItemToList(DConst{}, DConstList{})
+    registerItemToList(DStrings{}, DStringsList{})
 }
 
 func registerItemToList(item, list interface{}) {
