@@ -9,11 +9,6 @@ namespace UIModule.Test
         [SerializeField] private Vector2 m_TextPosition;
         [SerializeField] private EnumUILayer m_Layer;
 
-        private void Start()
-        {
-            
-        }
-
         public void ShowTestUI(string text, Vector2 textPosition, EnumUILayer layer)
         {
             switch (layer)

@@ -119,7 +119,7 @@ namespace UIModule
                 return;
             }
             var showingUIInfo = new ShowingUIInfo(identifier, componentAttribute.OpenLayer, uiComponent);
-            uiComponent.Initialize(identifier);
+            uiComponent.Initialize(showingUIInfo);
             m_ShowingUIInfos.Add(showingUIInfo);
             UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
             m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
@@ -166,9 +166,18 @@ namespace UIModule
 
         public void HideUI(Type componentType, string identifier)
         {
-            var showingUIInfos = m_ShowingUIInfos.FindAll(info => info.UIComponent.GetType() == componentType && info.Identifier == identifier);
-            foreach (var info in showingUIInfos)
-                HideUIImpl(info);
+            var showingUIInfo = m_ShowingUIInfos.FindLast(info => info.UIComponent.GetType() == componentType && info.Identifier == identifier);
+            if (showingUIInfo == null)
+            {
+                Log.Warning("未找到UI：<{component}>[{identifier}]，当前堆栈：{stack}", componentType.FullName, identifier, GetUIStack());
+                return;
+            }
+            HideUI(showingUIInfo);
+        }
+
+        public void HideUI(ShowingUIInfo showingUIInfo)
+        {
+            HideUIImpl(showingUIInfo);
         }
         
         public void HideUIType<TUIComponent>() where TUIComponent : UIComponentBase
@@ -184,6 +193,9 @@ namespace UIModule
         }
         private void HideUIImpl(ShowingUIInfo showingUIInfo)
         {
+            if (showingUIInfo == null)
+                return;
+                
             BeforeHideUI(showingUIInfo);
 
             m_ShowingUIInfos.Remove(showingUIInfo);

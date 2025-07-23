@@ -30,14 +30,14 @@ namespace UIModule
     public abstract class UIComponentBase : UIWidget
     {
         private bool m_IsInitialized = false;
-        public string Identifier { get; private set; }
+        private ShowingUIInfo m_ShowingUIInfo;
         public struct EmptyArgs { }
 
-        public virtual void Initialize(string identifier)
+        public virtual void Initialize(ShowingUIInfo showingUIInfo)
         {
             if (m_IsInitialized)
                 return;
-            Identifier = identifier;
+            m_ShowingUIInfo = showingUIInfo;
             m_IsInitialized = true;
         }
 
@@ -73,7 +73,7 @@ namespace UIModule
 
         public void Hide()
         {
-            UIManager.Instance.HideUI(GetType(), Identifier);
+            UIManager.Instance.HideUI(m_ShowingUIInfo);
         }
     }
 }
