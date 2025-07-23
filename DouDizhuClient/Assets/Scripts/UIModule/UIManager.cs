@@ -157,7 +157,7 @@ namespace UIModule
                     var showingUIInfo = m_ShowingUIInfos[i];
                     if (showingUIInfo.Layer != EnumUILayer.View && showingUIInfo.Layer != EnumUILayer.Popup)
                         continue;
-                    showingUIInfo.Covered();
+                    showingUIInfo.UIComponent.Covered();
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace UIModule
             foreach (var info in showingUITypeInfos)
                 HideUIImpl(info);
         }
-        
+
         private void HideUIImpl(ShowingUIInfo showingUIInfo)
         {
             if (showingUIInfo == null)
@@ -250,7 +250,7 @@ namespace UIModule
                     var showingUIInfo = m_ShowingUIInfos[i];
                     if (showingUIInfo.Layer != EnumUILayer.View && showingUIInfo.Layer != EnumUILayer.Popup)
                         continue;
-                    showingUIInfo.Uncovered();
+                    showingUIInfo.UIComponent.Uncovered();
                 }
             }
         }

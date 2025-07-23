@@ -1,6 +1,5 @@
 ﻿using System;
 using Serilog;
-using UnityEngine;
 
 namespace UIModule
 {
@@ -33,8 +32,9 @@ namespace UIModule
     {
         private bool m_IsInitialized = false;
         private ShowingUIInfo m_ShowingUIInfo;
-        public struct EmptyArgs { }
 
+        private int m_CoveredCounter = 0;
+        
         public void Initialize(ShowingUIInfo showingUIInfo)
         {
             if (m_IsInitialized)
@@ -67,9 +67,47 @@ namespace UIModule
 
         }
 
+        public void Covered()
+        {
+            if (m_CoveredCounter == 0)
+            {
+                try
+                {
+                    OnCovered();
+                    gameObject.SetActive(false);
+                }
+                catch (Exception e)
+                {
+                    // TODO 是不是可以考虑直接关闭界面？
+                    Log.Error(e, $"{m_ShowingUIInfo}在 OnCovered() 时发生错误");
+                }
+            }
+            m_CoveredCounter++;
+        }
+
         public virtual void OnCovered()
         {
 
+        }
+
+        public void Uncovered()
+        {
+            if (m_CoveredCounter == 0)
+                return;
+            m_CoveredCounter--;
+            if (m_CoveredCounter == 0)
+            {
+                try
+                {
+                    gameObject.SetActive(true);
+                    OnUncovered();
+                }
+                catch (Exception e)
+                {
+                    // TODO 是不是可以考虑直接关闭界面？
+                    Log.Error(e, $"{m_ShowingUIInfo}在 OnUncovered() 时发生错误");
+                }
+            }
         }
 
         public virtual void OnUncovered()
