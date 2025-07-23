@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Serilog;
+using UnityEngine;
 
 namespace UIModule
 {
@@ -33,12 +35,26 @@ namespace UIModule
         private ShowingUIInfo m_ShowingUIInfo;
         public struct EmptyArgs { }
 
-        public virtual void Initialize(ShowingUIInfo showingUIInfo)
+        public void Initialize(ShowingUIInfo showingUIInfo)
         {
             if (m_IsInitialized)
                 return;
             m_ShowingUIInfo = showingUIInfo;
             m_IsInitialized = true;
+
+            try
+            {
+                OnInitialize();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{showingUIInfo}在 OnInitialize() 时发生错误", m_ShowingUIInfo);
+            }
+        }
+
+        public virtual void OnInitialize()
+        {
+            
         }
 
         public virtual void OnShowBegin(object args)

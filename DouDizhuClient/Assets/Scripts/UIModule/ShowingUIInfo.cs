@@ -33,6 +33,7 @@ namespace UIModule
                 }
                 catch (Exception e)
                 {
+                    // TODO 是不是可以考虑直接关闭界面？
                     Log.Error(e, $"UIComponent.OnCovered() 异常, Identifier: {Identifier}, Type: {UIComponent.GetType().FullName}");
                 }
             }
@@ -53,6 +54,7 @@ namespace UIModule
                 }
                 catch (Exception e)
                 {
+                    // TODO 是不是可以考虑直接关闭界面？
                     Log.Error(e, $"UIComponent.OnUncovered() 异常, Identifier: {Identifier}, Type: {UIComponent.GetType().FullName}");
                 }
             }

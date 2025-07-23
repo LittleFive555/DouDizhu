@@ -120,16 +120,31 @@ namespace UIModule
             }
             var showingUIInfo = new ShowingUIInfo(identifier, componentAttribute.OpenLayer, uiComponent);
             uiComponent.Initialize(showingUIInfo);
+
             m_ShowingUIInfos.Add(showingUIInfo);
             UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
             m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
             Log.Information("显示UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", componentType, GetUIStack(), GetUIStackAllLayers());
 
-            uiComponent.OnShowBegin(args);
-            uiComponent.OnShowFinish(args);
+            try
+            {
+                uiComponent.OnShowBegin(args);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{showingUIInfo}在 OnShowBegin() 时发生错误", showingUIInfo);
+            }
+
+            try
+            {
+                uiComponent.OnShowFinish(args);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{showingUIInfo}在 OnShowFinish() 时发生错误", showingUIInfo);
+            }
 
             AfterShowUI(showingUIInfo);
-
         }
 
         private void AfterShowUI(ShowingUIInfo uiInfo)
@@ -191,6 +206,7 @@ namespace UIModule
             foreach (var info in showingUITypeInfos)
                 HideUIImpl(info);
         }
+        
         private void HideUIImpl(ShowingUIInfo showingUIInfo)
         {
             if (showingUIInfo == null)
@@ -204,8 +220,23 @@ namespace UIModule
 
             Log.Information("隐藏UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", showingUIInfo, GetUIStack(), GetUIStackAllLayers());
 
-            showingUIInfo.UIComponent.OnHideBegin();
-            showingUIInfo.UIComponent.OnHideFinish();
+            try
+            {
+                showingUIInfo.UIComponent.OnHideBegin();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{showingUIInfo}在 OnHideBegin() 时发生错误", showingUIInfo);
+            }
+
+            try
+            {
+                showingUIInfo.UIComponent.OnHideFinish();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "{showingUIInfo}在 OnHideFinish() 时发生错误", showingUIInfo);
+            }
             UnityEngine.Object.Destroy(showingUIInfo.UIComponent.gameObject);
         }
 
