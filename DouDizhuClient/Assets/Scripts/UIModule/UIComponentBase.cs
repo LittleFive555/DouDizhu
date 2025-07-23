@@ -48,7 +48,7 @@ namespace UIModule
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "{showingUIInfo}在 OnInitialize() 时发生错误", m_ShowingUIInfo);
+                Log.Error(ex, $"{m_ShowingUIInfo}在 OnInitialize() 时发生错误");
             }
         }
 
@@ -74,12 +74,14 @@ namespace UIModule
                 try
                 {
                     OnCovered();
-                    gameObject.SetActive(false);
                 }
                 catch (Exception e)
                 {
-                    // TODO 是不是可以考虑直接关闭界面？
                     Log.Error(e, $"{m_ShowingUIInfo}在 OnCovered() 时发生错误");
+                }
+                finally
+                {
+                    gameObject.SetActive(false);
                 }
             }
             m_CoveredCounter++;
@@ -99,13 +101,15 @@ namespace UIModule
             {
                 try
                 {
-                    gameObject.SetActive(true);
                     OnUncovered();
                 }
                 catch (Exception e)
                 {
-                    // TODO 是不是可以考虑直接关闭界面？
                     Log.Error(e, $"{m_ShowingUIInfo}在 OnUncovered() 时发生错误");
+                }
+                finally
+                {
+                    gameObject.SetActive(true);
                 }
             }
         }
