@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Config.Define;
+using Serilog;
 using UnityEngine;
 
 namespace Config
@@ -53,6 +54,7 @@ namespace Config
             if (m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt) && dictInt.TryGetValue(id, out var config))
                 return (T)config;
 
+            Log.Error($"ConfigsManager: Config {typeof(T).Name} with id {id} not found");
             return null;
         }
 
@@ -64,6 +66,7 @@ namespace Config
             if (m_ConfigDictString.TryGetValue(typeof(T), out var dictString) && dictString.TryGetValue(id, out var config))
                 return (T)config;
 
+            Log.Error($"ConfigsManager: Config {typeof(T).Name} with id {id} not found");
             return null;
         }
 
