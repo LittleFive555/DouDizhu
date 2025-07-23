@@ -3,7 +3,6 @@ using UnityEngine;
 using TMPro;
 using UIModule;
 using Gameplay.Player.Service;
-using UnityEngine.UI;
 using Config;
 
 namespace Gameplay.Login.View
@@ -53,9 +52,15 @@ namespace Gameplay.Login.View
         }
 
         [OnClick("Button")]
-        private async void OnClickConfirm()
+        protected async void OnClickConfirm()
         {
             await OnClickConfirmAsync();
+        }
+
+        [OnClick("BtnBack")]
+        protected void OnClickBack()
+        {
+            Hide();
         }
 
         private void OnSelectAccountInput(string _)

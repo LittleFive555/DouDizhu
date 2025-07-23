@@ -31,6 +31,10 @@
     {
       "ID": "Cancel",
       "Value": "\u53D6\u6D88"
+    },
+    {
+      "ID": "GoBack",
+      "Value": "\u8FD4\u56DE"
     }
   ]
 }
