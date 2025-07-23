@@ -111,6 +111,11 @@ namespace UIModule
                 return;
             }
             var uiObjAsset = AssetManager.LoadAsset<GameObject>(componentAttribute.ResPath);
+            if (uiObjAsset == null)
+            {
+                Log.Error("未找到UI资源：{resPath}", componentAttribute.ResPath);
+                return;
+            }
             var uiObj = GameObject.Instantiate(uiObjAsset);
             var uiComponent = uiObj.GetComponent(componentType) as UIComponentBase;
             if (uiComponent == null)
@@ -124,7 +129,7 @@ namespace UIModule
             m_ShowingUIInfos.Add(showingUIInfo);
             UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
             m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
-            Log.Information("显示UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", componentType, GetUIStack(), GetUIStackAllLayers());
+            Log.Information("显示UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", showingUIInfo, GetUIStack(), GetUIStackAllLayers());
 
             try
             {
@@ -184,7 +189,7 @@ namespace UIModule
             var showingUIInfo = m_ShowingUIInfos.FindLast(info => info.UIComponent.GetType() == componentType && info.Identifier == identifier);
             if (showingUIInfo == null)
             {
-                Log.Warning("未找到UI：<{component}>[{identifier}]，当前堆栈：{stack}", componentType.FullName, identifier, GetUIStack());
+                Log.Warning("未找到UI<{component}>[{identifier}]，当前堆栈：{stack}", componentType.FullName, identifier, GetUIStack());
                 return;
             }
             HideUI(showingUIInfo);
