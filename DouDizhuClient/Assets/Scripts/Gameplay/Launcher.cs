@@ -1,3 +1,4 @@
+using Config;
 using EdenMeng.AssetManager;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Gameplay
         private async void Awake()
         {
             InitAssetManager();
+            ConfigsManager.Instance.LoadConfigs();
             await GameManager.Instance.Launch(m_ServerHost);
         }
 
