@@ -51,11 +51,19 @@ namespace Config
 
         public T GetConfig<T>(int id) where T : DBaseData<int>
         {
-            if (m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt) && dictInt.TryGetValue(id, out var config))
-                return (T)config;
+            if (!m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt))
+            {
+                Log.Error($"[Configs] <{typeof(T).Name}> is not loaded.");
+                return null;
+            }
 
-            Log.Error($"ConfigsManager: Config {typeof(T).Name} with id {id} not found");
-            return null;
+            if (!dictInt.TryGetValue(id, out var config))
+            {
+                Log.Error($"[Configs] <{typeof(T).Name}> with id {id} is not found");
+                return null;
+            }
+
+            return (T)config;
         }
 
         public T GetConfig<T>(string id) where T : DBaseData<string>
@@ -63,11 +71,19 @@ namespace Config
             if (string.IsNullOrEmpty(id))
                 return null;
 
-            if (m_ConfigDictString.TryGetValue(typeof(T), out var dictString) && dictString.TryGetValue(id, out var config))
-                return (T)config;
+            if (!m_ConfigDictString.TryGetValue(typeof(T), out var dictString))
+            {
+                Log.Error($"[Configs] <{typeof(T).Name}> is not loaded.");
+                return null;
+            }
 
-            Log.Error($"ConfigsManager: Config {typeof(T).Name} with id {id} not found");
-            return null;
+            if (!dictString.TryGetValue(id, out var config))
+            {
+                Log.Error($"[Configs] <{typeof(T).Name}> with id {id} is not found");
+                return null;
+            }
+
+            return (T)config;
         }
 
         private static string ReadRawText(string fileName)
