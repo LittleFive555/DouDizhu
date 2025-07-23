@@ -51,6 +51,16 @@ namespace UIModule
 
         }
 
+        public virtual void OnCovered()
+        {
+
+        }
+
+        public virtual void OnUncovered()
+        {
+            
+        }
+
         public virtual void OnHideBegin()
         {
 

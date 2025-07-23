@@ -4,16 +4,35 @@ using EdenMeng.AssetManager;
 using System.Collections.Generic;
 using System;
 using Serilog;
+using System.Text;
 
 namespace UIModule
 {
     public enum EnumUILayer
     {
+        /// <summary>
+        /// 背景层
+        /// </summary>
         Background,
+        /// <summary>
+        /// 全屏视图层，打开后会隐藏View和Popup层
+        /// </summary>
         View,
+        /// <summary>
+        /// 弹窗层，打开后会在View层之上，但不隐藏View层
+        /// </summary>
         Popup,
+        /// <summary>
+        /// 浮动层，打开后始终在View和Popup层之上
+        /// </summary>
         Floating,
+        /// <summary>
+        /// 引导层，用于显示引导UI，始终在View、Popup和Floating层之上
+        /// </summary>
         Guide,
+        /// <summary>
+        /// 系统层，层级最高，用于显示系统提示等，在所有其他层之上
+        /// </summary>
         System,
     }
 
@@ -99,20 +118,33 @@ namespace UIModule
                 Log.Error("未找到{component}的UI组件", componentType.FullName);
                 return;
             }
-            var showingUIInfo = new ShowingUIInfo()
-            {
-                Identifier = identifier,
-                Layer = componentAttribute.OpenLayer,
-                UIComponent = uiComponent,
-            };
+            var showingUIInfo = new ShowingUIInfo(identifier, componentAttribute.OpenLayer, uiComponent);
             uiComponent.Initialize(identifier);
             m_ShowingUIInfos.Add(showingUIInfo);
             UIRoot.Instance.AppendToLayer(componentAttribute.OpenLayer, uiObj);
-            Log.Information("显示UI：{component}，标识：{identifier}", componentType.FullName, identifier);
+            m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
+            Log.Information("显示UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", componentType, GetUIStack(), GetUIStackAllLayers());
 
             uiComponent.OnShowBegin(args);
             uiComponent.OnShowFinish(args);
-            m_UIStacks[componentAttribute.OpenLayer].Add(identifier);
+
+            AfterShowUI(showingUIInfo);
+
+        }
+
+        private void AfterShowUI(ShowingUIInfo uiInfo)
+        {
+            if (uiInfo.Layer == EnumUILayer.View)
+            {
+                int currentIndex = m_ShowingUIInfos.IndexOf(uiInfo);
+                for (int i = 0; i < currentIndex; i++)
+                {
+                    var showingUIInfo = m_ShowingUIInfos[i];
+                    if (showingUIInfo.Layer != EnumUILayer.View && showingUIInfo.Layer != EnumUILayer.Popup)
+                        continue;
+                    showingUIInfo.Covered();
+                }
+            }
         }
 #endregion
 
@@ -138,9 +170,7 @@ namespace UIModule
             foreach (var info in showingUIInfos)
                 HideUIImpl(info);
         }
-#endregion
-
-#region HideUIType
+        
         public void HideUIType<TUIComponent>() where TUIComponent : UIComponentBase
         {
             HideUIType(typeof(TUIComponent));
@@ -152,17 +182,36 @@ namespace UIModule
             foreach (var info in showingUITypeInfos)
                 HideUIImpl(info);
         }
-#endregion
-
         private void HideUIImpl(ShowingUIInfo showingUIInfo)
         {
-            Log.Information("隐藏UI：{component}，标识：{identifier}", showingUIInfo.UIComponent.GetType().FullName, showingUIInfo.Identifier);
-            showingUIInfo.UIComponent.OnHideBegin();
-            showingUIInfo.UIComponent.OnHideFinish();
+            BeforeHideUI(showingUIInfo);
+
             m_ShowingUIInfos.Remove(showingUIInfo);
             UIRoot.Instance.RemoveFromLayer(showingUIInfo.Layer, showingUIInfo.UIComponent.gameObject);
+            m_UIStacks[showingUIInfo.Layer].Remove(showingUIInfo.Identifier);
+
+            Log.Information("隐藏UI：{component}, 堆栈：{stack}\n 详细堆栈：{stackAll}", showingUIInfo, GetUIStack(), GetUIStackAllLayers());
+
+            showingUIInfo.UIComponent.OnHideBegin();
+            showingUIInfo.UIComponent.OnHideFinish();
             UnityEngine.Object.Destroy(showingUIInfo.UIComponent.gameObject);
         }
+
+        private void BeforeHideUI(ShowingUIInfo uiInfo)
+        {
+            if (uiInfo.Layer == EnumUILayer.View)
+            {
+                int currentIndex = m_ShowingUIInfos.IndexOf(uiInfo);
+                for (int i = 0; i < currentIndex; i++)
+                {
+                    var showingUIInfo = m_ShowingUIInfos[i];
+                    if (showingUIInfo.Layer != EnumUILayer.View && showingUIInfo.Layer != EnumUILayer.Popup)
+                        continue;
+                    showingUIInfo.Uncovered();
+                }
+            }
+        }
+#endregion
 
 #region IsUIShowing
         public bool IsUIShowing<TUIComponent>() where TUIComponent : UIComponentBase
@@ -192,5 +241,27 @@ namespace UIModule
             return m_ShowingUIInfos.FindAll(info => info.UIComponent.GetType() == componentType).Count > 0;
         }
 #endregion
+
+        public string GetUIStack()
+        {
+            return string.Join(", ", m_ShowingUIInfos);
+        }
+
+        public string GetUIStackByLayer(EnumUILayer layer)
+        {
+            return string.Join(", ", m_UIStacks[layer]);
+        }
+
+        public string GetUIStackAllLayers()
+        {
+            StringBuilder stack = new StringBuilder();
+            foreach (var layer in m_UIStacks)
+            {
+                stack.Append($"{layer.Key}: ");
+                stack.Append(string.Join(", ", layer.Value));
+                stack.Append("\n");
+            }
+            return stack.ToString();
+        }
     }
 }
