@@ -27,23 +27,28 @@ namespace UIModule.Editor
             };
 
             bool hasClickBinding = false;
-            var methods = uiWidget.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            foreach (var method in methods)
+            var type = uiWidget.GetType();
+            while (type != null && type != typeof(UIWidget))
             {
-                var attribute = method.GetCustomAttribute<OnClickAttribute>();
-                if (attribute == null)
-                    continue;
+                var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly);
+                foreach (var method in methods)
+                {
+                    var attribute = method.GetCustomAttribute<OnClickAttribute>();
+                    if (attribute == null)
+                        continue;
 
-                var objectField = new ObjectField(method.Name);
-                objectField.SetEnabled(false);
-                objectField.value = uiWidget.transform.Find(attribute.Path)?.GetComponent<UnityEngine.UI.Button>();
-                clickBindingFoldout.Add(objectField);
-                if (objectField.value == null)
-                    clickBindingFoldout.Add(new Label("Above ClickBinding is not referenced")
-                    {
-                        style = { color = new Color(1f, 1f, 0, 1), backgroundColor = new Color(1f, 1f, 0, 0.1f) }
-                    });
-                hasClickBinding = true;
+                    var objectField = new ObjectField(method.Name);
+                    objectField.SetEnabled(false);
+                    objectField.value = uiWidget.transform.Find(attribute.Path)?.GetComponent<UnityEngine.UI.Button>();
+                    clickBindingFoldout.Add(objectField);
+                    if (objectField.value == null)
+                        clickBindingFoldout.Add(new Label("Above ClickBinding is not referenced")
+                        {
+                            style = { color = new Color(1f, 1f, 0, 1), backgroundColor = new Color(1f, 1f, 0, 0.1f) }
+                        });
+                    hasClickBinding = true;
+                }
+                type = type.BaseType;
             }
 
             if (hasClickBinding)

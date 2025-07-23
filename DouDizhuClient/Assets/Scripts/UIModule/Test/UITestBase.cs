@@ -23,7 +23,7 @@ namespace UIModule.Test
         }
 
         [OnClick("BtnClose")]
-        protected void OnClickClose()
+        private void OnClickClose()
         {
             Hide();
         }
