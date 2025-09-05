@@ -83,3 +83,8 @@ crashlytics-build.properties
 
 # Local History for Visual Studio Code
 .history/
+
+/Assets/StreamingAssets/AssetBundles/*
+/Assets/StreamingAssets/AssetBundles.meta
+/Assets/BundlesInfo.asset
+/Assets/BundlesInfo.asset.meta
