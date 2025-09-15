@@ -2,6 +2,7 @@
   "dependencies": {
     "com.edenmeng.assetmanager": "git@github.com:LittleFive555/AssetManagerPackage.git",
     "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+    "com.unity.cinemachine": "2.10.4",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.34",
