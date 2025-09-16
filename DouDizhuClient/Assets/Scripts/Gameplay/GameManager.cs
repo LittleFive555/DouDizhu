@@ -23,11 +23,22 @@ namespace Gameplay
             }
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        public static void InitializeLogger()
+        {
+            // TODO 日志文件在Editor下和Build下分开
+            // 初始化日志
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Unity3D()
+                .WriteTo.File("log.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true)
+                .CreateLogger();
+            Log.Information("Logger Initialized");
+        }
+
         public async Task Launch(string serverHost)
         {
-            InitializeLogger();
-            Log.Information("Logger Initialized");
-
             CreateMainBehaviour();
 
             await NetworkManager.Instance.ConnectAsync(serverHost, 8080);
@@ -52,8 +63,6 @@ namespace Gameplay
 
         public async Task LaunchPlayground(string serverHost)
         {
-            InitializeLogger();
-            Log.Information("Logger Initialized");
 
             CreateMainBehaviour();
 
@@ -64,18 +73,6 @@ namespace Gameplay
         {
             NetworkManager.Instance.Disconnect();
             Log.CloseAndFlush();
-        }
-
-        private void InitializeLogger()
-        {
-            // TODO 日志文件在Editor下和Build下分开
-            // 初始化日志
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Unity3D()
-                .WriteTo.File("log.txt",
-                    rollingInterval: RollingInterval.Day,
-                    rollOnFileSizeLimit: true)
-                .CreateLogger();
         }
 
         private void CreateMainBehaviour()
