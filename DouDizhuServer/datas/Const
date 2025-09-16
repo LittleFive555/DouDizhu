@@ -15,6 +15,42 @@
     {
       "ID": "PasswordMaxLength",
       "Value": "26"
+    },
+    {
+      "ID": "TestInt",
+      "Value": "8"
+    },
+    {
+      "ID": "TestFloat",
+      "Value": "1.6"
+    },
+    {
+      "ID": "TestBool",
+      "Value": "TRUE"
+    },
+    {
+      "ID": "TestLong",
+      "Value": "999999999999999"
+    },
+    {
+      "ID": "TestDouble",
+      "Value": "254354.254354354"
+    },
+    {
+      "ID": "TestString",
+      "Value": "test string"
+    },
+    {
+      "ID": "TestVector2",
+      "Value": "(1,2)"
+    },
+    {
+      "ID": "TestVector3",
+      "Value": "(1.1, 2, 0)"
+    },
+    {
+      "ID": "TestDateTime",
+      "Value": "1/1/2025 10:00:00"
     }
   ]
 }

@@ -38,8 +38,8 @@ namespace Gameplay.Login.View
             int accountMaxLength = ConfigsManager.Instance.GetConst<int>("AccountMaxLength");
             int passwordMinLength = ConfigsManager.Instance.GetConst<int>("PasswordMinLength");
             int passwordMaxLength = ConfigsManager.Instance.GetConst<int>("PasswordMaxLength");
-            m_TextAccountTip.text = StringsHelper.GetString("AccountTip", accountMinLength, accountMaxLength);
-            m_TextPasswordTip.text = StringsHelper.GetString("PasswordTip", passwordMinLength, passwordMaxLength);
+            m_TextAccountTip.text = ConfigsManager.Instance.GetString("AccountTip", accountMinLength, accountMaxLength);
+            m_TextPasswordTip.text = ConfigsManager.Instance.GetString("PasswordTip", passwordMinLength, passwordMaxLength);
         }
 
         public async Task OnClickConfirmAsync()

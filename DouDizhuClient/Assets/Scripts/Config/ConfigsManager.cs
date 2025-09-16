@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Config
 {
-    public class ConfigsManager
+    public partial class ConfigsManager
     {
         private static ConfigsManager m_Instance;
         public static ConfigsManager Instance
@@ -39,16 +39,7 @@ namespace Config
                     m_ConfigDictString.Add(type, LoadConfig<string>(type));
             }
         }
-
-        public TValue GetConst<TValue>(string id)
-        {
-            var config = GetConfig<DConst>(id);
-            if (config == null)
-                return default;
-
-            return (TValue)Convert.ChangeType(config.Value, typeof(TValue));
-        }
-
+        
         public T GetConfig<T>(int id) where T : DBaseData<int>
         {
             if (!m_ConfigDictInt.TryGetValue(typeof(T), out var dictInt))
