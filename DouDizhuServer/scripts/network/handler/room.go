@@ -135,3 +135,17 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 		}, nil
 	}
 }
+
+func tryGetPlayerRoom(player *player.Player) (*room.Room, error) {
+	if player == nil {
+		return nil, errordef.NewGameplayError(errordef.CodePlayerOffline)
+	}
+	if !player.IsInRoom() {
+		return nil, errordef.NewGameplayError(errordef.CodePlayerNotInRoom)
+	}
+	room, err := room.Manager.GetRoom(player.GetRoomId())
+	if err != nil {
+		return nil, err
+	}
+	return room, nil
+}

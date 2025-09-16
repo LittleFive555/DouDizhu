@@ -14,6 +14,7 @@ type Room struct {
 	maxPlayerCount uint32
 	state          protodef.PRoomState
 	lock           sync.RWMutex
+	world          *RoomWorld
 }
 
 func NewRoom(id uint32, name string) *Room {
@@ -23,6 +24,7 @@ func NewRoom(id uint32, name string) *Room {
 		playerIds:      []string{},
 		maxPlayerCount: 3,
 		state:          protodef.PRoomState_PROOM_STATE_WAITING,
+		world:          NewRoomWorld(),
 	}
 }
 

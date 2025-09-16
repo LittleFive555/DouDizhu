@@ -27,6 +27,7 @@ func (m *RoomManager) CreateRoom(name string) *Room {
 	roomId := uuid.New().ID()
 	room := NewRoom(roomId, name)
 	m.rooms[room.id] = room
+	go room.world.RunLoop()
 	return room
 }
 
@@ -59,7 +60,7 @@ func (m *RoomManager) RemoveRoom(roomId uint32) error {
 	if _, ok := m.rooms[roomId]; !ok {
 		return errordef.NewGameplayError(errordef.CodeRoomNotExists)
 	}
-
+	m.rooms[roomId].world.Stop()
 	delete(m.rooms, roomId)
 	return nil
 }

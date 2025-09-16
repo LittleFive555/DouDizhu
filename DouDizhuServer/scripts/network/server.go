@@ -15,13 +15,6 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-var Server *GameServer
-
-// GetServer 返回游戏服务器实例
-func GetServer() *GameServer {
-	return Server
-}
-
 type GameServer struct {
 	listener   net.Listener
 	sessionMgr *session.SessionManager
@@ -64,7 +57,7 @@ func (s *GameServer) Stop() error {
 }
 
 func (s *GameServer) RegisterHandlers() {
-	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, HandleHandshake)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, s.HandleHandshake)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, handler.HandleRegister)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, handler.HandleLogin)
@@ -78,13 +71,13 @@ func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*messag
 	s.dispatcher.RegisterHandler(msgId, handler)
 }
 
-func HandleHandshake(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
+func (s *GameServer) HandleHandshake(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
 	reqMsg, ok := (*req).(*protodef.PHandshakeRequest)
 	if !ok {
 		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
 
-	session, err := Server.sessionMgr.GetSession(context.SessionId)
+	session, err := s.sessionMgr.GetSession(context.SessionId)
 	if err != nil {
 		return nil, err
 	}
@@ -263,6 +256,7 @@ func (s *GameServer) handleRequest(session *session.PlayerSession, clientMsg *pr
 	context := &message.MessageContext{
 		SessionId: sessionId,
 		PlayerId:  msgHeader.PlayerId,
+		Timestamp: msgHeader.Timestamp,
 	}
 	result, err = handler(context, &reqPayload)
 	return result, enableEncryption, err
@@ -282,7 +276,7 @@ func createResponseMsg(requestHeader *protodef.PMsgHeader) *protodef.PServerMsg 
 		Header: &protodef.PMsgHeader{
 			UniqueId:  requestHeader.UniqueId,
 			MsgId:     requestHeader.MsgId,
-			Timestamp: requestHeader.Timestamp,
+			Timestamp: time.Now().UnixMilli(),
 
 			SessionId: requestHeader.SessionId,
 			PlayerId:  requestHeader.PlayerId,

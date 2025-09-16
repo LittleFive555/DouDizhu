@@ -38,8 +38,6 @@ namespace Network
         private Encryptor m_Encryptor;
 
         private readonly ConcurrentQueue<MessageDataToSend> m_MessageDataToSend = new();
-        
-        private const int SERVER_PORT = 8080;
 
 
         private const int REQUEST_TIMEOUT = 5;
@@ -53,9 +51,22 @@ namespace Network
             m_Encryptor = new Encryptor();
         }
 
-        public async Task ConnectAsync(string serverHost)
+        public async Task ConnectAsync(string serverHost, int port)
         {
-            await ConnectAsync(serverHost, SERVER_PORT);
+            try
+            {
+                m_TcpClient = new TcpClient();
+                await m_TcpClient.ConnectAsync(serverHost, port);
+                m_NetworkStream = m_TcpClient.GetStream();
+                m_IsConnected = true;
+                Log.Information("TCP连接已建立");
+                _ = ReceiveLoopAsync();
+            }
+            catch (SocketException ex)
+            {
+                Log.Error(ex, "TCP连接失败");
+                m_IsConnected = false;
+            }
         }
 
         public void Disconnect()
@@ -153,24 +164,6 @@ namespace Network
                 m_NotificationHandlers[msgId] -= adapter.Handle;
                 if (m_NotificationHandlers[msgId] == null)
                     m_NotificationHandlers.Remove(msgId);
-            }
-        }
-
-        private async Task ConnectAsync(string serverHost, int port)
-        {
-            try
-            {
-                m_TcpClient = new TcpClient();
-                await m_TcpClient.ConnectAsync(serverHost, port);
-                m_NetworkStream = m_TcpClient.GetStream();
-                m_IsConnected = true;
-                Log.Information("TCP连接已建立");
-                _ = ReceiveLoopAsync();
-            }
-            catch (SocketException ex)
-            {
-                Log.Error(ex, "TCP连接失败");
-                m_IsConnected = false;
             }
         }
 

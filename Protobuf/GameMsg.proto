@@ -27,6 +27,10 @@ enum PMsgId {
 
 	// 聊天相关
 	PMSG_ID_CHAT_MSG = 30;
+
+	// 房间人物控制
+	PMSG_ID_CHARACTER_MOVE = 60;
+	PMSG_ID_CHARACTER_STATE = 61;
 }
 
 message PMsgHeader {

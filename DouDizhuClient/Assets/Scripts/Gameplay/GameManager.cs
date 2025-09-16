@@ -30,7 +30,7 @@ namespace Gameplay
 
             CreateMainBehaviour();
 
-            await NetworkManager.Instance.ConnectAsync(serverHost);
+            await NetworkManager.Instance.ConnectAsync(serverHost, 8080);
 
             try
             {
@@ -48,6 +48,16 @@ namespace Gameplay
                 Log.Information("Main Scene Loaded");
                 UIManager.Instance.ShowUI<UILogin>();
             };
+        }
+
+        public async Task LaunchPlayground(string serverHost)
+        {
+            InitializeLogger();
+            Log.Information("Logger Initialized");
+
+            CreateMainBehaviour();
+
+            await NetworkManager.Instance.ConnectAsync(serverHost, 9090);
         }
 
         public void Exit()

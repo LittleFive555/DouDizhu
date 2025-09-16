@@ -19,6 +19,10 @@ var messageRegistry = map[protodef.PMsgId]func() proto.Message{
 
 	// Chat
 	protodef.PMsgId_PMSG_ID_CHAT_MSG: func() proto.Message { return &protodef.PChatMsgRequest{} },
+
+	// Character Move
+	protodef.PMsgId_PMSG_ID_CHARACTER_MOVE:  func() proto.Message { return &protodef.PCharacterMove{} },
+	protodef.PMsgId_PMSG_ID_CHARACTER_STATE: func() proto.Message { return &protodef.PCharacterState{} },
 }
 
 func GetMessage(msgId protodef.PMsgId) proto.Message {

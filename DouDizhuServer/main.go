@@ -3,6 +3,7 @@ package main
 import (
 	"DouDizhuServer/scripts/database"
 	"DouDizhuServer/scripts/gameplay/player"
+	"DouDizhuServer/scripts/gameplay/playground"
 	"DouDizhuServer/scripts/gameplay/room"
 	"DouDizhuServer/scripts/logger"
 	"DouDizhuServer/scripts/network"
@@ -22,18 +23,38 @@ func main() {
 	logger.Info("日志系统初始化成功")
 	database.ConnectDB()
 
+	// startGameServer()
+	startPlayground()
+}
+
+func startGameServer() {
+	var server *network.GameServer
 	// 创建并启动TCP服务器
-	network.Server = network.NewGameServer()
+	server = network.NewGameServer()
 
 	// 注册消息处理函数
-	network.Server.RegisterHandlers()
+	server.RegisterHandlers()
 
 	player.Manager = player.NewPlayerManager()
 	room.Manager = room.NewRoomManager()
 
-	if err := network.Server.Start(":8080"); err != nil {
+	if err := server.Start(":8080"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)
 	}
 
-	defer network.Server.Stop()
+	defer server.Stop()
+}
+
+func startPlayground() {
+	var server *network.GameServer
+	server = network.NewGameServer()
+	server.RegisterPlaygroundHandlers()
+
+	playground.Playground = playground.NewRoomPlayground()
+
+	if err := server.Start(":9090"); err != nil {
+		logger.PanicWith("服务器启动失败", "error", err)
+	}
+
+	defer server.Stop()
 }
