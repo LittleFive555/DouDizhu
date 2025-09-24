@@ -14,7 +14,7 @@ func HandleCharacterMove(context *message.MessageContext, req *proto.Message) (*
 	if !ok {
 		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
-	logger.InfoWith("收到角色移动消息", "playerId", context.PlayerId, "move", reqMsg)
+	logger.InfoWith("收到角色移动消息", "move", reqMsg)
 	// world := playground.Playground.World
 
 	return &message.HandleResult{}, nil

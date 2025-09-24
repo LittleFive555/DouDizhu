@@ -51,6 +51,7 @@ func startPlayground() {
 	server.RegisterPlaygroundHandlers()
 
 	playground.Playground = playground.NewRoomPlayground()
+	playground.Playground.Start()
 
 	if err := server.Start(":9090"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)

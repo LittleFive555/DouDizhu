@@ -10,6 +10,10 @@ type RoomPlayground struct {
 
 func NewRoomPlayground() *RoomPlayground {
 	return &RoomPlayground{
-		World: room.NewRoomWorld(),
+		World: room.NewRoomWorld("playground-111999555", 10),
 	}
+}
+
+func (p *RoomPlayground) Start() {
+	go p.World.RunLoop()
 }

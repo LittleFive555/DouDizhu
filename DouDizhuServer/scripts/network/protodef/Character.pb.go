@@ -81,16 +81,178 @@ func (x *PVector3) GetZ() float32 {
 	return 0
 }
 
+type PEnterWorldRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorldId       string                 `protobuf:"bytes,1,opt,name=worldId,proto3" json:"worldId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PEnterWorldRequest) Reset() {
+	*x = PEnterWorldRequest{}
+	mi := &file_Character_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PEnterWorldRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PEnterWorldRequest) ProtoMessage() {}
+
+func (x *PEnterWorldRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_Character_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PEnterWorldRequest.ProtoReflect.Descriptor instead.
+func (*PEnterWorldRequest) Descriptor() ([]byte, []int) {
+	return file_Character_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PEnterWorldRequest) GetWorldId() string {
+	if x != nil {
+		return x.WorldId
+	}
+	return ""
+}
+
+type PEnterWorldResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Characters    []*PCharacterState     `protobuf:"bytes,2,rep,name=characters,proto3" json:"characters,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PEnterWorldResponse) Reset() {
+	*x = PEnterWorldResponse{}
+	mi := &file_Character_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PEnterWorldResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PEnterWorldResponse) ProtoMessage() {}
+
+func (x *PEnterWorldResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_Character_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PEnterWorldResponse.ProtoReflect.Descriptor instead.
+func (*PEnterWorldResponse) Descriptor() ([]byte, []int) {
+	return file_Character_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PEnterWorldResponse) GetCharacters() []*PCharacterState {
+	if x != nil {
+		return x.Characters
+	}
+	return nil
+}
+
+type PLeaveWorldRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PLeaveWorldRequest) Reset() {
+	*x = PLeaveWorldRequest{}
+	mi := &file_Character_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PLeaveWorldRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PLeaveWorldRequest) ProtoMessage() {}
+
+func (x *PLeaveWorldRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_Character_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PLeaveWorldRequest.ProtoReflect.Descriptor instead.
+func (*PLeaveWorldRequest) Descriptor() ([]byte, []int) {
+	return file_Character_proto_rawDescGZIP(), []int{3}
+}
+
+type PLeaveWorldResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PLeaveWorldResponse) Reset() {
+	*x = PLeaveWorldResponse{}
+	mi := &file_Character_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PLeaveWorldResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PLeaveWorldResponse) ProtoMessage() {}
+
+func (x *PLeaveWorldResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_Character_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PLeaveWorldResponse.ProtoReflect.Descriptor instead.
+func (*PLeaveWorldResponse) Descriptor() ([]byte, []int) {
+	return file_Character_proto_rawDescGZIP(), []int{4}
+}
+
 type PCharacterMove struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MoveX         float32                `protobuf:"fixed32,1,opt,name=moveX,proto3" json:"moveX,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Move          *PVector3              `protobuf:"bytes,3,opt,name=move,proto3" json:"move,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PCharacterMove) Reset() {
 	*x = PCharacterMove{}
-	mi := &file_Character_proto_msgTypes[1]
+	mi := &file_Character_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -102,7 +264,7 @@ func (x *PCharacterMove) String() string {
 func (*PCharacterMove) ProtoMessage() {}
 
 func (x *PCharacterMove) ProtoReflect() protoreflect.Message {
-	mi := &file_Character_proto_msgTypes[1]
+	mi := &file_Character_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -115,26 +277,42 @@ func (x *PCharacterMove) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PCharacterMove.ProtoReflect.Descriptor instead.
 func (*PCharacterMove) Descriptor() ([]byte, []int) {
-	return file_Character_proto_rawDescGZIP(), []int{1}
+	return file_Character_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *PCharacterMove) GetMoveX() float32 {
+func (x *PCharacterMove) GetId() string {
 	if x != nil {
-		return x.MoveX
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PCharacterMove) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
 	}
 	return 0
 }
 
+func (x *PCharacterMove) GetMove() *PVector3 {
+	if x != nil {
+		return x.Move
+	}
+	return nil
+}
+
 type PCharacterState struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *PVector3              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Pos           *PVector3              `protobuf:"bytes,3,opt,name=pos,proto3" json:"pos,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *PCharacterState) Reset() {
 	*x = PCharacterState{}
-	mi := &file_Character_proto_msgTypes[2]
+	mi := &file_Character_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +324,7 @@ func (x *PCharacterState) String() string {
 func (*PCharacterState) ProtoMessage() {}
 
 func (x *PCharacterState) ProtoReflect() protoreflect.Message {
-	mi := &file_Character_proto_msgTypes[2]
+	mi := &file_Character_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,12 +337,26 @@ func (x *PCharacterState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PCharacterState.ProtoReflect.Descriptor instead.
 func (*PCharacterState) Descriptor() ([]byte, []int) {
-	return file_Character_proto_rawDescGZIP(), []int{2}
+	return file_Character_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *PCharacterState) GetPosition() *PVector3 {
+func (x *PCharacterState) GetId() string {
 	if x != nil {
-		return x.Position
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PCharacterState) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *PCharacterState) GetPos() *PVector3 {
+	if x != nil {
+		return x.Pos
 	}
 	return nil
 }
@@ -177,11 +369,23 @@ const file_Character_proto_rawDesc = "" +
 	"\bPVector3\x12\f\n" +
 	"\x01x\x18\x01 \x01(\x02R\x01x\x12\f\n" +
 	"\x01y\x18\x02 \x01(\x02R\x01y\x12\f\n" +
-	"\x01z\x18\x03 \x01(\x02R\x01z\"&\n" +
-	"\x0ePCharacterMove\x12\x14\n" +
-	"\x05moveX\x18\x01 \x01(\x02R\x05moveX\"A\n" +
-	"\x0fPCharacterState\x12.\n" +
-	"\bposition\x18\x01 \x01(\v2\x12.DouDizhu.PVector3R\bpositionB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
+	"\x01z\x18\x03 \x01(\x02R\x01z\".\n" +
+	"\x12PEnterWorldRequest\x12\x18\n" +
+	"\aworldId\x18\x01 \x01(\tR\aworldId\"P\n" +
+	"\x13PEnterWorldResponse\x129\n" +
+	"\n" +
+	"characters\x18\x02 \x03(\v2\x19.DouDizhu.PCharacterStateR\n" +
+	"characters\"\x14\n" +
+	"\x12PLeaveWorldRequest\"\x15\n" +
+	"\x13PLeaveWorldResponse\"f\n" +
+	"\x0ePCharacterMove\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x12&\n" +
+	"\x04move\x18\x03 \x01(\v2\x12.DouDizhu.PVector3R\x04move\"e\n" +
+	"\x0fPCharacterState\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x12$\n" +
+	"\x03pos\x18\x03 \x01(\v2\x12.DouDizhu.PVector3R\x03posB\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 
 var (
 	file_Character_proto_rawDescOnce sync.Once
@@ -195,19 +399,25 @@ func file_Character_proto_rawDescGZIP() []byte {
 	return file_Character_proto_rawDescData
 }
 
-var file_Character_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_Character_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_Character_proto_goTypes = []any{
-	(*PVector3)(nil),        // 0: DouDizhu.PVector3
-	(*PCharacterMove)(nil),  // 1: DouDizhu.PCharacterMove
-	(*PCharacterState)(nil), // 2: DouDizhu.PCharacterState
+	(*PVector3)(nil),            // 0: DouDizhu.PVector3
+	(*PEnterWorldRequest)(nil),  // 1: DouDizhu.PEnterWorldRequest
+	(*PEnterWorldResponse)(nil), // 2: DouDizhu.PEnterWorldResponse
+	(*PLeaveWorldRequest)(nil),  // 3: DouDizhu.PLeaveWorldRequest
+	(*PLeaveWorldResponse)(nil), // 4: DouDizhu.PLeaveWorldResponse
+	(*PCharacterMove)(nil),      // 5: DouDizhu.PCharacterMove
+	(*PCharacterState)(nil),     // 6: DouDizhu.PCharacterState
 }
 var file_Character_proto_depIdxs = []int32{
-	0, // 0: DouDizhu.PCharacterState.position:type_name -> DouDizhu.PVector3
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	6, // 0: DouDizhu.PEnterWorldResponse.characters:type_name -> DouDizhu.PCharacterState
+	0, // 1: DouDizhu.PCharacterMove.move:type_name -> DouDizhu.PVector3
+	0, // 2: DouDizhu.PCharacterState.pos:type_name -> DouDizhu.PVector3
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_Character_proto_init() }
@@ -221,7 +431,7 @@ func file_Character_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_Character_proto_rawDesc), len(file_Character_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

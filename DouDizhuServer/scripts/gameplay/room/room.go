@@ -4,6 +4,8 @@ import (
 	"DouDizhuServer/scripts/errordef"
 	"DouDizhuServer/scripts/network/protodef"
 	"sync"
+
+	"github.com/google/uuid"
 )
 
 type Room struct {
@@ -24,7 +26,7 @@ func NewRoom(id uint32, name string) *Room {
 		playerIds:      []string{},
 		maxPlayerCount: 3,
 		state:          protodef.PRoomState_PROOM_STATE_WAITING,
-		world:          NewRoomWorld(),
+		world:          NewRoomWorld(uuid.New().String(), 10),
 	}
 }
 

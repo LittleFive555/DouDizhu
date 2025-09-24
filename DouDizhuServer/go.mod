@@ -16,5 +16,6 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/ungerik/go3d v0.0.0-20240502073936-1137f6adf7e9 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 )

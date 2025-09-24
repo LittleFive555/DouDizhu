@@ -31,6 +31,8 @@ enum PMsgId {
 	// 房间人物控制
 	PMSG_ID_CHARACTER_MOVE = 60;
 	PMSG_ID_CHARACTER_STATE = 61;
+	PMSG_ID_ENTER_WORLD = 62;
+	PMSG_ID_LEAVE_WORLD = 63;
 }
 
 message PMsgHeader {
