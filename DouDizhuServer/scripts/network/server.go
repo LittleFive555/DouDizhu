@@ -122,7 +122,9 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 		return
 	}
 
+	// 处理请求
 	result, enableEncryption, err := s.handleRequest(session, clientMsg)
+
 	respMessage := createResponseMsg(clientMsg.GetHeader())
 	var respPayload proto.Message
 	var notifyPayload proto.Message
@@ -180,42 +182,52 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	// 发送通知
 	// 包装为 GameServerMessage
 	if gameError == nil && notifyPayload != nil && result.NotifyGroup != nil {
-		notifyPayloadBytes, err := serialize.SerializePayload(notifyPayload)
+		s.sendNotify(notifyPayload, result.NotifyGroup, result.NotifyMsgId)
+	}
+}
+
+func (s *GameServer) sendNotify(notifyPayload proto.Message, notifyGroup message.INotificationGroup, notifyMsgId protodef.PMsgId) {
+	notifyPayloadBytes, err := serialize.SerializePayload(notifyPayload)
+	if err != nil {
+		logger.ErrorWith("序列化通知失败", "error", err)
+		return
+	}
+	targetSessionIds := notifyGroup.GetTargetSessionIds()
+	for _, targetSessionId := range targetSessionIds {
+		targetSession, err := s.sessionMgr.GetSession(targetSessionId)
 		if err != nil {
-			logger.ErrorWith("序列化通知失败", "error", err)
-			return
+			logger.ErrorWith("获取会话失败", "error", err)
+			continue
 		}
-		targetSessionIds := result.NotifyGroup.GetTargetSessionIds()
-		for _, targetSessionId := range targetSessionIds {
-			targetSession, err := s.sessionMgr.GetSession(targetSessionId)
-			if err != nil {
-				logger.ErrorWith("获取会话失败", "error", err)
-				continue
-			}
-			notificationPayloadBytes, iv, err := targetSession.EncryptPayload(notifyPayloadBytes)
+		var notificationPayloadBytes []byte
+		var iv []byte
+		if targetSession.IsSecureKeyValid() {
+			notificationPayloadBytes, iv, err = targetSession.EncryptPayload(notifyPayloadBytes)
 			if err != nil {
 				logger.ErrorWith("加密通知失败", "error", err)
 				continue
 			}
-			notificationMessage := createNotificationMsg(targetSession, result.NotifyMsgId)
-			notificationMessage.Payload = notificationPayloadBytes
-			notificationMessage.Header.Iv = iv
-			notificationData, err := serialize.Serialize(notificationMessage)
-			if err != nil {
-				logger.ErrorWith("序列化响应失败", "error", err)
-				continue
-			}
-			err = targetSession.SendMessage(notificationData)
-			if err != nil {
-				logger.ErrorWith("发送消息失败", "error", err)
-				continue
-			}
-		}
-		if isSensitiveMessage(msgId) {
-			logger.InfoWith("发送通知结束", "msgId", msgId, "sessionId", msg.SessionId)
 		} else {
-			logger.InfoWith("发送通知结束", "msgId", msgId, "sessionId", msg.SessionId, "payload", notifyPayload)
+			notificationPayloadBytes = notifyPayloadBytes
 		}
+		notificationMessage := createNotificationMsg(targetSession, notifyMsgId)
+		notificationMessage.Payload = notificationPayloadBytes
+		notificationMessage.Header.Iv = iv
+		notificationData, err := serialize.Serialize(notificationMessage)
+		if err != nil {
+			logger.ErrorWith("序列化响应失败", "error", err)
+			continue
+		}
+		err = targetSession.SendMessage(notificationData)
+		if err != nil {
+			logger.ErrorWith("发送消息失败", "error", err)
+			continue
+		}
+	}
+	if isSensitiveMessage(notifyMsgId) {
+		logger.InfoWith("发送通知结束", "msgId", notifyMsgId)
+	} else {
+		logger.InfoWith("发送通知结束", "msgId", notifyMsgId, "payload", notifyPayload)
 	}
 }
 
