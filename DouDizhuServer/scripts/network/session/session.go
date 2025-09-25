@@ -82,14 +82,14 @@ func (s *PlayerSession) IsSecureKeyValid() bool {
 	return s.secureKey != nil
 }
 
-func (s *PlayerSession) start(receiveChan chan<- *message.Message) {
+func (s *PlayerSession) start(messageHandler func(*message.Message)) {
 	s.waitGroup.Add(2)
-	go s.startReading(receiveChan)
+	go s.startReading(messageHandler)
 	go s.startWriting()
 	s.waitGroup.Wait()
 }
 
-func (s *PlayerSession) startReading(receiveChan chan<- *message.Message) {
+func (s *PlayerSession) startReading(messageHandler func(*message.Message)) {
 	defer s.waitGroup.Done()
 	remoteAddr := s.conn.RemoteAddr().String()
 	for {
@@ -104,10 +104,10 @@ func (s *PlayerSession) startReading(receiveChan chan<- *message.Message) {
 			return
 		}
 
-		receiveChan <- &message.Message{
+		messageHandler(&message.Message{
 			SessionId: s.Id,
 			Data:      rawMessage,
-		}
+		})
 	}
 }
 

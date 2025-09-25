@@ -1,18 +1,19 @@
 package message
 
-type Worker struct {
+// 消息工作协程
+type MessageWorker struct {
 	queue   <-chan *Message
 	handler func(message *Message)
 }
 
-func NewWorker(queue <-chan *Message, handler func(message *Message)) *Worker {
-	return &Worker{
+func NewMessageWorker(queue <-chan *Message, handler func(message *Message)) *MessageWorker {
+	return &MessageWorker{
 		queue:   queue,
 		handler: handler,
 	}
 }
 
-func (w *Worker) Run() {
+func (w *MessageWorker) Run() {
 	for msg := range w.queue {
 		w.handler(msg)
 	}

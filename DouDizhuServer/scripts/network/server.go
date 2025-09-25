@@ -17,14 +17,16 @@ import (
 )
 
 type GameServer struct {
-	listener   net.Listener
-	sessionMgr *session.SessionManager
-	dispatcher *message.MessageDispatcher
+	listener        net.Listener
+	sessionMgr      *session.SessionManager
+	messageRegister *message.MessageRegister
+	dispatcher      *message.MessageDispatcher
 }
 
 func NewGameServer() *GameServer {
 	gameServer := &GameServer{}
 	gameServer.sessionMgr = session.NewSessionManager()
+	gameServer.messageRegister = message.NewMessageRegister()
 	gameServer.dispatcher = message.NewMessageDispatcher(10, gameServer.handleMessage)
 	return gameServer
 }
@@ -39,14 +41,11 @@ func (s *GameServer) Start(addr string) error {
 
 	logger.InfoWith("TCP服务器启动成功", "addr", addr)
 
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			logger.ErrorWith("接受连接失败", "error", err)
-			continue
-		}
-		go s.handleConnection(conn)
-	}
+	go s.handleNotifications()
+
+	s.handleConnections(ln)
+
+	return nil
 }
 
 // Stop 停止TCP服务器
@@ -58,7 +57,7 @@ func (s *GameServer) Stop() error {
 }
 
 func (s *GameServer) RegisterHandlers() {
-	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, s.HandleHandshake)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, s.handleHandshake)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, handler.HandleRegister)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, handler.HandleLogin)
@@ -69,36 +68,24 @@ func (s *GameServer) RegisterHandlers() {
 }
 
 func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {
-	s.dispatcher.RegisterHandler(msgId, handler)
+	s.messageRegister.RegisterHandler(msgId, handler)
 }
 
-func (s *GameServer) HandleHandshake(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
-	reqMsg, ok := (*req).(*protodef.PHandshakeRequest)
-	if !ok {
-		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
+func (s *GameServer) handleConnections(ln net.Listener) {
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			logger.ErrorWith("接受连接失败", "error", err)
+			continue
+		}
+		go s.handleConnection(conn)
 	}
-
-	session, err := s.sessionMgr.GetSession(context.SessionId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverPublicKeyStr, err := session.GenerateSecureKey(reqMsg.GetPublicKey(), reqMsg.GetSalt(), reqMsg.GetInfo())
-	if err != nil {
-		return nil, err
-	}
-
-	return &message.HandleResult{
-		Resp: &protodef.PHandshakeResponse{
-			PublicKey: serverPublicKeyStr,
-		},
-	}, nil
 }
 
 // handleConnection 处理单个连接
 func (s *GameServer) handleConnection(conn net.Conn) {
 	sessionId := "ps-" + uuid.New().String()
-	s.sessionMgr.StartPlayerSession(sessionId, conn, s.dispatcher.GetReceiveChannel())
+	s.sessionMgr.StartPlayerSession(sessionId, conn, s.dispatcher.EnqueueMessage)
 	defer s.sessionMgr.CloseSession(sessionId)
 }
 
@@ -128,7 +115,7 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	var gameError *errordef.GameError
 	if gameError = errordef.AsGameError(err); gameError != nil {
 		if gameError.Category == errordef.CategoryGameplay {
-			logger.InfoWith("游戏逻辑错误", "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
+			logger.ErrorWith("游戏逻辑错误", "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
 		} else {
 			logger.ErrorWith("服务器错误", "errorCategory", gameError.Category, "errorCode", gameError.Code, "errorMessage", gameError.ClientMsg)
 		}
@@ -178,6 +165,12 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 	// 包装为 GameServerMessage
 	if gameError == nil && notifyPayload != nil && result.NotifyGroup != nil {
 		s.sendNotify(notifyPayload, result.NotifyGroup, result.NotifyMsgId)
+	}
+}
+
+func (s *GameServer) handleNotifications() {
+	for notification := range s.dispatcher.DequeueNotification() {
+		s.sendNotify(notification.Payload, notification.NotifyGroup, notification.NotifyMsgId)
 	}
 }
 
@@ -255,7 +248,7 @@ func (s *GameServer) handleRequest(session *session.PlayerSession, clientMsg *pr
 	}
 
 	// 处理消息
-	handler := s.dispatcher.GetHandler(msgId)
+	handler := s.messageRegister.GetHandler(msgId)
 	if handler == nil {
 		logger.ErrorWith("未找到消息处理器", "type", msgId)
 		return nil, enableEncryption, errordef.NewGameplayError(errordef.CodeInvalidRequest)
@@ -267,6 +260,29 @@ func (s *GameServer) handleRequest(session *session.PlayerSession, clientMsg *pr
 	}
 	result, err = handler(context, &reqPayload)
 	return result, enableEncryption, err
+}
+
+func (s *GameServer) handleHandshake(context *message.MessageContext, req *proto.Message) (*message.HandleResult, error) {
+	reqMsg, ok := (*req).(*protodef.PHandshakeRequest)
+	if !ok {
+		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
+	}
+
+	session, err := s.sessionMgr.GetSession(context.SessionId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverPublicKeyStr, err := session.GenerateSecureKey(reqMsg.GetPublicKey(), reqMsg.GetSalt(), reqMsg.GetInfo())
+	if err != nil {
+		return nil, err
+	}
+
+	return &message.HandleResult{
+		Resp: &protodef.PHandshakeResponse{
+			PublicKey: serverPublicKeyStr,
+		},
+	}, nil
 }
 
 func isSensitiveMessage(msgId protodef.PMsgId) bool {
