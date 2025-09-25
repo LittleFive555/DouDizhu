@@ -23,6 +23,8 @@ namespace Network
 
             // 人物相关
             { PMsgId.CharacterMove, PCharacterMove.Parser },
+            { PMsgId.EnterWorld, PEnterWorldResponse.Parser },
+            { PMsgId.LeaveWorld, PEmptyResponse.Parser },
         };
 
         private static Dictionary<PMsgId, MessageParser> m_NotifyParsers = new()
@@ -35,7 +37,7 @@ namespace Network
             { PMsgId.RoomDisbanded, PRoomDisbandedNotification.Parser },
 
             // 人物相关
-            { PMsgId.CharacterState, PCharacterState.Parser },
+            { PMsgId.CharacterMove, PCharacterMove.Parser },
         };
         
         public static MessageParser GetResponseParser(PMsgId msgId)

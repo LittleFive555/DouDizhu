@@ -35,15 +35,16 @@ namespace Network.Proto {
             "AQoOUFNlcnZlck1zZ1R5cGUSHAoYUFNFUlZFUl9NU0dfVFlQRV9VTktOT1dO",
             "EAASHQoZUFNFUlZFUl9NU0dfVFlQRV9SRVNQT05TRRABEiEKHVBTRVJWRVJf",
             "TVNHX1RZUEVfTk9USUZJQ0FUSU9OEAISGgoWUFNFUlZFUl9NU0dfVFlQRV9F",
-            "UlJPUhADKsYCCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAASEQoNUE1T",
+            "UlJPUhADKvgCCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAASEQoNUE1T",
             "R19JRF9MT0dJThABEhQKEFBNU0dfSURfUkVHSVNURVIQAhIVChFQTVNHX0lE",
             "X0hBTkRTSEFLRRADEhcKE1BNU0dfSURfQ1JFQVRFX1JPT00QChIZChVQTVNH",
             "X0lEX0dFVF9ST09NX0xJU1QQCxIWChJQTVNHX0lEX0VOVEVSX1JPT00QDBIW",
             "ChJQTVNHX0lEX0xFQVZFX1JPT00QDRIYChRQTVNHX0lEX1JPT01fQ0hBTkdF",
             "RBAOEhoKFlBNU0dfSURfUk9PTV9ESVNCQU5ERUQQDxIUChBQTVNHX0lEX0NI",
             "QVRfTVNHEB4SGgoWUE1TR19JRF9DSEFSQUNURVJfTU9WRRA8EhsKF1BNU0df",
-            "SURfQ0hBUkFDVEVSX1NUQVRFED1CIloQbmV0d29yay9wcm90b2RlZqoCDU5l",
-            "dHdvcmsuUHJvdG9iBnByb3RvMw=="));
+            "SURfQ0hBUkFDVEVSX1NUQVRFED0SFwoTUE1TR19JRF9FTlRFUl9XT1JMRBA+",
+            "EhcKE1BNU0dfSURfTEVBVkVfV09STEQQP0IiWhBuZXR3b3JrL3Byb3RvZGVm",
+            "qgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PServerMsgType), typeof(global::Network.Proto.PMsgId), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -87,6 +88,8 @@ namespace Network.Proto {
     /// </summary>
     [pbr::OriginalName("PMSG_ID_CHARACTER_MOVE")] CharacterMove = 60,
     [pbr::OriginalName("PMSG_ID_CHARACTER_STATE")] CharacterState = 61,
+    [pbr::OriginalName("PMSG_ID_ENTER_WORLD")] EnterWorld = 62,
+    [pbr::OriginalName("PMSG_ID_LEAVE_WORLD")] LeaveWorld = 63,
   }
 
   #endregion
