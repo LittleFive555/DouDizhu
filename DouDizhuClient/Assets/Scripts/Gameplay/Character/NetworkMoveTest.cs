@@ -1,6 +1,5 @@
-using Network;
-using Network.Proto;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gameplay.Character
 {
@@ -9,28 +8,19 @@ namespace Gameplay.Character
         [SerializeField]
         private StarterAssetsInputs m_Input;
 
-        public float Speed = 2f;
+        private float Speed = 2.0f;
 
-        private Vector2 m_MoveInput = Vector2.zero;
+        private bool m_IsClient = true;
 
         private void Update()
         {
-            var move = m_Input.move;
-            if (m_MoveInput != move)
+            if (m_IsClient)
             {
-                m_MoveInput = move;
-                _ = NetworkManager.Instance.RequestAsync(PMsgId.CharacterMove, new PCharacterMove()
-                {
-                    MoveX = m_MoveInput.x
-                });
+                var move = m_Input.move;
+                if (move == Vector2.zero)
+                    return;
+                transform.position += new Vector3(move.x, move.y, 0) * Speed * Time.deltaTime;
             }
-
-            float deltaX = m_MoveInput.x * Speed * Time.deltaTime;
-            if (transform.position.x + deltaX > 5)
-                deltaX = 5 - transform.position.x;
-            else if (transform.position.x + deltaX < -5)
-                deltaX = -5 - transform.position.x;
-            transform.Translate(Vector3.right * deltaX);
         }
     }
 }
