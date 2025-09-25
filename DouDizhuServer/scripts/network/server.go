@@ -12,6 +12,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/google/uuid"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -96,15 +97,9 @@ func (s *GameServer) HandleHandshake(context *message.MessageContext, req *proto
 
 // handleConnection 处理单个连接
 func (s *GameServer) handleConnection(conn net.Conn) {
-	session, err := s.sessionMgr.CreatePlayerSession(conn)
-	if err != nil {
-		logger.ErrorWith("创建会话失败", "error", err)
-		conn.Close()
-		return
-	}
-	logger.InfoWith("创建会话成功，开始处理消息", "sessionId", session.Id)
-	defer s.sessionMgr.CloseSession(session.Id)
-	session.StartReading(s.dispatcher.EnqueueMessage)
+	sessionId := "ps-" + uuid.New().String()
+	s.sessionMgr.StartPlayerSession(sessionId, conn, s.dispatcher.GetReceiveChannel())
+	defer s.sessionMgr.CloseSession(sessionId)
 }
 
 // HandleMessage 实现Handler接口

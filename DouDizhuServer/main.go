@@ -23,14 +23,15 @@ func main() {
 	logger.Info("日志系统初始化成功")
 	database.ConnectDB()
 
-	// startGameServer()
-	startPlayground()
+	startGameServer()
+	// startPlayground()
 }
 
 func startGameServer() {
 	var server *network.GameServer
 	// 创建并启动TCP服务器
 	server = network.NewGameServer()
+	defer server.Stop()
 
 	// 注册消息处理函数
 	server.RegisterHandlers()
@@ -42,12 +43,14 @@ func startGameServer() {
 		logger.PanicWith("服务器启动失败", "error", err)
 	}
 
-	defer server.Stop()
 }
 
 func startPlayground() {
 	var server *network.GameServer
 	server = network.NewGameServer()
+	defer server.Stop()
+
+	// 注册消息处理函数
 	server.RegisterPlaygroundHandlers()
 
 	playground.Playground = playground.NewRoomPlayground()
@@ -57,5 +60,4 @@ func startPlayground() {
 		logger.PanicWith("服务器启动失败", "error", err)
 	}
 
-	defer server.Stop()
 }

@@ -12,44 +12,40 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"sync"
 
 	"golang.org/x/crypto/hkdf"
 )
 
 type PlayerSession struct {
 	Id        string
-	Conn      net.Conn
-	IP        string
+	conn      net.Conn
+	ip        string
 	secureKey []byte
+
+	closed    chan int
+	writeChan chan []byte
+	waitGroup sync.WaitGroup
 }
 
-func (s *PlayerSession) StartReading(handler func(message *message.Message)) {
-	defer s.Conn.Close()
+func newPlayerSession(id string, conn net.Conn, ip string) *PlayerSession {
+	return &PlayerSession{
+		Id:   id,
+		conn: conn,
+		ip:   ip,
 
-	remoteAddr := s.Conn.RemoteAddr().String()
-	for {
-		rawMessage, err := read(s.Conn)
-		if err != nil {
-			if err.Error() == "EOF" {
-				logger.InfoWith("客户端正常断开连接", "remote_addr", remoteAddr)
-			} else {
-				logger.ErrorWith("连接异常断开", "remote_addr", remoteAddr, "error", err)
-			}
-			break
-		}
-
-		handler(&message.Message{
-			SessionId: s.Id,
-			Data:      rawMessage,
-		})
+		closed:    make(chan int),
+		writeChan: make(chan []byte, 100),
+		waitGroup: sync.WaitGroup{},
 	}
 }
 
 func (s *PlayerSession) SendMessage(data []byte) error {
-	if s.Conn == nil {
+	if s.conn == nil {
 		return fmt.Errorf("连接已关闭")
 	}
-	return write(s.Conn, data)
+	s.writeChan <- data
+	return nil
 }
 
 func (s *PlayerSession) GenerateSecureKey(clientPublicKeyStr string, salt []byte, info []byte) (string, error) {
@@ -86,9 +82,58 @@ func (s *PlayerSession) IsSecureKeyValid() bool {
 	return s.secureKey != nil
 }
 
-func (s *PlayerSession) Close() error {
-	if s.Conn != nil {
-		return s.Conn.Close()
+func (s *PlayerSession) start(receiveChan chan<- *message.Message) {
+	s.waitGroup.Add(2)
+	go s.startReading(receiveChan)
+	go s.startWriting()
+	s.waitGroup.Wait()
+}
+
+func (s *PlayerSession) startReading(receiveChan chan<- *message.Message) {
+	defer s.waitGroup.Done()
+	remoteAddr := s.conn.RemoteAddr().String()
+	for {
+		rawMessage, err := read(s.conn)
+		if err != nil {
+			if err.Error() == "EOF" {
+				logger.InfoWith("客户端正常断开连接", "remote_addr", remoteAddr)
+			} else {
+				logger.ErrorWith("连接异常断开", "remote_addr", remoteAddr, "error", err)
+			}
+			s.close()
+			return
+		}
+
+		receiveChan <- &message.Message{
+			SessionId: s.Id,
+			Data:      rawMessage,
+		}
+	}
+}
+
+func (s *PlayerSession) startWriting() {
+	defer s.waitGroup.Done()
+	remoteAddr := s.conn.RemoteAddr().String()
+	for {
+		select {
+		case <-s.closed:
+			return
+		case data := <-s.writeChan:
+			err := write(s.conn, data)
+			if err != nil {
+				logger.ErrorWith("发送消息失败", "remote_addr", remoteAddr, "error", err)
+				return
+			}
+		}
+	}
+}
+
+func (s *PlayerSession) close() error {
+	if s.conn != nil {
+		s.closed <- 0
+		conn := s.conn
+		s.conn = nil
+		return conn.Close()
 	}
 	return nil
 }

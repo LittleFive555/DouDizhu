@@ -2,11 +2,10 @@ package session
 
 import (
 	"DouDizhuServer/scripts/logger"
+	"DouDizhuServer/scripts/network/message"
 	"fmt"
 	"net"
 	"sync"
-
-	"github.com/google/uuid"
 )
 
 type SessionManager struct {
@@ -18,20 +17,17 @@ func NewSessionManager() *SessionManager {
 	return &SessionManager{playerSessions: make(map[string]*PlayerSession)}
 }
 
-func (s *SessionManager) CreatePlayerSession(conn net.Conn) (*PlayerSession, error) {
+func (s *SessionManager) StartPlayerSession(sessionId string, conn net.Conn, receiveChan chan<- *message.Message) {
 	s.mutex.Lock()
-	defer s.mutex.Unlock()
 
-	sessionId := "ps-" + uuid.New().String()
 	ip := conn.RemoteAddr().String()
-	session := &PlayerSession{
-		Id:   sessionId,
-		Conn: conn,
-		IP:   ip,
-	}
-
+	session := newPlayerSession(sessionId, conn, ip)
 	s.playerSessions[sessionId] = session
-	return session, nil
+
+	s.mutex.Unlock()
+
+	logger.InfoWith("创建会话成功，开始处理消息", "sessionId", session.Id)
+	session.start(receiveChan)
 }
 
 func (s *SessionManager) GetSession(sessionId string) (*PlayerSession, error) {
@@ -69,8 +65,9 @@ func (s *SessionManager) CloseSession(sessionId string) error {
 		return fmt.Errorf("sessionId不存在")
 	}
 
-	session.Conn.Close()
+	session.close()
 	delete(s.playerSessions, sessionId)
+	logger.InfoWith("关闭会话成功", "sessionId", sessionId)
 
 	return nil
 }
@@ -80,7 +77,7 @@ func (s *SessionManager) Shutdown() {
 	defer s.mutex.Unlock()
 
 	for _, session := range s.playerSessions {
-		session.Conn.Close()
+		session.close()
 	}
 
 	s.playerSessions = make(map[string]*PlayerSession)

@@ -41,6 +41,6 @@ func (md *MessageDispatcher) GetHandler(msgId protodef.PMsgId) func(*MessageCont
 }
 
 // 接收消息
-func (md *MessageDispatcher) EnqueueMessage(msg *Message) {
-	md.messageQueue <- msg
+func (md *MessageDispatcher) GetReceiveChannel() chan<- *Message {
+	return md.messageQueue
 }
