@@ -90,10 +90,10 @@ const (
 	// 聊天相关
 	PMsgId_PMSG_ID_CHAT_MSG PMsgId = 30
 	// 房间人物控制
-	PMsgId_PMSG_ID_CHARACTER_MOVE  PMsgId = 60
-	PMsgId_PMSG_ID_CHARACTER_STATE PMsgId = 61
-	PMsgId_PMSG_ID_ENTER_WORLD     PMsgId = 62
-	PMsgId_PMSG_ID_LEAVE_WORLD     PMsgId = 63
+	PMsgId_PMSG_ID_CHARACTER_MOVE PMsgId = 60
+	PMsgId_PMSG_ID_WORLD_STATE    PMsgId = 61
+	PMsgId_PMSG_ID_ENTER_WORLD    PMsgId = 62
+	PMsgId_PMSG_ID_LEAVE_WORLD    PMsgId = 63
 )
 
 // Enum value maps for PMsgId.
@@ -111,26 +111,26 @@ var (
 		15: "PMSG_ID_ROOM_DISBANDED",
 		30: "PMSG_ID_CHAT_MSG",
 		60: "PMSG_ID_CHARACTER_MOVE",
-		61: "PMSG_ID_CHARACTER_STATE",
+		61: "PMSG_ID_WORLD_STATE",
 		62: "PMSG_ID_ENTER_WORLD",
 		63: "PMSG_ID_LEAVE_WORLD",
 	}
 	PMsgId_value = map[string]int32{
-		"PMSG_ID_UNKNOWN":         0,
-		"PMSG_ID_LOGIN":           1,
-		"PMSG_ID_REGISTER":        2,
-		"PMSG_ID_HANDSHAKE":       3,
-		"PMSG_ID_CREATE_ROOM":     10,
-		"PMSG_ID_GET_ROOM_LIST":   11,
-		"PMSG_ID_ENTER_ROOM":      12,
-		"PMSG_ID_LEAVE_ROOM":      13,
-		"PMSG_ID_ROOM_CHANGED":    14,
-		"PMSG_ID_ROOM_DISBANDED":  15,
-		"PMSG_ID_CHAT_MSG":        30,
-		"PMSG_ID_CHARACTER_MOVE":  60,
-		"PMSG_ID_CHARACTER_STATE": 61,
-		"PMSG_ID_ENTER_WORLD":     62,
-		"PMSG_ID_LEAVE_WORLD":     63,
+		"PMSG_ID_UNKNOWN":        0,
+		"PMSG_ID_LOGIN":          1,
+		"PMSG_ID_REGISTER":       2,
+		"PMSG_ID_HANDSHAKE":      3,
+		"PMSG_ID_CREATE_ROOM":    10,
+		"PMSG_ID_GET_ROOM_LIST":  11,
+		"PMSG_ID_ENTER_ROOM":     12,
+		"PMSG_ID_LEAVE_ROOM":     13,
+		"PMSG_ID_ROOM_CHANGED":   14,
+		"PMSG_ID_ROOM_DISBANDED": 15,
+		"PMSG_ID_CHAT_MSG":       30,
+		"PMSG_ID_CHARACTER_MOVE": 60,
+		"PMSG_ID_WORLD_STATE":    61,
+		"PMSG_ID_ENTER_WORLD":    62,
+		"PMSG_ID_LEAVE_WORLD":    63,
 	}
 )
 
@@ -424,7 +424,7 @@ const file_GameMsg_proto_rawDesc = "" +
 	"\x18PSERVER_MSG_TYPE_UNKNOWN\x10\x00\x12\x1d\n" +
 	"\x19PSERVER_MSG_TYPE_RESPONSE\x10\x01\x12!\n" +
 	"\x1dPSERVER_MSG_TYPE_NOTIFICATION\x10\x02\x12\x1a\n" +
-	"\x16PSERVER_MSG_TYPE_ERROR\x10\x03*\xf8\x02\n" +
+	"\x16PSERVER_MSG_TYPE_ERROR\x10\x03*\xf4\x02\n" +
 	"\x06PMsgId\x12\x13\n" +
 	"\x0fPMSG_ID_UNKNOWN\x10\x00\x12\x11\n" +
 	"\rPMSG_ID_LOGIN\x10\x01\x12\x14\n" +
@@ -438,8 +438,8 @@ const file_GameMsg_proto_rawDesc = "" +
 	"\x14PMSG_ID_ROOM_CHANGED\x10\x0e\x12\x1a\n" +
 	"\x16PMSG_ID_ROOM_DISBANDED\x10\x0f\x12\x14\n" +
 	"\x10PMSG_ID_CHAT_MSG\x10\x1e\x12\x1a\n" +
-	"\x16PMSG_ID_CHARACTER_MOVE\x10<\x12\x1b\n" +
-	"\x17PMSG_ID_CHARACTER_STATE\x10=\x12\x17\n" +
+	"\x16PMSG_ID_CHARACTER_MOVE\x10<\x12\x17\n" +
+	"\x13PMSG_ID_WORLD_STATE\x10=\x12\x17\n" +
 	"\x13PMSG_ID_ENTER_WORLD\x10>\x12\x17\n" +
 	"\x13PMSG_ID_LEAVE_WORLD\x10?B\"Z\x10network/protodef\xaa\x02\rNetwork.Protob\x06proto3"
 

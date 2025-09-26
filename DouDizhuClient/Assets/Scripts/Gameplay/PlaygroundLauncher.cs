@@ -1,5 +1,6 @@
 using Config;
 using EdenMeng.AssetManager;
+using Gameplay.World;
 using UnityEngine;
 
 namespace Gameplay
@@ -17,6 +18,7 @@ namespace Gameplay
             InitAssetManager();
             ConfigsManager.Instance.LoadConfigs();
             await GameManager.Instance.LaunchPlayground(m_ServerHost);
+            InitializeWorld();
         }
 
         private void InitAssetManager()
@@ -29,6 +31,12 @@ namespace Gameplay
 #else
             AssetManager.InitWithAssetBundle(new AssetBundlePath());
 #endif
+        }
+
+        private void InitializeWorld()
+        {
+            RoomWorld world = FindObjectOfType<RoomWorld>();
+            world.Initialize();
         }
 
         private class AssetBundlePath : IAssetBundlePath

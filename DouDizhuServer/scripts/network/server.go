@@ -21,6 +21,8 @@ type GameServer struct {
 	sessionMgr      *session.SessionManager
 	messageRegister *message.MessageRegister
 	dispatcher      *message.MessageDispatcher
+
+	notificationQueue chan *message.Notification // 通知队列
 }
 
 func NewGameServer() *GameServer {
@@ -28,6 +30,8 @@ func NewGameServer() *GameServer {
 	gameServer.sessionMgr = session.NewSessionManager()
 	gameServer.messageRegister = message.NewMessageRegister()
 	gameServer.dispatcher = message.NewMessageDispatcher(10, gameServer.handleMessage)
+
+	gameServer.notificationQueue = make(chan *message.Notification, 10000)
 	return gameServer
 }
 
@@ -69,6 +73,10 @@ func (s *GameServer) RegisterHandlers() {
 
 func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {
 	s.messageRegister.RegisterHandler(msgId, handler)
+}
+
+func (s *GameServer) EnqueueNotification(notification *message.Notification) {
+	s.notificationQueue <- notification
 }
 
 func (s *GameServer) handleConnections(ln net.Listener) {
@@ -169,18 +177,18 @@ func (s *GameServer) handleMessage(msg *message.Message) {
 }
 
 func (s *GameServer) handleNotifications() {
-	for notification := range s.dispatcher.DequeueNotification() {
+	for notification := range s.notificationQueue {
 		s.sendNotify(notification.Payload, notification.NotifyGroup, notification.NotifyMsgId)
 	}
 }
 
-func (s *GameServer) sendNotify(notifyPayload proto.Message, notifyGroup message.INotificationGroup, notifyMsgId protodef.PMsgId) {
+func (s *GameServer) sendNotify(notifyPayload proto.Message, notifyGroup message.INotifyGroup, notifyMsgId protodef.PMsgId) {
 	notifyPayloadBytes, err := serialize.SerializePayload(notifyPayload)
 	if err != nil {
 		logger.ErrorWith("序列化通知失败", "error", err)
 		return
 	}
-	targetSessionIds := notifyGroup.GetTargetSessionIds()
+	targetSessionIds := getNotifySessionIds(s.sessionMgr, notifyGroup)
 	for _, targetSessionId := range targetSessionIds {
 		targetSession, err := s.sessionMgr.GetSession(targetSessionId)
 		if err != nil {
@@ -257,6 +265,8 @@ func (s *GameServer) handleRequest(session *session.PlayerSession, clientMsg *pr
 		SessionId: sessionId,
 		PlayerId:  msgHeader.PlayerId,
 		Timestamp: msgHeader.Timestamp,
+
+		Dispatcher: s,
 	}
 	result, err = handler(context, &reqPayload)
 	return result, enableEncryption, err

@@ -93,6 +93,14 @@ func (m *PlayerManager) RemovePlayer(playerId string) {
 	delete(m.players, playerId)
 }
 
+func (m *PlayerManager) GetAllPlayers() []*Player {
+	players := make([]*Player, 0)
+	for _, player := range m.players {
+		players = append(players, player)
+	}
+	return players
+}
+
 func validateAccount(account string) error {
 	// TODO
 	return nil

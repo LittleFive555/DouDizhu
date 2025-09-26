@@ -1,6 +1,9 @@
 package playground
 
-import "DouDizhuServer/scripts/gameplay/room"
+import (
+	"DouDizhuServer/scripts/gameplay/room"
+	"DouDizhuServer/scripts/network/message"
+)
 
 var Playground *RoomPlayground
 
@@ -14,6 +17,6 @@ func NewRoomPlayground() *RoomPlayground {
 	}
 }
 
-func (p *RoomPlayground) Start() {
-	go p.World.RunLoop()
+func (p *RoomPlayground) Start(dispatcher message.INotificationDispatcher) {
+	go p.World.RunLoop(dispatcher)
 }

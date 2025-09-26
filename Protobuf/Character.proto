@@ -10,16 +10,30 @@ message PVector3 {
     float z = 3;
 }
 
+message PCharacterState {
+    int64 timestamp = 1;
+    PVector3 pos = 2;
+}
+
+message PCharacterStateList {
+    repeated PCharacterState states = 1;
+}
+
+message PWorldState {
+    map<string, PCharacterStateList> characters = 1;
+}
+
 message PEnterWorldRequest {
     string worldId = 1;
 }
 
 message PEnterWorldResponse {
-    repeated PCharacterState characters = 2;
+    string characterId = 1;
+    PWorldState worldState = 2;
 }
 
 message PLeaveWorldRequest {
-
+    string characterId = 1;
 }
 
 message PLeaveWorldResponse {
@@ -27,15 +41,8 @@ message PLeaveWorldResponse {
 }
 
 message PCharacterMove {
-    string id = 1;
+    string characterId = 1;
     int64 timestamp = 2;
 
     PVector3 move = 3;
-}
-
-message PCharacterState {
-    string id = 1;
-    int64 timestamp = 2;
-
-    PVector3 pos = 3;
 }

@@ -2,6 +2,7 @@ package room
 
 import (
 	"DouDizhuServer/scripts/errordef"
+	"DouDizhuServer/scripts/network/message"
 	"sync"
 
 	"github.com/google/uuid"
@@ -20,14 +21,14 @@ func NewRoomManager() *RoomManager {
 	}
 }
 
-func (m *RoomManager) CreateRoom(name string) *Room {
+func (m *RoomManager) CreateRoom(name string, dispatcher message.INotificationDispatcher) *Room {
 	m.listOpLock.Lock()
 	defer m.listOpLock.Unlock()
 
 	roomId := uuid.New().ID()
 	room := NewRoom(roomId, name)
 	m.rooms[room.id] = room
-	go room.world.RunLoop()
+	go room.world.RunLoop(dispatcher)
 	return room
 }
 

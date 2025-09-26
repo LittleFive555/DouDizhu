@@ -23,7 +23,7 @@ func HandleCreateRoom(context *message.MessageContext, req *proto.Message) (*mes
 	if !ownerPlayer.IsInLobby() {
 		return nil, errordef.NewGameplayError(errordef.CodePlayerNotInLobby)
 	}
-	room := room.Manager.CreateRoom(reqMsg.GetRoomName())
+	room := room.Manager.CreateRoom(reqMsg.GetRoomName(), context.Dispatcher)
 	err := room.SetOwner(ownerPlayer.GetPlayerId())
 	if err != nil {
 		return nil, err
@@ -85,7 +85,10 @@ func HandleEnterRoom(context *message.MessageContext, req *proto.Message) (*mess
 				Players: translator.RoomPlayersToProto(targetRoom, player.Manager),
 			},
 		},
-		NotifyGroup: room.NewRoomNotificationGroupExcept(targetRoom.GetId(), requestingPlayer.GetPlayerId()),
+		NotifyGroup: &room.RoomNotifyGroup{
+			RoomId:         targetRoom.GetId(),
+			ExceptPlayerId: requestingPlayer.GetPlayerId(),
+		},
 	}, nil
 }
 
@@ -107,7 +110,10 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 		return nil, err
 	}
 
-	notifyGroup := room.NewRoomNotificationGroupExcept(currentRoom.GetId(), playerId)
+	notifyGroup := &room.RoomNotifyGroup{
+		RoomId:         currentRoom.GetId(),
+		ExceptPlayerId: playerId,
+	}
 	if currentRoom.IsOwnedBy(playerId) { // 如果房间是房主，则直接解散整个房间
 		players := currentRoom.GetPlayers()
 		for _, playerId := range players {

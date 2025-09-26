@@ -6,8 +6,18 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+type INotifyGroup interface {
+	IsNotifyGroup()
+}
+
 type Notification struct {
 	NotifyMsgId protodef.PMsgId
 	Payload     proto.Message
-	NotifyGroup INotificationGroup
+	NotifyGroup INotifyGroup
+}
+
+type AllConnectionNotificationGroup struct {
+}
+
+func (g *AllConnectionNotificationGroup) IsNotifyGroup() {
 }

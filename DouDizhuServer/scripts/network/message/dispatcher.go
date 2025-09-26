@@ -1,10 +1,12 @@
 package message
 
+type INotificationDispatcher interface {
+	EnqueueNotification(notification *Notification)
+}
+
 type MessageDispatcher struct {
 	messageQueue   chan *Message    // 消息队列
 	messageWorkers []*MessageWorker // 工作协程池
-
-	notificationQueue chan *Notification // 通知队列
 }
 
 // 初始化消息分发器
@@ -26,12 +28,4 @@ func NewMessageDispatcher(workerCount int, handler func(message *Message)) *Mess
 // 接收消息
 func (md *MessageDispatcher) EnqueueMessage(message *Message) {
 	md.messageQueue <- message
-}
-
-func (md *MessageDispatcher) EnqueueNotification(notification *Notification) {
-	md.notificationQueue <- notification
-}
-
-func (md *MessageDispatcher) DequeueNotification() <-chan *Notification {
-	return md.notificationQueue
 }

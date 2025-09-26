@@ -28,13 +28,16 @@ func HandleChatMessage(context *message.MessageContext, req *proto.Message) (*me
 	}
 
 	// 聊天消息通知组
-	var notificationGroup message.INotificationGroup
+	var notificationGroup message.INotifyGroup
 	channel := reqMsg.GetChannel()
 	switch channel {
 	case protodef.PChatChannel_PCHAT_CHANNEL_ALL:
-		notificationGroup = player.NewAllPlayerNotificationGroup()
+		notificationGroup = &player.AllPlayerNotificationGroup{}
 	case protodef.PChatChannel_PCHAT_CHANNEL_ROOM:
-		notificationGroup = room.NewRoomNotificationGroup(fromPlayer.GetRoomId())
+		notificationGroup = &room.RoomNotifyGroup{
+			RoomId:         fromPlayer.GetRoomId(),
+			ExceptPlayerId: fromPlayer.GetPlayerId(),
+		}
 	}
 
 	result := &message.HandleResult{

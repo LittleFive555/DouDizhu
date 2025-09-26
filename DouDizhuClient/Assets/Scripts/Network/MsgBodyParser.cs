@@ -38,6 +38,7 @@ namespace Network
 
             // 人物相关
             { PMsgId.CharacterMove, PCharacterMove.Parser },
+            { PMsgId.WorldState, PWorldState.Parser },
         };
         
         public static MessageParser GetResponseParser(PMsgId msgId)

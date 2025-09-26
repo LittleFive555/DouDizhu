@@ -21,10 +21,9 @@ var messageRegistry = map[protodef.PMsgId]func() proto.Message{
 	protodef.PMsgId_PMSG_ID_CHAT_MSG: func() proto.Message { return &protodef.PChatMsgRequest{} },
 
 	// Character Move
-	protodef.PMsgId_PMSG_ID_CHARACTER_MOVE:  func() proto.Message { return &protodef.PCharacterMove{} },
-	protodef.PMsgId_PMSG_ID_CHARACTER_STATE: func() proto.Message { return &protodef.PCharacterState{} },
-	protodef.PMsgId_PMSG_ID_ENTER_WORLD:     func() proto.Message { return &protodef.PEnterWorldRequest{} },
-	protodef.PMsgId_PMSG_ID_LEAVE_WORLD:     func() proto.Message { return &protodef.PLeaveWorldRequest{} },
+	protodef.PMsgId_PMSG_ID_CHARACTER_MOVE: func() proto.Message { return &protodef.PCharacterMove{} },
+	protodef.PMsgId_PMSG_ID_ENTER_WORLD:    func() proto.Message { return &protodef.PEnterWorldRequest{} },
+	protodef.PMsgId_PMSG_ID_LEAVE_WORLD:    func() proto.Message { return &protodef.PLeaveWorldRequest{} },
 }
 
 func GetMessage(msgId protodef.PMsgId) proto.Message {

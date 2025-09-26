@@ -4,4 +4,6 @@ type MessageContext struct {
 	SessionId string
 	PlayerId  string
 	Timestamp int64
+
+	Dispatcher INotificationDispatcher
 }

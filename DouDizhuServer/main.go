@@ -23,8 +23,8 @@ func main() {
 	logger.Info("日志系统初始化成功")
 	database.ConnectDB()
 
-	startGameServer()
-	// startPlayground()
+	// startGameServer()
+	startPlayground()
 }
 
 func startGameServer() {
@@ -53,8 +53,11 @@ func startPlayground() {
 	// 注册消息处理函数
 	server.RegisterPlaygroundHandlers()
 
+	player.Manager = player.NewPlayerManager()
+	room.Manager = room.NewRoomManager()
+
 	playground.Playground = playground.NewRoomPlayground()
-	playground.Playground.Start()
+	playground.Playground.Start(server)
 
 	if err := server.Start(":9090"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)

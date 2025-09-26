@@ -1,6 +1,7 @@
 package room
 
 import (
+	"DouDizhuServer/scripts/network/message"
 	"DouDizhuServer/scripts/network/protodef"
 	"sync"
 	"time"
@@ -30,7 +31,7 @@ func NewRoomWorld(worldId string, frameRate int) *RoomWorld {
 	}
 }
 
-func (world *RoomWorld) RunLoop() {
+func (world *RoomWorld) RunLoop(dispatcher message.INotificationDispatcher) {
 	world.stop = false
 	for {
 		if world.stop {
@@ -39,10 +40,21 @@ func (world *RoomWorld) RunLoop() {
 		now := time.Now().UnixMilli()
 		delta := now - world.lastUpdateTimestamp
 		for delta >= world.frameTime {
+			// 更新世界状态
 			delta -= world.frameTime
 			lastTimestamp := world.lastUpdateTimestamp
 			world.lastUpdateTimestamp += world.frameTime
 			world.update(lastTimestamp, world.lastUpdateTimestamp)
+
+			// 向客户端同步世界变化
+			worldStateChanges := world.collectWorldStateChanges()
+			if worldStateChanges != nil {
+				dispatcher.EnqueueNotification(&message.Notification{
+					NotifyMsgId: protodef.PMsgId_PMSG_ID_WORLD_STATE,
+					Payload:     worldStateChanges,
+					NotifyGroup: &message.AllConnectionNotificationGroup{},
+				})
+			}
 		}
 		time.Sleep(time.Millisecond)
 	}
@@ -50,6 +62,24 @@ func (world *RoomWorld) RunLoop() {
 
 func (world *RoomWorld) Stop() {
 	world.stop = true
+}
+
+func (world *RoomWorld) GetFullWrldState() *protodef.PWorldState {
+	world.lock.RLock()
+	defer world.lock.RUnlock()
+
+	// 获取所有角色的完整状态
+	characters := make(map[string]*protodef.PCharacterStateList)
+	for _, character := range world.characters {
+		currentState := character.GetFullState()
+		currentState.Timestamp = world.lastUpdateTimestamp
+		characters[character.GetId()] = &protodef.PCharacterStateList{
+			States: []*protodef.PCharacterState{currentState},
+		}
+	}
+	return &protodef.PWorldState{
+		Characters: characters,
+	}
 }
 
 func (world *RoomWorld) AddCharacter() string {
@@ -68,9 +98,20 @@ func (world *RoomWorld) RemoveCharacter(characterId string) {
 	delete(world.characters, characterId)
 }
 
+func (world *RoomWorld) MoveCharacter(move *protodef.PCharacterMove) {
+	world.lock.Lock()
+	defer world.lock.Unlock()
+
+	character, ok := world.characters[move.GetCharacterId()]
+	if !ok {
+		return
+	}
+	character.EnqueueInput(move)
+}
+
 func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
-	world.lock.RLock()
-	defer world.lock.RUnlock()
+	world.lock.Lock()
+	defer world.lock.Unlock()
 
 	// 依次处理每个角色的输入
 	for _, character := range world.characters {
@@ -85,12 +126,11 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 				duration := endTime - startTime
 
 				durationSecond := float32(duration) / 1000
-				move.Scale(durationSecond)
+				move.Scale(character.GetSpeed() * durationSecond)
 
 				transform := character.GetTransform()
 				transform.Position.Add(&move)
 				character.EnqueueState(&protodef.PCharacterState{
-					Id:        character.GetId(),
 					Timestamp: endTime,
 					Pos:       Vec3ToProto(transform.Position),
 				})
@@ -113,11 +153,10 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 				character.SetMove(move)
 				if move.LengthSqr() > 0 {
 					durationSecond := float32(duration) / 1000
-					move.Scale(durationSecond)
+					move.Scale(character.GetSpeed() * durationSecond)
 
 					transform.Position.Add(&move)
 					character.EnqueueState(&protodef.PCharacterState{
-						Id:        character.GetId(),
 						Timestamp: endTime,
 						Pos:       Vec3ToProto(transform.Position),
 					})
@@ -127,19 +166,39 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 			// 如果没有新的输入，则处理已存在的输入
 			move := character.GetMove()
 			if move.LengthSqr() > 0 {
-				durationSecond := float32(world.frameTime) / 1000
-				move.Scale(durationSecond)
+				durationSecond := nowTimestamp - lastTimestamp
+				move.Scale(character.GetSpeed() * float32(durationSecond) / 1000)
 				transform := character.GetTransform()
 				transform.Position.Add(&move)
 				character.EnqueueState(&protodef.PCharacterState{
-					Id:        character.GetId(),
 					Timestamp: nowTimestamp,
 					Pos:       Vec3ToProto(transform.Position),
 				})
 			}
 		}
 	}
-	// TODO 向客户端同步每个角色的状态
+}
+
+func (world *RoomWorld) collectWorldStateChanges() *protodef.PWorldState {
+	world.lock.RLock()
+	defer world.lock.RUnlock()
+
+	characters := make(map[string]*protodef.PCharacterStateList)
+	for _, character := range world.characters {
+		changes := character.PopAllStateChange()
+		if len(changes) > 0 {
+			characters[character.GetId()] = &protodef.PCharacterStateList{
+				States: changes,
+			}
+		}
+	}
+	if len(characters) == 0 {
+		return nil
+	} else {
+		return &protodef.PWorldState{
+			Characters: characters,
+		}
+	}
 }
 
 func Vec3ToProto(v vec3.T) *protodef.PVector3 {
