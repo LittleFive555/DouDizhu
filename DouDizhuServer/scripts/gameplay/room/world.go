@@ -16,15 +16,18 @@ type RoomWorld struct {
 
 	worldId             string
 	frameTime           int64
+	delayFrame          int64
 	lastUpdateTimestamp int64
 	characters          map[string]*RoomCharacter
 }
 
-func NewRoomWorld(worldId string, frameRate int) *RoomWorld {
+func NewRoomWorld(worldId string, frameRate int, delayFrame int) *RoomWorld {
+	frameTime := 1000 / int64(frameRate)
 	return &RoomWorld{
 		worldId:             worldId,
-		frameTime:           1000 / int64(frameRate),
-		lastUpdateTimestamp: time.Now().UnixMilli(),
+		frameTime:           frameTime,
+		delayFrame:          int64(delayFrame),
+		lastUpdateTimestamp: time.Now().UnixMilli() - frameTime*int64(delayFrame),
 		characters:          make(map[string]*RoomCharacter),
 
 		lock: sync.RWMutex{},
@@ -37,7 +40,7 @@ func (world *RoomWorld) RunLoop(dispatcher message.INotificationDispatcher) {
 		if world.stop {
 			return
 		}
-		now := time.Now().UnixMilli()
+		now := time.Now().UnixMilli() - world.frameTime*world.delayFrame
 		delta := now - world.lastUpdateTimestamp
 		for delta >= world.frameTime {
 			// 更新世界状态
@@ -116,7 +119,7 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 	// 依次处理每个角色的输入
 	for _, character := range world.characters {
 		// 如果有输入，则处理输入
-		inputs := character.DequeueInput(nowTimestamp)
+		inputs := character.DequeueInput(lastTimestamp, nowTimestamp)
 		if len(inputs) > 0 {
 			move := character.GetMove()
 			// 如果有已存在的输入状态，则处理该输入直到新的输入事件

@@ -2,7 +2,9 @@ package room
 
 import (
 	"DouDizhuServer/scripts/gameplay/component"
+	"DouDizhuServer/scripts/logger"
 	"DouDizhuServer/scripts/network/protodef"
+	"sort"
 	"sync"
 
 	"github.com/ungerik/go3d/vec3"
@@ -63,19 +65,28 @@ func (c *RoomCharacter) EnqueueInput(input *protodef.PCharacterMove) {
 	c.inputBuffer = append(c.inputBuffer, input)
 }
 
-func (c *RoomCharacter) DequeueInput(untilTimestamp int64) []*protodef.PCharacterMove {
+func (c *RoomCharacter) DequeueInput(fromTimestamp int64, untilTimestamp int64) []*protodef.PCharacterMove {
 	c.inputBufferLock.Lock()
 	defer c.inputBufferLock.Unlock()
 	if len(c.inputBuffer) == 0 {
 		return nil
 	}
 	inputs := make([]*protodef.PCharacterMove, 0)
+	sort.Sort(CharacterInputByTimestamp(c.inputBuffer))
+	dequeueCount := 0
 	for _, input := range c.inputBuffer {
-		if input.GetTimestamp() <= untilTimestamp {
+		inputTimestamp := input.GetTimestamp()
+		if inputTimestamp < fromTimestamp {
+			logger.WarnFormat("Drop input: inputTimestamp %d is before fromTimestamp %d", inputTimestamp, fromTimestamp)
+			dequeueCount++
+			continue
+		}
+		if inputTimestamp <= untilTimestamp {
+			dequeueCount++
 			inputs = append(inputs, input)
 		}
 	}
-	c.inputBuffer = c.inputBuffer[len(inputs):]
+	c.inputBuffer = c.inputBuffer[dequeueCount:]
 	return inputs
 }
 
@@ -111,4 +122,18 @@ func (c *RoomCharacter) GetFullState() *protodef.PCharacterState {
 	return &protodef.PCharacterState{
 		Pos: Vec3ToProto(c.transform.Position),
 	}
+}
+
+type CharacterInputByTimestamp []*protodef.PCharacterMove
+
+func (c CharacterInputByTimestamp) Len() int {
+	return len(c)
+}
+
+func (c CharacterInputByTimestamp) Less(i, j int) bool {
+	return c[i].Timestamp < c[j].Timestamp
+}
+
+func (c CharacterInputByTimestamp) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
 }

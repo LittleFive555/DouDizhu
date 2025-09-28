@@ -26,7 +26,7 @@ func NewRoom(id uint32, name string) *Room {
 		playerIds:      []string{},
 		maxPlayerCount: 3,
 		state:          protodef.PRoomState_PROOM_STATE_WAITING,
-		world:          NewRoomWorld(uuid.New().String(), 10),
+		world:          NewRoomWorld(uuid.New().String(), 20, 3),
 	}
 }
 

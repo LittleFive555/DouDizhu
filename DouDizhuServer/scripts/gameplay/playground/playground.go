@@ -13,7 +13,7 @@ type RoomPlayground struct {
 
 func NewRoomPlayground() *RoomPlayground {
 	return &RoomPlayground{
-		World: room.NewRoomWorld("playground-111999555", 10),
+		World: room.NewRoomWorld("playground-111999555", 20, 3),
 	}
 }
 
