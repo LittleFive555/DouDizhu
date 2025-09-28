@@ -99,8 +99,8 @@ func (world *RoomWorld) RemoveCharacter(characterId string) {
 }
 
 func (world *RoomWorld) MoveCharacter(move *protodef.PCharacterMove) {
-	world.lock.Lock()
-	defer world.lock.Unlock()
+	world.lock.RLock()
+	defer world.lock.RUnlock()
 
 	character, ok := world.characters[move.GetCharacterId()]
 	if !ok {
@@ -110,14 +110,14 @@ func (world *RoomWorld) MoveCharacter(move *protodef.PCharacterMove) {
 }
 
 func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
-	world.lock.Lock()
-	defer world.lock.Unlock()
+	world.lock.RLock()
+	defer world.lock.RUnlock()
 
 	// 依次处理每个角色的输入
 	for _, character := range world.characters {
 		// 如果有输入，则处理输入
-		if character.HasInput() {
-			inputs := character.DequeueInput(nowTimestamp)
+		inputs := character.DequeueInput(nowTimestamp)
+		if len(inputs) > 0 {
 			move := character.GetMove()
 			// 如果有已存在的输入状态，则处理该输入直到新的输入事件
 			if move.LengthSqr() > 0 {

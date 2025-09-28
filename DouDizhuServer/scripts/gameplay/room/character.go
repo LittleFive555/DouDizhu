@@ -64,11 +64,11 @@ func (c *RoomCharacter) EnqueueInput(input *protodef.PCharacterMove) {
 }
 
 func (c *RoomCharacter) DequeueInput(untilTimestamp int64) []*protodef.PCharacterMove {
-	if !c.HasInput() {
-		return nil
-	}
 	c.inputBufferLock.Lock()
 	defer c.inputBufferLock.Unlock()
+	if len(c.inputBuffer) == 0 {
+		return nil
+	}
 	inputs := make([]*protodef.PCharacterMove, 0)
 	for _, input := range c.inputBuffer {
 		if input.GetTimestamp() <= untilTimestamp {
@@ -92,12 +92,12 @@ func (c *RoomCharacter) EnqueueState(state *protodef.PCharacterState) {
 }
 
 func (c *RoomCharacter) PopAllStateChange() []*protodef.PCharacterState {
-	if !c.HasStateChange() {
+	c.stateBufferLock.Lock()
+	defer c.stateBufferLock.Unlock()
+	if len(c.stateBuffer) == 0 {
 		return nil
 	}
 
-	c.stateBufferLock.Lock()
-	defer c.stateBufferLock.Unlock()
 	states := make([]*protodef.PCharacterState, len(c.stateBuffer))
 	copy(states, c.stateBuffer)
 
