@@ -82,14 +82,14 @@ func (s *PlayerSession) IsSecureKeyValid() bool {
 	return s.secureKey != nil
 }
 
-func (s *PlayerSession) start(messageHandler func(*message.Message)) {
+func (s *PlayerSession) start(dispatcher message.IMessageDispatcher) {
 	s.waitGroup.Add(2)
-	go s.startReading(messageHandler)
+	go s.startReading(dispatcher)
 	go s.startWriting()
 	s.waitGroup.Wait()
 }
 
-func (s *PlayerSession) startReading(messageHandler func(*message.Message)) {
+func (s *PlayerSession) startReading(dispatcher message.IMessageDispatcher) {
 	defer s.waitGroup.Done()
 	remoteAddr := s.conn.RemoteAddr().String()
 	for {
@@ -104,7 +104,7 @@ func (s *PlayerSession) startReading(messageHandler func(*message.Message)) {
 			return
 		}
 
-		messageHandler(&message.Message{
+		dispatcher.EnqueueMessage(&message.Message{
 			SessionId: s.Id,
 			Data:      rawMessage,
 		})

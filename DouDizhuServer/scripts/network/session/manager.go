@@ -17,7 +17,7 @@ func NewSessionManager() *SessionManager {
 	return &SessionManager{playerSessions: make(map[string]*PlayerSession)}
 }
 
-func (s *SessionManager) StartPlayerSession(sessionId string, conn net.Conn, messageHandler func(*message.Message)) {
+func (s *SessionManager) StartPlayerSession(sessionId string, conn net.Conn, dispatcher message.IMessageDispatcher) {
 	s.mutex.Lock()
 
 	ip := conn.RemoteAddr().String()
@@ -27,7 +27,7 @@ func (s *SessionManager) StartPlayerSession(sessionId string, conn net.Conn, mes
 	s.mutex.Unlock()
 
 	logger.InfoWith("创建会话成功，开始处理消息", "sessionId", session.Id)
-	session.start(messageHandler)
+	session.start(dispatcher)
 }
 
 func (s *SessionManager) GetSession(sessionId string) (*PlayerSession, error) {

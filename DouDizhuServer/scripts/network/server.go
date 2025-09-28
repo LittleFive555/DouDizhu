@@ -20,8 +20,8 @@ type GameServer struct {
 	listener        net.Listener
 	sessionMgr      *session.SessionManager
 	messageRegister *message.MessageRegister
-	dispatcher      *message.MessageDispatcher
 
+	messageQueue      chan *message.Message      // 消息队列
 	notificationQueue chan *message.Notification // 通知队列
 }
 
@@ -29,8 +29,8 @@ func NewGameServer() *GameServer {
 	gameServer := &GameServer{}
 	gameServer.sessionMgr = session.NewSessionManager()
 	gameServer.messageRegister = message.NewMessageRegister()
-	gameServer.dispatcher = message.NewMessageDispatcher(10, gameServer.handleMessage)
 
+	gameServer.messageQueue = make(chan *message.Message, 10000)
 	gameServer.notificationQueue = make(chan *message.Notification, 10000)
 	return gameServer
 }
@@ -45,6 +45,7 @@ func (s *GameServer) Start(addr string) error {
 
 	logger.InfoWith("TCP服务器启动成功", "addr", addr)
 
+	go s.handleMessages()
 	go s.handleNotifications()
 
 	s.handleConnections(ln)
@@ -93,8 +94,18 @@ func (s *GameServer) handleConnections(ln net.Listener) {
 // handleConnection 处理单个连接
 func (s *GameServer) handleConnection(conn net.Conn) {
 	sessionId := "ps-" + uuid.New().String()
-	s.sessionMgr.StartPlayerSession(sessionId, conn, s.dispatcher.EnqueueMessage)
+	s.sessionMgr.StartPlayerSession(sessionId, conn, s)
 	defer s.sessionMgr.CloseSession(sessionId)
+}
+
+func (s *GameServer) EnqueueMessage(msg *message.Message) {
+	s.messageQueue <- msg
+}
+
+func (s *GameServer) handleMessages() {
+	for msg := range s.messageQueue {
+		s.handleMessage(msg)
+	}
 }
 
 // HandleMessage 实现Handler接口
