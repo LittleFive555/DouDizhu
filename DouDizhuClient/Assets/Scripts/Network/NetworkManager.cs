@@ -61,6 +61,7 @@ namespace Network
                 m_IsConnected = true;
                 Log.Information("TCP连接已建立");
                 _ = ReceiveLoopAsync();
+                _ = SendLoopAsync();
             }
             catch (SocketException ex)
             {
@@ -169,20 +170,12 @@ namespace Network
 
         private void SendMessage(MessageDataToSend messageDataToSend)
         {
-            if (m_MessageDataToSend.Count > 0)
-            {
-                m_MessageDataToSend.Enqueue(messageDataToSend);
-            }
-            else
-            {
-                m_MessageDataToSend.Enqueue(messageDataToSend);
-                _ = SendMessageFromQueueAsync();
-            }
+            m_MessageDataToSend.Enqueue(messageDataToSend);
         }
 
-        private async Task SendMessageFromQueueAsync()
+        private async Task SendLoopAsync()
         {
-            while (m_MessageDataToSend.Count > 0)
+            while (true)
             {
                 if (!m_IsConnected) // TODO: 等待连接成功后重试
                 {
@@ -206,6 +199,10 @@ namespace Network
                         Log.Information("消息已发送: [{requestType}]", toSend.MsgId);
                     else
                         Log.Information("消息已发送: [{requestType}] {request}", toSend.MsgId, toSend.PayloadString);
+                }
+                else
+                {
+                    await Task.Delay(1);
                 }
             }
         }
