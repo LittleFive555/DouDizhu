@@ -169,8 +169,8 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 			// 如果没有新的输入，则处理已存在的输入
 			move := character.GetMove()
 			if move.LengthSqr() > 0 {
-				durationSecond := nowTimestamp - lastTimestamp
-				move.Scale(character.GetSpeed() * float32(durationSecond) / 1000)
+				durationSecond := float32(nowTimestamp-lastTimestamp) / 1000
+				move.Scale(character.GetSpeed() * durationSecond)
 				transform := character.GetTransform()
 				transform.Position.Add(&move)
 				character.EnqueueState(&protodef.PCharacterState{
