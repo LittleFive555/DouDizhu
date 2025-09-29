@@ -27,8 +27,7 @@ namespace Gameplay.World
                     var characterObj = Instantiate(m_MoveTestProto, transform);
                     var characterId = character.Key;
                     characterObj.name = characterId;
-                    var state = character.Value.States[0];
-                    characterObj.transform.position = new Vector3(state.Pos.X, state.Pos.Y, 0);
+                    characterObj.OnReceiveServerUpdate(character.Value.States[0]);
                     m_CharacterMap[characterId] = characterObj;
 
                     if (characterId == response.Data.CharacterId)
@@ -48,6 +47,14 @@ namespace Gameplay.World
         {
             Debug.Log("World state changed: " + worldState);
             // Handle the world state change here
+            foreach (var character in worldState.Characters)
+            {
+                if (m_CharacterMap.TryGetValue(character.Key, out var characterObj))
+                {
+                    foreach (var state in character.Value.States)
+                        characterObj.OnReceiveServerUpdate(state);
+                }
+            }
         }
     }
 }
