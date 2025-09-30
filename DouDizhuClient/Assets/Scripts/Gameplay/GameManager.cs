@@ -41,7 +41,7 @@ namespace Gameplay
         {
             CreateMainBehaviour();
 
-            await NetworkManager.Instance.ConnectAsync(serverHost, 8080);
+            await NetworkManager.Instance.ConnectAsync(serverHost, 15770);
 
             try
             {
@@ -66,7 +66,7 @@ namespace Gameplay
 
             CreateMainBehaviour();
 
-            await NetworkManager.Instance.ConnectAsync(serverHost, 9090);
+            await NetworkManager.Instance.ConnectAsync(serverHost, 15771);
         }
 
         public void Exit()

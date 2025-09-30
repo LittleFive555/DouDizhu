@@ -39,7 +39,7 @@ func startGameServer() {
 	player.Manager = player.NewPlayerManager()
 	room.Manager = room.NewRoomManager()
 
-	if err := server.Start(":8080"); err != nil {
+	if err := server.Start("localhost:15770"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)
 	}
 
@@ -59,7 +59,7 @@ func startPlayground() {
 	playground.Playground = playground.NewRoomPlayground()
 	playground.Playground.Start(server)
 
-	if err := server.Start(":9090"); err != nil {
+	if err := server.Start("localhost:15771"); err != nil {
 		logger.PanicWith("服务器启动失败", "error", err)
 	}
 
