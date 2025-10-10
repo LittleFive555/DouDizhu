@@ -24,32 +24,34 @@ namespace Network.Proto {
     static RoomReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpSb29tLnByb3RvEghEb3VEaXpodRoMUGxheWVyLnByb3RvIqQBCgVQUm9v",
-            "bRIKCgJpZBgBIAEoDRIMCgRuYW1lGAIgASgJEiAKBW93bmVyGAMgASgLMhEu",
-            "RG91RGl6aHUuUFBsYXllchIiCgdwbGF5ZXJzGAQgAygLMhEuRG91RGl6aHUu",
-            "UFBsYXllchIWCg5tYXhQbGF5ZXJDb3VudBgFIAEoDRIjCgVzdGF0ZRgGIAEo",
-            "DjIULkRvdURpemh1LlBSb29tU3RhdGUiJgoSUENyZWF0ZVJvb21SZXF1ZXN0",
-            "EhAKCHJvb21OYW1lGAEgASgJIjQKE1BDcmVhdGVSb29tUmVzcG9uc2USHQoE",
-            "cm9vbRgBIAEoCzIPLkRvdURpemh1LlBSb29tIiMKEVBFbnRlclJvb21SZXF1",
-            "ZXN0Eg4KBnJvb21JZBgBIAEoDSIzChJQRW50ZXJSb29tUmVzcG9uc2USHQoE",
-            "cm9vbRgBIAEoCzIPLkRvdURpemh1LlBSb29tIhMKEVBMZWF2ZVJvb21SZXF1",
-            "ZXN0IhUKE1BHZXRSb29tTGlzdFJlcXVlc3QiNgoUUEdldFJvb21MaXN0UmVz",
-            "cG9uc2USHgoFcm9vbXMYASADKAsyDy5Eb3VEaXpodS5QUm9vbSImChRQU3lu",
-            "Y1Jvb21JbmZvUmVxdWVzdBIOCgZyb29tSWQYASABKA0iNgoVUFN5bmNSb29t",
-            "SW5mb1Jlc3BvbnNlEh0KBHJvb20YASABKAsyDy5Eb3VEaXpodS5QUm9vbSIc",
-            "ChpQUm9vbURpc2JhbmRlZE5vdGlmaWNhdGlvbiI5ChhQUm9vbUNoYW5nZWRO",
-            "b3RpZmljYXRpb24SHQoEcm9vbRgBIAEoCzIPLkRvdURpemh1LlBSb29tKlcK",
-            "ClBSb29tU3RhdGUSFwoTUFJPT01fU1RBVEVfVU5LTk9XThAAEhcKE1BST09N",
-            "X1NUQVRFX1dBSVRJTkcQARIXChNQUk9PTV9TVEFURV9QTEFZSU5HEAJCIloQ",
-            "bmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJvdG9iBnByb3RvMw=="));
+            "CgpSb29tLnByb3RvEghEb3VEaXpodRoMUGxheWVyLnByb3RvGgtXb3JsZC5w",
+            "cm90byLAAQoFUFJvb20SCgoCaWQYASABKA0SDAoEbmFtZRgCIAEoCRIPCgdv",
+            "d25lcklkGAMgASgJEiIKB3BsYXllcnMYBCADKAsyES5Eb3VEaXpodS5QUGxh",
+            "eWVyEhYKDm1heFBsYXllckNvdW50GAUgASgNEiMKBXN0YXRlGAYgASgOMhQu",
+            "RG91RGl6aHUuUFJvb21TdGF0ZRIrCgxjdXJyZW50V29ybGQYByABKAsyFS5E",
+            "b3VEaXpodS5QV29ybGRTdGF0ZSImChJQQ3JlYXRlUm9vbVJlcXVlc3QSEAoI",
+            "cm9vbU5hbWUYASABKAkiSQoTUENyZWF0ZVJvb21SZXNwb25zZRIdCgRyb29t",
+            "GAEgASgLMg8uRG91RGl6aHUuUFJvb20SEwoLY2hhcmFjdGVySWQYAiABKAki",
+            "IwoRUEVudGVyUm9vbVJlcXVlc3QSDgoGcm9vbUlkGAEgASgNIkgKElBFbnRl",
+            "clJvb21SZXNwb25zZRIdCgRyb29tGAEgASgLMg8uRG91RGl6aHUuUFJvb20S",
+            "EwoLY2hhcmFjdGVySWQYAiABKAkiEwoRUExlYXZlUm9vbVJlcXVlc3QiFQoT",
+            "UEdldFJvb21MaXN0UmVxdWVzdCI2ChRQR2V0Um9vbUxpc3RSZXNwb25zZRIe",
+            "CgVyb29tcxgBIAMoCzIPLkRvdURpemh1LlBSb29tIiYKFFBTeW5jUm9vbUlu",
+            "Zm9SZXF1ZXN0Eg4KBnJvb21JZBgBIAEoDSI2ChVQU3luY1Jvb21JbmZvUmVz",
+            "cG9uc2USHQoEcm9vbRgBIAEoCzIPLkRvdURpemh1LlBSb29tIhwKGlBSb29t",
+            "RGlzYmFuZGVkTm90aWZpY2F0aW9uIjkKGFBSb29tQ2hhbmdlZE5vdGlmaWNh",
+            "dGlvbhIdCgRyb29tGAEgASgLMg8uRG91RGl6aHUuUFJvb20qVwoKUFJvb21T",
+            "dGF0ZRIXChNQUk9PTV9TVEFURV9VTktOT1dOEAASFwoTUFJPT01fU1RBVEVf",
+            "V0FJVElORxABEhcKE1BST09NX1NUQVRFX1BMQVlJTkcQAkIiWhBuZXR3b3Jr",
+            "L3Byb3RvZGVmqgINTmV0d29yay5Qcm90b2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Network.Proto.PlayerReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Network.Proto.PlayerReflection.Descriptor, global::Network.Proto.WorldReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PRoomState), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRoom), global::Network.Proto.PRoom.Parser, new[]{ "Id", "Name", "Owner", "Players", "MaxPlayerCount", "State" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PRoom), global::Network.Proto.PRoom.Parser, new[]{ "Id", "Name", "OwnerId", "Players", "MaxPlayerCount", "State", "CurrentWorld" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PCreateRoomRequest), global::Network.Proto.PCreateRoomRequest.Parser, new[]{ "RoomName" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PCreateRoomResponse), global::Network.Proto.PCreateRoomResponse.Parser, new[]{ "Room" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PCreateRoomResponse), global::Network.Proto.PCreateRoomResponse.Parser, new[]{ "Room", "CharacterId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PEnterRoomRequest), global::Network.Proto.PEnterRoomRequest.Parser, new[]{ "RoomId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PEnterRoomResponse), global::Network.Proto.PEnterRoomResponse.Parser, new[]{ "Room" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PEnterRoomResponse), global::Network.Proto.PEnterRoomResponse.Parser, new[]{ "Room", "CharacterId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PLeaveRoomRequest), global::Network.Proto.PLeaveRoomRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGetRoomListRequest), global::Network.Proto.PGetRoomListRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Network.Proto.PGetRoomListResponse), global::Network.Proto.PGetRoomListResponse.Parser, new[]{ "Rooms" }, null, null, null, null),
@@ -109,10 +111,11 @@ namespace Network.Proto {
     public PRoom(PRoom other) : this() {
       id_ = other.id_;
       name_ = other.name_;
-      owner_ = other.owner_ != null ? other.owner_.Clone() : null;
+      ownerId_ = other.ownerId_;
       players_ = other.players_.Clone();
       maxPlayerCount_ = other.maxPlayerCount_;
       state_ = other.state_;
+      currentWorld_ = other.currentWorld_ != null ? other.currentWorld_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -146,15 +149,15 @@ namespace Network.Proto {
       }
     }
 
-    /// <summary>Field number for the "owner" field.</summary>
-    public const int OwnerFieldNumber = 3;
-    private global::Network.Proto.PPlayer owner_;
+    /// <summary>Field number for the "ownerId" field.</summary>
+    public const int OwnerIdFieldNumber = 3;
+    private string ownerId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Network.Proto.PPlayer Owner {
-      get { return owner_; }
+    public string OwnerId {
+      get { return ownerId_; }
       set {
-        owner_ = value;
+        ownerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -193,6 +196,21 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "currentWorld" field.</summary>
+    public const int CurrentWorldFieldNumber = 7;
+    private global::Network.Proto.PWorldState currentWorld_;
+    /// <summary>
+    /// 进入世界后才有的信息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Network.Proto.PWorldState CurrentWorld {
+      get { return currentWorld_; }
+      set {
+        currentWorld_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -210,10 +228,11 @@ namespace Network.Proto {
       }
       if (Id != other.Id) return false;
       if (Name != other.Name) return false;
-      if (!object.Equals(Owner, other.Owner)) return false;
+      if (OwnerId != other.OwnerId) return false;
       if(!players_.Equals(other.players_)) return false;
       if (MaxPlayerCount != other.MaxPlayerCount) return false;
       if (State != other.State) return false;
+      if (!object.Equals(CurrentWorld, other.CurrentWorld)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -223,10 +242,11 @@ namespace Network.Proto {
       int hash = 1;
       if (Id != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (owner_ != null) hash ^= Owner.GetHashCode();
+      if (OwnerId.Length != 0) hash ^= OwnerId.GetHashCode();
       hash ^= players_.GetHashCode();
       if (MaxPlayerCount != 0) hash ^= MaxPlayerCount.GetHashCode();
       if (State != global::Network.Proto.PRoomState.Unknown) hash ^= State.GetHashCode();
+      if (currentWorld_ != null) hash ^= CurrentWorld.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -253,9 +273,9 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (owner_ != null) {
+      if (OwnerId.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteMessage(Owner);
+        output.WriteString(OwnerId);
       }
       players_.WriteTo(output, _repeated_players_codec);
       if (MaxPlayerCount != 0) {
@@ -265,6 +285,10 @@ namespace Network.Proto {
       if (State != global::Network.Proto.PRoomState.Unknown) {
         output.WriteRawTag(48);
         output.WriteEnum((int) State);
+      }
+      if (currentWorld_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(CurrentWorld);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -284,9 +308,9 @@ namespace Network.Proto {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (owner_ != null) {
+      if (OwnerId.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteMessage(Owner);
+        output.WriteString(OwnerId);
       }
       players_.WriteTo(ref output, _repeated_players_codec);
       if (MaxPlayerCount != 0) {
@@ -296,6 +320,10 @@ namespace Network.Proto {
       if (State != global::Network.Proto.PRoomState.Unknown) {
         output.WriteRawTag(48);
         output.WriteEnum((int) State);
+      }
+      if (currentWorld_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(CurrentWorld);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -313,8 +341,8 @@ namespace Network.Proto {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (owner_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Owner);
+      if (OwnerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OwnerId);
       }
       size += players_.CalculateSize(_repeated_players_codec);
       if (MaxPlayerCount != 0) {
@@ -322,6 +350,9 @@ namespace Network.Proto {
       }
       if (State != global::Network.Proto.PRoomState.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) State);
+      }
+      if (currentWorld_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(CurrentWorld);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -341,11 +372,8 @@ namespace Network.Proto {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.owner_ != null) {
-        if (owner_ == null) {
-          Owner = new global::Network.Proto.PPlayer();
-        }
-        Owner.MergeFrom(other.Owner);
+      if (other.OwnerId.Length != 0) {
+        OwnerId = other.OwnerId;
       }
       players_.Add(other.players_);
       if (other.MaxPlayerCount != 0) {
@@ -353,6 +381,12 @@ namespace Network.Proto {
       }
       if (other.State != global::Network.Proto.PRoomState.Unknown) {
         State = other.State;
+      }
+      if (other.currentWorld_ != null) {
+        if (currentWorld_ == null) {
+          CurrentWorld = new global::Network.Proto.PWorldState();
+        }
+        CurrentWorld.MergeFrom(other.CurrentWorld);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -382,10 +416,7 @@ namespace Network.Proto {
             break;
           }
           case 26: {
-            if (owner_ == null) {
-              Owner = new global::Network.Proto.PPlayer();
-            }
-            input.ReadMessage(Owner);
+            OwnerId = input.ReadString();
             break;
           }
           case 34: {
@@ -398,6 +429,13 @@ namespace Network.Proto {
           }
           case 48: {
             State = (global::Network.Proto.PRoomState) input.ReadEnum();
+            break;
+          }
+          case 58: {
+            if (currentWorld_ == null) {
+              CurrentWorld = new global::Network.Proto.PWorldState();
+            }
+            input.ReadMessage(CurrentWorld);
             break;
           }
         }
@@ -428,10 +466,7 @@ namespace Network.Proto {
             break;
           }
           case 26: {
-            if (owner_ == null) {
-              Owner = new global::Network.Proto.PPlayer();
-            }
-            input.ReadMessage(Owner);
+            OwnerId = input.ReadString();
             break;
           }
           case 34: {
@@ -444,6 +479,13 @@ namespace Network.Proto {
           }
           case 48: {
             State = (global::Network.Proto.PRoomState) input.ReadEnum();
+            break;
+          }
+          case 58: {
+            if (currentWorld_ == null) {
+              CurrentWorld = new global::Network.Proto.PWorldState();
+            }
+            input.ReadMessage(CurrentWorld);
             break;
           }
         }
@@ -687,6 +729,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PCreateRoomResponse(PCreateRoomResponse other) : this() {
       room_ = other.room_ != null ? other.room_.Clone() : null;
+      characterId_ = other.characterId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -708,6 +751,18 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "characterId" field.</summary>
+    public const int CharacterIdFieldNumber = 2;
+    private string characterId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CharacterId {
+      get { return characterId_; }
+      set {
+        characterId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -724,6 +779,7 @@ namespace Network.Proto {
         return true;
       }
       if (!object.Equals(Room, other.Room)) return false;
+      if (CharacterId != other.CharacterId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -732,6 +788,7 @@ namespace Network.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (room_ != null) hash ^= Room.GetHashCode();
+      if (CharacterId.Length != 0) hash ^= CharacterId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -754,6 +811,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteMessage(Room);
       }
+      if (CharacterId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(CharacterId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -768,6 +829,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteMessage(Room);
       }
+      if (CharacterId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(CharacterId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -780,6 +845,9 @@ namespace Network.Proto {
       int size = 0;
       if (room_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Room);
+      }
+      if (CharacterId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CharacterId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -798,6 +866,9 @@ namespace Network.Proto {
           Room = new global::Network.Proto.PRoom();
         }
         Room.MergeFrom(other.Room);
+      }
+      if (other.CharacterId.Length != 0) {
+        CharacterId = other.CharacterId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -825,6 +896,10 @@ namespace Network.Proto {
             input.ReadMessage(Room);
             break;
           }
+          case 18: {
+            CharacterId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -849,6 +924,10 @@ namespace Network.Proto {
               Room = new global::Network.Proto.PRoom();
             }
             input.ReadMessage(Room);
+            break;
+          }
+          case 18: {
+            CharacterId = input.ReadString();
             break;
           }
         }
@@ -1092,6 +1171,7 @@ namespace Network.Proto {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PEnterRoomResponse(PEnterRoomResponse other) : this() {
       room_ = other.room_ != null ? other.room_.Clone() : null;
+      characterId_ = other.characterId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1113,6 +1193,18 @@ namespace Network.Proto {
       }
     }
 
+    /// <summary>Field number for the "characterId" field.</summary>
+    public const int CharacterIdFieldNumber = 2;
+    private string characterId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CharacterId {
+      get { return characterId_; }
+      set {
+        characterId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1129,6 +1221,7 @@ namespace Network.Proto {
         return true;
       }
       if (!object.Equals(Room, other.Room)) return false;
+      if (CharacterId != other.CharacterId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1137,6 +1230,7 @@ namespace Network.Proto {
     public override int GetHashCode() {
       int hash = 1;
       if (room_ != null) hash ^= Room.GetHashCode();
+      if (CharacterId.Length != 0) hash ^= CharacterId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1159,6 +1253,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteMessage(Room);
       }
+      if (CharacterId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(CharacterId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1173,6 +1271,10 @@ namespace Network.Proto {
         output.WriteRawTag(10);
         output.WriteMessage(Room);
       }
+      if (CharacterId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(CharacterId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1185,6 +1287,9 @@ namespace Network.Proto {
       int size = 0;
       if (room_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Room);
+      }
+      if (CharacterId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CharacterId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1203,6 +1308,9 @@ namespace Network.Proto {
           Room = new global::Network.Proto.PRoom();
         }
         Room.MergeFrom(other.Room);
+      }
+      if (other.CharacterId.Length != 0) {
+        CharacterId = other.CharacterId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1230,6 +1338,10 @@ namespace Network.Proto {
             input.ReadMessage(Room);
             break;
           }
+          case 18: {
+            CharacterId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1254,6 +1366,10 @@ namespace Network.Proto {
               Room = new global::Network.Proto.PRoom();
             }
             input.ReadMessage(Room);
+            break;
+          }
+          case 18: {
+            CharacterId = input.ReadString();
             break;
           }
         }

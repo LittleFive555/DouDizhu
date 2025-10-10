@@ -5,6 +5,7 @@ option go_package = "network/protodef";
 option csharp_namespace = "Network.Proto";
 
 import "Player.proto";
+import "World.proto";
 
 enum PRoomState {
     PROOM_STATE_UNKNOWN = 0;
@@ -15,10 +16,13 @@ enum PRoomState {
 message PRoom {
     uint32 id = 1;
     string name = 2;
-    PPlayer owner = 3;
+    string ownerId = 3;
     repeated PPlayer players = 4;
     uint32 maxPlayerCount = 5;
     PRoomState state = 6;
+    
+    // 进入世界后才有的信息
+    PWorldState currentWorld = 7;
 }
 
 message PCreateRoomRequest {
@@ -27,6 +31,7 @@ message PCreateRoomRequest {
 
 message PCreateRoomResponse {
     PRoom room = 1;
+    string characterId = 2;
 }
 
 message PEnterRoomRequest {
@@ -35,6 +40,7 @@ message PEnterRoomRequest {
 
 message PEnterRoomResponse {
     PRoom room = 1;
+    string characterId = 2;
 }
 
 message PLeaveRoomRequest { // 空响应

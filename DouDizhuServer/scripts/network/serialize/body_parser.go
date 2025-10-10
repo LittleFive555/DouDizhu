@@ -23,7 +23,6 @@ var messageRegistry = map[protodef.PMsgId]func() proto.Message{
 	// Character Move
 	protodef.PMsgId_PMSG_ID_CHARACTER_MOVE: func() proto.Message { return &protodef.PCharacterMove{} },
 	protodef.PMsgId_PMSG_ID_ENTER_WORLD:    func() proto.Message { return &protodef.PEnterWorldRequest{} },
-	protodef.PMsgId_PMSG_ID_LEAVE_WORLD:    func() proto.Message { return &protodef.PLeaveWorldRequest{} },
 }
 
 func GetMessage(msgId protodef.PMsgId) proto.Message {

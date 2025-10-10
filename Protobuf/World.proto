@@ -28,16 +28,7 @@ message PEnterWorldRequest {
 }
 
 message PEnterWorldResponse {
-    string characterId = 1;
-    PWorldState worldState = 2;
-}
-
-message PLeaveWorldRequest {
-    string characterId = 1;
-}
-
-message PLeaveWorldResponse {
-
+    PWorldState worldState = 1;
 }
 
 message PCharacterMove {
