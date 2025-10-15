@@ -24,14 +24,13 @@ func HandleCreateRoom(context *message.MessageContext, req *proto.Message) (*mes
 		return nil, errordef.NewGameplayError(errordef.CodePlayerNotInLobby)
 	}
 	room := room.Manager.CreateRoom(reqMsg.GetRoomName(), context.Dispatcher)
-	err := room.SetOwner(ownerPlayer.GetPlayerId())
+	err := room.AddPlayer(ownerPlayer, true)
 	if err != nil {
 		return nil, err
 	}
-	ownerPlayer.EnterRoom(room.GetId())
 	return &message.HandleResult{
 		Resp: &protodef.PCreateRoomResponse{
-			Room: translator.RoomToProto(room, player.Manager),
+			Room: translator.RoomToProto(room, player.Manager, true),
 		},
 	}, nil
 }
@@ -44,7 +43,7 @@ func HandleGetRoomList(context *message.MessageContext, req *proto.Message) (*me
 	roomList := room.Manager.GetRoomList()
 	rooms := make([]*protodef.PRoom, 0)
 	for _, r := range roomList {
-		rooms = append(rooms, translator.RoomToProto(r, player.Manager))
+		rooms = append(rooms, translator.RoomToProto(r, player.Manager, false))
 	}
 	return &message.HandleResult{
 		Resp: &protodef.PGetRoomListResponse{
@@ -69,15 +68,14 @@ func HandleEnterRoom(context *message.MessageContext, req *proto.Message) (*mess
 	if err != nil {
 		return nil, err
 	}
-	err = targetRoom.AddPlayer(requestingPlayer.GetPlayerId())
+	err = targetRoom.AddPlayer(requestingPlayer, false)
 	if err != nil {
 		return nil, err
 	}
-	requestingPlayer.EnterRoom(targetRoom.GetId())
 
 	return &message.HandleResult{
 		Resp: &protodef.PEnterRoomResponse{
-			Room: translator.RoomToProto(targetRoom, player.Manager),
+			Room: translator.RoomToProto(targetRoom, player.Manager, true),
 		},
 		NotifyMsgId: protodef.PMsgId_PMSG_ID_ROOM_CHANGED,
 		Notify: &protodef.PRoomChangedNotification{
@@ -97,15 +95,16 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 	if !ok {
 		return nil, errordef.NewGameplayError(errordef.CodeInvalidRequest)
 	}
-	currentPlayer := player.Manager.GetPlayer(context.PlayerId)
+	playerId := context.PlayerId
+
+	currentPlayer := player.Manager.GetPlayer(playerId)
 	if currentPlayer == nil {
 		return nil, errordef.NewGameplayError(errordef.CodePlayerOffline)
 	}
-	playerId := currentPlayer.GetPlayerId()
 	if !currentPlayer.IsInRoom() {
 		return nil, errordef.NewGameplayError(errordef.CodePlayerNotInRoom)
 	}
-	currentRoom, err := room.Manager.GetRoom(currentPlayer.GetRoomId())
+	currentRoom, err := tryGetPlayerRoom(playerId)
 	if err != nil {
 		return nil, err
 	}
@@ -115,10 +114,6 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 		ExceptPlayerId: playerId,
 	}
 	if currentRoom.IsOwnedBy(playerId) { // 如果房间是房主，则直接解散整个房间
-		players := currentRoom.GetPlayers()
-		for _, playerId := range players {
-			player.Manager.GetPlayer(playerId).LeaveRoom()
-		}
 		room.Manager.RemoveRoom(currentRoom.GetId())
 
 		return &message.HandleResult{
@@ -128,8 +123,8 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 		}, nil
 	} else {
 		currentRoom.RemovePlayer(playerId)
-		currentPlayer.LeaveRoom()
 		// 如果房间不是房主，则给房间其他人发通知
+		// TODO 需要把离开世界的玩家状态也通知到其他客户端
 		return &message.HandleResult{
 			Notify: &protodef.PRoomChangedNotification{
 				Room: &protodef.PRoom{
@@ -142,16 +137,13 @@ func HandleLeaveRoom(context *message.MessageContext, req *proto.Message) (*mess
 	}
 }
 
-func tryGetPlayerRoom(player *player.Player) (*room.Room, error) {
+func tryGetPlayerRoom(playerId string) (*room.Room, error) {
+	player := player.Manager.GetPlayer(playerId)
 	if player == nil {
 		return nil, errordef.NewGameplayError(errordef.CodePlayerOffline)
 	}
 	if !player.IsInRoom() {
 		return nil, errordef.NewGameplayError(errordef.CodePlayerNotInRoom)
 	}
-	room, err := room.Manager.GetRoom(player.GetRoomId())
-	if err != nil {
-		return nil, err
-	}
-	return room, nil
+	return room.Manager.GetRoom(player.GetRoomId())
 }

@@ -1,4 +1,4 @@
-package room
+package world
 
 import (
 	"DouDizhuServer/scripts/network/message"
@@ -6,11 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/ungerik/go3d/vec3"
 )
 
-type RoomWorld struct {
+type World struct {
 	stop bool
 	lock sync.RWMutex
 
@@ -18,23 +17,23 @@ type RoomWorld struct {
 	frameTime           int64
 	delayFrame          int64
 	lastUpdateTimestamp int64
-	characters          map[string]*RoomCharacter
+	characters          map[string]*Character
 }
 
-func NewRoomWorld(worldId string, frameRate int, delayFrame int) *RoomWorld {
+func newWorld(worldId string, frameRate int, delayFrame int) *World {
 	frameTime := 1000 / int64(frameRate)
-	return &RoomWorld{
+	return &World{
 		worldId:             worldId,
 		frameTime:           frameTime,
 		delayFrame:          int64(delayFrame),
 		lastUpdateTimestamp: time.Now().UnixMilli() - frameTime*int64(delayFrame),
-		characters:          make(map[string]*RoomCharacter),
+		characters:          make(map[string]*Character),
 
 		lock: sync.RWMutex{},
 	}
 }
 
-func (world *RoomWorld) RunLoop(dispatcher message.INotificationDispatcher) {
+func (world *World) RunLoop(dispatcher message.INotificationDispatcher) {
 	world.stop = false
 	for {
 		if world.stop {
@@ -63,11 +62,11 @@ func (world *RoomWorld) RunLoop(dispatcher message.INotificationDispatcher) {
 	}
 }
 
-func (world *RoomWorld) Stop() {
+func (world *World) Stop() {
 	world.stop = true
 }
 
-func (world *RoomWorld) GetFullWrldState() *protodef.PWorldState {
+func (world *World) GetFullWorldState() *protodef.PWorldState {
 	world.lock.RLock()
 	defer world.lock.RUnlock()
 
@@ -85,23 +84,22 @@ func (world *RoomWorld) GetFullWrldState() *protodef.PWorldState {
 	}
 }
 
-func (world *RoomWorld) AddCharacter() string {
+func (world *World) OnCharacterEnter(character *Character) {
 	world.lock.Lock()
 	defer world.lock.Unlock()
 
-	characterId := uuid.New().String()
-	world.characters[characterId] = NewRoomCharacter(characterId)
-	return characterId
+	character.worldId = world.worldId
+	world.characters[character.GetId()] = character
 }
 
-func (world *RoomWorld) RemoveCharacter(characterId string) {
+func (world *World) OnCharacterLeave(character *Character) {
 	world.lock.Lock()
 	defer world.lock.Unlock()
 
-	delete(world.characters, characterId)
+	delete(world.characters, character.GetId())
 }
 
-func (world *RoomWorld) MoveCharacter(move *protodef.PCharacterMove) {
+func (world *World) MoveCharacter(move *protodef.PCharacterMove) {
 	world.lock.RLock()
 	defer world.lock.RUnlock()
 
@@ -112,7 +110,7 @@ func (world *RoomWorld) MoveCharacter(move *protodef.PCharacterMove) {
 	character.EnqueueInput(move)
 }
 
-func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
+func (world *World) update(lastTimestamp int64, nowTimestamp int64) {
 	world.lock.RLock()
 	defer world.lock.RUnlock()
 
@@ -182,7 +180,7 @@ func (world *RoomWorld) update(lastTimestamp int64, nowTimestamp int64) {
 	}
 }
 
-func (world *RoomWorld) collectWorldStateChanges() *protodef.PWorldState {
+func (world *World) collectWorldStateChanges() *protodef.PWorldState {
 	world.lock.RLock()
 	defer world.lock.RUnlock()
 

@@ -26,9 +26,9 @@ func (m *RoomManager) CreateRoom(name string, dispatcher message.INotificationDi
 	defer m.listOpLock.Unlock()
 
 	roomId := uuid.New().ID()
-	room := NewRoom(roomId, name)
-	m.rooms[room.id] = room
-	go room.world.RunLoop(dispatcher)
+	room := NewRoom(roomId, name, dispatcher)
+	m.rooms[roomId] = room
+	go room.worldManager.RunLoop()
 	return room
 }
 
@@ -58,10 +58,12 @@ func (m *RoomManager) RemoveRoom(roomId uint32) error {
 	m.listOpLock.Lock()
 	defer m.listOpLock.Unlock()
 
-	if _, ok := m.rooms[roomId]; !ok {
+	var room *Room
+	var ok bool
+	if room, ok = m.rooms[roomId]; !ok {
 		return errordef.NewGameplayError(errordef.CodeRoomNotExists)
 	}
-	m.rooms[roomId].world.Stop()
+	room.Destroy()
 	delete(m.rooms, roomId)
 	return nil
 }

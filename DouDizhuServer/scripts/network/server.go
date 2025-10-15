@@ -62,14 +62,25 @@ func (s *GameServer) Stop() error {
 }
 
 func (s *GameServer) RegisterHandlers() {
+	// 启动相关
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_HANDSHAKE, s.handleHandshake)
-	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
+
+	// 账号相关
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_REGISTER, handler.HandleRegister)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LOGIN, handler.HandleLogin)
+
+	// 房间相关
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CREATE_ROOM, handler.HandleCreateRoom)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_GET_ROOM_LIST, handler.HandleGetRoomList)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_ENTER_ROOM, handler.HandleEnterRoom)
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_LEAVE_ROOM, handler.HandleLeaveRoom)
+
+	// 聊天相关
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
+
+	// 世界相关
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_ENTER_WORLD, handler.HandleEnterWorld)
+	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHARACTER_MOVE, handler.HandleCharacterMove)
 }
 
 func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {

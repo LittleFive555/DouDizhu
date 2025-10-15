@@ -3,6 +3,7 @@ package translator
 import (
 	"DouDizhuServer/scripts/gameplay/player"
 	"DouDizhuServer/scripts/gameplay/room"
+	"DouDizhuServer/scripts/gameplay/world"
 	"DouDizhuServer/scripts/network/protodef"
 )
 
@@ -15,16 +16,21 @@ func PlayerToProto(p *player.Player) *protodef.PPlayer {
 	}
 }
 
-func RoomToProto(r *room.Room, playerManager *player.PlayerManager) *protodef.PRoom {
-	players := RoomPlayersToProto(r, playerManager)
-	return &protodef.PRoom{
+func RoomToProto(r *room.Room, playerManager *player.PlayerManager, withWorld bool) *protodef.PRoom {
+	protoRoom := &protodef.PRoom{
 		Id:             r.GetId(),
 		Name:           r.GetName(),
-		Owner:          PlayerToProto(playerManager.GetPlayer(r.GetOwnerId())),
-		Players:        players,
+		OwnerId:        r.GetOwnerId(),
+		Players:        RoomPlayersToProto(r, playerManager),
 		MaxPlayerCount: r.GetMaxPlayerCount(),
 		State:          r.GetState(),
 	}
+	if withWorld {
+		worldManager := r.GetWorldManager()
+		worldState := worldManager.GetWorldFullState("default") // TODO: 世界ID
+		protoRoom.CurrentWorld = worldState
+	}
+	return protoRoom
 }
 
 func RoomPlayersToProto(r *room.Room, playerManager *player.PlayerManager) []*protodef.PPlayer {
@@ -33,4 +39,8 @@ func RoomPlayersToProto(r *room.Room, playerManager *player.PlayerManager) []*pr
 		players = append(players, PlayerToProto(playerManager.GetPlayer(playerId)))
 	}
 	return players
+}
+
+func WorldToProto(world *world.World) *protodef.PWorldState {
+	return world.GetFullWorldState()
 }

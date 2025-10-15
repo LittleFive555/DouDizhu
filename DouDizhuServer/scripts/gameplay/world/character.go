@@ -1,4 +1,4 @@
-package room
+package world
 
 import (
 	"DouDizhuServer/scripts/gameplay/component"
@@ -10,11 +10,13 @@ import (
 	"github.com/ungerik/go3d/vec3"
 )
 
-type RoomCharacter struct {
+type Character struct {
 	id        string
 	transform *component.Transform
 	speed     float32
 	move      vec3.T
+
+	worldId string
 
 	inputBufferLock sync.RWMutex
 	inputBuffer     []*protodef.PCharacterMove
@@ -23,8 +25,8 @@ type RoomCharacter struct {
 	stateBuffer     []*protodef.PCharacterState
 }
 
-func NewRoomCharacter(id string) *RoomCharacter {
-	return &RoomCharacter{
+func NewCharacter(id string) *Character {
+	return &Character{
 		id:          id,
 		speed:       2,
 		transform:   component.NewTransform(),
@@ -33,39 +35,39 @@ func NewRoomCharacter(id string) *RoomCharacter {
 	}
 }
 
-func (c *RoomCharacter) GetId() string {
+func (c *Character) GetId() string {
 	return c.id
 }
 
-func (c *RoomCharacter) GetTransform() *component.Transform {
+func (c *Character) GetTransform() *component.Transform {
 	return c.transform
 }
 
-func (c *RoomCharacter) GetSpeed() float32 {
+func (c *Character) GetSpeed() float32 {
 	return c.speed
 }
 
-func (c *RoomCharacter) GetMove() vec3.T {
+func (c *Character) GetMove() vec3.T {
 	return c.move
 }
 
-func (c *RoomCharacter) SetMove(move vec3.T) {
+func (c *Character) SetMove(move vec3.T) {
 	c.move = move
 }
 
-func (c *RoomCharacter) HasInput() bool {
+func (c *Character) HasInput() bool {
 	c.inputBufferLock.RLock()
 	defer c.inputBufferLock.RUnlock()
 	return len(c.inputBuffer) > 0
 }
 
-func (c *RoomCharacter) EnqueueInput(input *protodef.PCharacterMove) {
+func (c *Character) EnqueueInput(input *protodef.PCharacterMove) {
 	c.inputBufferLock.Lock()
 	defer c.inputBufferLock.Unlock()
 	c.inputBuffer = append(c.inputBuffer, input)
 }
 
-func (c *RoomCharacter) DequeueInput(fromTimestamp int64, untilTimestamp int64) []*protodef.PCharacterMove {
+func (c *Character) DequeueInput(fromTimestamp int64, untilTimestamp int64) []*protodef.PCharacterMove {
 	c.inputBufferLock.Lock()
 	defer c.inputBufferLock.Unlock()
 	if len(c.inputBuffer) == 0 {
@@ -90,19 +92,19 @@ func (c *RoomCharacter) DequeueInput(fromTimestamp int64, untilTimestamp int64) 
 	return inputs
 }
 
-func (c *RoomCharacter) HasStateChange() bool {
+func (c *Character) HasStateChange() bool {
 	c.stateBufferLock.RLock()
 	defer c.stateBufferLock.RUnlock()
 	return len(c.stateBuffer) > 0
 }
 
-func (c *RoomCharacter) EnqueueState(state *protodef.PCharacterState) {
+func (c *Character) EnqueueState(state *protodef.PCharacterState) {
 	c.stateBufferLock.Lock()
 	defer c.stateBufferLock.Unlock()
 	c.stateBuffer = append(c.stateBuffer, state)
 }
 
-func (c *RoomCharacter) PopAllStateChange() []*protodef.PCharacterState {
+func (c *Character) PopAllStateChange() []*protodef.PCharacterState {
 	c.stateBufferLock.Lock()
 	defer c.stateBufferLock.Unlock()
 	if len(c.stateBuffer) == 0 {
@@ -118,7 +120,7 @@ func (c *RoomCharacter) PopAllStateChange() []*protodef.PCharacterState {
 	return states
 }
 
-func (c *RoomCharacter) GetFullState() *protodef.PCharacterState {
+func (c *Character) GetFullState() *protodef.PCharacterState {
 	return &protodef.PCharacterState{
 		Pos: Vec3ToProto(c.transform.Position),
 	}

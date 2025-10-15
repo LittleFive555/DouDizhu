@@ -68,12 +68,12 @@ func (p *Player) Logout() {
 	p.state = protodef.PPlayerState_PPLAYER_STATE_NONE
 }
 
-func (p *Player) EnterRoom(roomId uint32) {
+func (p *Player) OnEnterRoom(roomId uint32) {
 	p.roomId = roomId
 	p.state = protodef.PPlayerState_PPLAYER_STATE_IN_ROOM
 }
 
-func (p *Player) LeaveRoom() {
+func (p *Player) OnLeaveRoom() {
 	p.roomId = 0
 	p.state = protodef.PPlayerState_PPLAYER_STATE_LOBBY
 }
