@@ -1,4 +1,4 @@
-using Gameplay.Room.Service;
+using Gameplay.Room.Controller;
 using Network.Proto;
 using TMPro;
 using UIModule;
@@ -29,13 +29,9 @@ namespace Gameplay.Room.View
         }
 
         [OnClick("BtnEnter")]
-        private async void EnterRoom()
+        private void EnterRoom()
         {
-            var result = await RoomService.EnterRoom(m_RoomInfo.Id);
-            if (result != null)
-            {
-                UIManager.Instance.ShowUI<UIRoom, UIRoom.Args>(new UIRoom.Args() { Room = result });
-            }
+            _ = RoomController.EnterRoom(m_RoomInfo.Id);
         }
     }
 }

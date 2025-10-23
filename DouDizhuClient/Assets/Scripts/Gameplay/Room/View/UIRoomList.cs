@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Gameplay.Room.Service;
 using Network.Proto;
 using UIModule;
 using Gameplay.Player.Model;
 using Gameplay.Chat.View;
+using Gameplay.Room.Controller;
 
 namespace Gameplay.Room.View
 {
@@ -42,13 +42,9 @@ namespace Gameplay.Room.View
         }
 
         [OnClick("BtnCreateRoom")]
-        private async void CreateRoom()
+        private void CreateRoom()
         {
-            var room = await RoomService.CreateRoom(string.Format("{0}'s Room", PlayerManager.Instance.Name));
-            if (room == null)
-                return;
-
-            UIManager.Instance.ShowUI<UIRoom, UIRoom.Args>(new UIRoom.Args() { Room = room });
+            _ = RoomController.CreateRoom(string.Format("{0}'s Room", PlayerManager.Instance.Name));
         }
 
         [OnClick("BtnRefresh")]
@@ -58,7 +54,7 @@ namespace Gameplay.Room.View
                 return;
 
             m_IsRequesting = true;
-            var roomList = await RoomService.GetRoomList();
+            var roomList = await RoomController.RefreshRoomList();
             if (roomList == null)
             {
                 m_IsRequesting = false;

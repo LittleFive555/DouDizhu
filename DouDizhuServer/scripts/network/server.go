@@ -77,10 +77,6 @@ func (s *GameServer) RegisterHandlers() {
 
 	// 聊天相关
 	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHAT_MSG, handler.HandleChatMessage)
-
-	// 世界相关
-	s.RegisterHandler(protodef.PMsgId_PMSG_ID_ENTER_WORLD, handler.HandleEnterWorld)
-	s.RegisterHandler(protodef.PMsgId_PMSG_ID_CHARACTER_MOVE, handler.HandleCharacterMove)
 }
 
 func (s *GameServer) RegisterHandler(msgId protodef.PMsgId, handler func(*message.MessageContext, *proto.Message) (*message.HandleResult, error)) {

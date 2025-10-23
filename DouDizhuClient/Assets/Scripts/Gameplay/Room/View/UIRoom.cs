@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Gameplay.Room.Service;
 using Network;
 using Network.Proto;
 using TMPro;
 using UIModule;
 using Gameplay.Chat.View;
+using Gameplay.Room.Controller;
 
 namespace Gameplay.Room.View
 {
@@ -66,7 +66,7 @@ namespace Gameplay.Room.View
             if (!string.IsNullOrEmpty(notification.Room.Name))
                 SetRoomName(notification.Room.Name);
             
-            if (notification.Room.Owner != null)
+            if (!string.IsNullOrEmpty(notification.Room.OwnerId))
             {
                 // TODO 房主变更
             }
@@ -85,8 +85,7 @@ namespace Gameplay.Room.View
         [OnClick("BtnBack")]
         private void OnClickClose()
         {
-            _ = RoomService.LeaveRoom();
-            Hide();
+            _ = RoomController.LeaveRoom();
         }
     }
 }

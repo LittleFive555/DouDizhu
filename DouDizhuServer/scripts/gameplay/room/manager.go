@@ -28,7 +28,6 @@ func (m *RoomManager) CreateRoom(name string, dispatcher message.INotificationDi
 	roomId := uuid.New().ID()
 	room := NewRoom(roomId, name, dispatcher)
 	m.rooms[roomId] = room
-	go room.worldManager.RunLoop()
 	return room
 }
 

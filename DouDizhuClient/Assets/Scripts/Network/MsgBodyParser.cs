@@ -20,11 +20,6 @@ namespace Network
 
             // 聊天相关
             { PMsgId.ChatMsg, PChatMsgNotification.Parser },
-
-            // 人物相关
-            { PMsgId.CharacterMove, PCharacterMove.Parser },
-            { PMsgId.EnterWorld, PEnterWorldResponse.Parser },
-            { PMsgId.LeaveWorld, PEmptyResponse.Parser },
         };
 
         private static Dictionary<PMsgId, MessageParser> m_NotifyParsers = new()
@@ -35,10 +30,6 @@ namespace Network
             // 房间相关
             { PMsgId.RoomChanged, PRoomChangedNotification.Parser },
             { PMsgId.RoomDisbanded, PRoomDisbandedNotification.Parser },
-
-            // 人物相关
-            { PMsgId.CharacterMove, PCharacterMove.Parser },
-            { PMsgId.WorldState, PWorldState.Parser },
         };
         
         public static MessageParser GetResponseParser(PMsgId msgId)

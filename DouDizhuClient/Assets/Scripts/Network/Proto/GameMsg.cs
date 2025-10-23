@@ -35,15 +35,14 @@ namespace Network.Proto {
             "AQoOUFNlcnZlck1zZ1R5cGUSHAoYUFNFUlZFUl9NU0dfVFlQRV9VTktOT1dO",
             "EAASHQoZUFNFUlZFUl9NU0dfVFlQRV9SRVNQT05TRRABEiEKHVBTRVJWRVJf",
             "TVNHX1RZUEVfTk9USUZJQ0FUSU9OEAISGgoWUFNFUlZFUl9NU0dfVFlQRV9F",
-            "UlJPUhADKtsCCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAASEQoNUE1T",
+            "UlJPUhADKo0CCgZQTXNnSWQSEwoPUE1TR19JRF9VTktOT1dOEAASEQoNUE1T",
             "R19JRF9MT0dJThABEhQKEFBNU0dfSURfUkVHSVNURVIQAhIVChFQTVNHX0lE",
             "X0hBTkRTSEFLRRADEhcKE1BNU0dfSURfQ1JFQVRFX1JPT00QChIZChVQTVNH",
             "X0lEX0dFVF9ST09NX0xJU1QQCxIWChJQTVNHX0lEX0VOVEVSX1JPT00QDBIW",
             "ChJQTVNHX0lEX0xFQVZFX1JPT00QDRIYChRQTVNHX0lEX1JPT01fQ0hBTkdF",
             "RBAOEhoKFlBNU0dfSURfUk9PTV9ESVNCQU5ERUQQDxIUChBQTVNHX0lEX0NI",
-            "QVRfTVNHEB4SGgoWUE1TR19JRF9DSEFSQUNURVJfTU9WRRA8EhcKE1BNU0df",
-            "SURfV09STERfU1RBVEUQPRIXChNQTVNHX0lEX0VOVEVSX1dPUkxEED5CIloQ",
-            "bmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJvdG9iBnByb3RvMw=="));
+            "QVRfTVNHEB5CIloQbmV0d29yay9wcm90b2RlZqoCDU5ldHdvcmsuUHJvdG9i",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Network.Proto.PServerMsgType), typeof(global::Network.Proto.PMsgId), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -82,12 +81,6 @@ namespace Network.Proto {
     /// 聊天相关
     /// </summary>
     [pbr::OriginalName("PMSG_ID_CHAT_MSG")] ChatMsg = 30,
-    /// <summary>
-    /// 房间人物控制
-    /// </summary>
-    [pbr::OriginalName("PMSG_ID_CHARACTER_MOVE")] CharacterMove = 60,
-    [pbr::OriginalName("PMSG_ID_WORLD_STATE")] WorldState = 61,
-    [pbr::OriginalName("PMSG_ID_ENTER_WORLD")] EnterWorld = 62,
   }
 
   #endregion

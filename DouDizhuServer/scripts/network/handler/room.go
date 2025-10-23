@@ -30,7 +30,7 @@ func HandleCreateRoom(context *message.MessageContext, req *proto.Message) (*mes
 	}
 	return &message.HandleResult{
 		Resp: &protodef.PCreateRoomResponse{
-			Room: translator.RoomToProto(room, player.Manager, true),
+			Room: translator.RoomToProto(room, player.Manager),
 		},
 	}, nil
 }
@@ -43,7 +43,7 @@ func HandleGetRoomList(context *message.MessageContext, req *proto.Message) (*me
 	roomList := room.Manager.GetRoomList()
 	rooms := make([]*protodef.PRoom, 0)
 	for _, r := range roomList {
-		rooms = append(rooms, translator.RoomToProto(r, player.Manager, false))
+		rooms = append(rooms, translator.RoomToProto(r, player.Manager))
 	}
 	return &message.HandleResult{
 		Resp: &protodef.PGetRoomListResponse{
@@ -75,7 +75,7 @@ func HandleEnterRoom(context *message.MessageContext, req *proto.Message) (*mess
 
 	return &message.HandleResult{
 		Resp: &protodef.PEnterRoomResponse{
-			Room: translator.RoomToProto(targetRoom, player.Manager, true),
+			Room: translator.RoomToProto(targetRoom, player.Manager),
 		},
 		NotifyMsgId: protodef.PMsgId_PMSG_ID_ROOM_CHANGED,
 		Notify: &protodef.PRoomChangedNotification{

@@ -3,7 +3,6 @@ package translator
 import (
 	"DouDizhuServer/scripts/gameplay/player"
 	"DouDizhuServer/scripts/gameplay/room"
-	"DouDizhuServer/scripts/gameplay/world"
 	"DouDizhuServer/scripts/network/protodef"
 )
 
@@ -16,7 +15,7 @@ func PlayerToProto(p *player.Player) *protodef.PPlayer {
 	}
 }
 
-func RoomToProto(r *room.Room, playerManager *player.PlayerManager, withWorld bool) *protodef.PRoom {
+func RoomToProto(r *room.Room, playerManager *player.PlayerManager) *protodef.PRoom {
 	protoRoom := &protodef.PRoom{
 		Id:             r.GetId(),
 		Name:           r.GetName(),
@@ -24,11 +23,6 @@ func RoomToProto(r *room.Room, playerManager *player.PlayerManager, withWorld bo
 		Players:        RoomPlayersToProto(r, playerManager),
 		MaxPlayerCount: r.GetMaxPlayerCount(),
 		State:          r.GetState(),
-	}
-	if withWorld {
-		worldManager := r.GetWorldManager()
-		worldState := worldManager.GetWorldFullState("default") // TODO: 世界ID
-		protoRoom.CurrentWorld = worldState
 	}
 	return protoRoom
 }
@@ -39,8 +33,4 @@ func RoomPlayersToProto(r *room.Room, playerManager *player.PlayerManager) []*pr
 		players = append(players, PlayerToProto(playerManager.GetPlayer(playerId)))
 	}
 	return players
-}
-
-func WorldToProto(world *world.World) *protodef.PWorldState {
-	return world.GetFullWorldState()
 }
